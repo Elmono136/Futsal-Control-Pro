@@ -872,6 +872,22 @@ header .small{color:#87909d;font-size:10px;text-transform:uppercase;letter-spaci
 .matchMeta.quickEditTarget::after{content:' ✎';opacity:.65;font-size:12px;}
 .teamDashboardHead.quickEditTarget{border-radius:12px;padding:4px;}
 @media(max-width:900px){#configCard{padding:12px}.quickSettingsInner{padding:18px!important;margin-top:1vh!important}.quickSettingsTitle{font-size:19px!important}}
+
+/* V14 — registro de incidencias reducido: goles y faltas se gestionan desde sus contadores */
+.cardOnlyGrid{
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:10px;
+}
+.cardOnlyGrid button{
+  min-height:74px;
+  font-size:1rem;
+}
+.cardTarjetas h3{
+  margin-bottom:10px;
+}
+@media (max-width:700px){
+  .cardOnlyGrid button{min-height:68px;}
+}
 </style>
 
 </head>
@@ -1156,43 +1172,17 @@ header .small{color:#87909d;font-size:10px;text-transform:uppercase;letter-spaci
 </div>
 
 
-<!-- REGISTRAR INCIDENCIAS -->
+<!-- REGISTRAR TARJETAS -->
 
-<div class="card">
+<div class="card cardTarjetas">
 
-<h3>📋 REGISTRAR INCIDENCIA</h3>
+<h3>📋 REGISTRAR TARJETA</h3>
 
-<div class="actionGrid">
-
-<button class="gold"
-        onclick="openGoal(1)">
-    ⚽<br>GOL
-</button>
-
-<button class="blue"
-        onclick="openFoul(1)">
-    🚨<br>FALTA
-</button>
+<div class="actionGrid cardOnlyGrid">
 
 <button class="gold"
         onclick="openCard('yellow')">
     🟨<br>AMARILLA
-</button>
-
-</div>
-
-<br>
-
-<div class="actionGrid">
-
-<button class="red"
-        onclick="openGoal(0)">
-    ⚽<br>GOL EQUIPO VISITANTE
-</button>
-
-<button class="blue"
-        onclick="openFoul(0)">
-    🚨<br>FALTA EQUIPO VISITANTE
 </button>
 
 <button class="red"
