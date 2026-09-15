@@ -150,6 +150,120 @@ header .small{margin-left:auto;color:var(--muted);font-size:12px}
 }
 
 .teamHead input::placeholder{color:#77808e}
+
+/* Expulsión: aviso visual grande y siempre por encima de la interfaz */
+#expulsionMessage{
+  position:fixed!important;
+  inset:0!important;
+  z-index:10000!important;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+  background:rgba(5,7,10,.88);
+}
+#expulsionMessage .expulsionBox{
+  width:min(560px,94vw);
+  background:linear-gradient(180deg,#211116,#120d10);
+  border:3px solid #d83b3b;
+  border-radius:22px;
+  padding:26px;
+  text-align:center;
+  box-shadow:0 0 0 6px rgba(216,59,59,.12),0 30px 100px rgba(0,0,0,.65);
+}
+#expulsionMessage .expulsionIcon{font-size:58px;line-height:1}
+#expulsionMessage .expulsionTitle{
+  margin-top:8px;
+  font-size:clamp(25px,5vw,40px);
+  font-weight:1000;
+  color:#fff;
+}
+#expulsionMessage .expulsionText{
+  margin-top:14px;
+  font-size:18px;
+  line-height:1.5;
+  color:#f5f7fa;
+}
+
+/* Plantilla compacta: los 14 jugadores quedan integrados en la pantalla principal */
+.roster{
+  margin-top:8px;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:5px;
+  max-height:none;
+  overflow:visible;
+}
+.player{
+  background:#151a22!important;
+  border:1px solid #29303b!important;
+  border-radius:10px!important;
+  padding:6px!important;
+  min-width:0;
+}
+.player .playerTop{
+  display:flex!important;
+  align-items:center!important;
+  gap:5px!important;
+}
+.player .number{
+  width:31px!important;
+  min-width:31px!important;
+  padding:4px 3px!important;
+  font-size:12px!important;
+}
+.player .playerName{
+  min-width:0!important;
+  width:100%!important;
+  padding:3px 2px!important;
+  font-size:12px!important;
+  white-space:nowrap!important;
+  overflow:hidden!important;
+  text-overflow:ellipsis!important;
+}
+.player .badges{
+  display:flex!important;
+  gap:3px!important;
+  margin:3px 0!important;
+  min-height:16px!important;
+  overflow:hidden!important;
+}
+.player .badge{
+  font-size:8px!important;
+  padding:2px 4px!important;
+  white-space:nowrap!important;
+}
+.player .starterButton{
+  width:100%!important;
+  min-height:25px!important;
+  padding:3px 4px!important;
+  font-size:9px!important;
+  margin:2px 0!important;
+}
+.player .playerActions button{
+  width:100%!important;
+  min-height:25px!important;
+  padding:3px 4px!important;
+  font-size:9px!important;
+}
+.player .playerStats{
+  display:flex!important;
+  justify-content:space-between!important;
+  gap:2px!important;
+  margin-top:3px!important;
+}
+.player .miniStat{
+  font-size:7px!important;
+  text-align:center!important;
+  color:#9ca5b3!important;
+}
+.player .miniStat strong{
+  font-size:10px!important;
+  color:#fff!important;
+  display:inline!important;
+  margin-right:2px!important;
+}
+.player .miniStat:nth-child(5){display:none!important}
 </style>
 
 </head>
@@ -361,6 +475,7 @@ let running = false;
 let timer = null;
 
 let matchStarted = false;
+let lineupLocked = false;
 
 let matchFinished = false;
 
@@ -598,10 +713,10 @@ function toggleStarter(
        NO SE PUEDE CAMBIAR LA ALINEACIÓN
     */
 
-    if(matchStarted){
+    if(lineupLocked){
 
         alert(
-            "🔒 La alineación de titulares ya está cerrada porque el partido ha comenzado."
+            "🔒 La alineación está cerrada porque el reloj ya ha comenzado."
         );
 
         return;
@@ -806,6 +921,7 @@ function startNewMatch(){
 
 
     matchStarted = true;
+    lineupLocked = false;
 
     matchFinished = false;
 
@@ -1011,6 +1127,7 @@ function startClock(){
     if(running) return;
 
     running=true;
+    lineupLocked=true;
 
     let b =
         document
@@ -2245,485 +2362,93 @@ function renderPlayers(){
 }
 
 
-function renderTeamPlayers(
-    id,
-    arr
-){
+function renderTeamPlayers(id, arr){
 
-    let el=
-        document.getElementById(id);
+    const el=document.getElementById(id);
+    if(!el) return;
 
     el.innerHTML="";
 
-
     arr.forEach((p,i)=>{
 
-        let d=
-            document.createElement(
-                "div"
-            );
-
+        const d=document.createElement("div");
 
         d.className=
             "player "
-            +
-            (
-                p.onCourt
-                ? "onCourt "
-                : ""
-            )
-            +
-            (
-                p.sentOff
-                ? "sentOff "
-                : ""
-            )
-            +
-            (
-                p.starter
-                ? "starter"
-                : ""
-            );
+            +(p.onCourt ? "onCourt " : "")
+            +(p.sentOff ? "sentOff " : "")
+            +(p.starter ? "starter" : "");
 
+        const starterText=p.starter ? "⭐ TITULAR" : "☆ HACER TITULAR";
+        const starterClass=p.starter ? "gold" : "dark";
 
-        let courtBadge=
-            p.onCourt
-            ? '<span class="badge badgeCourt">🟢 EN PISTA</span>'
-            : '<span class="badge badgeBench">⚪ BANQUILLO</span>';
-
-
-        let starterBadge=
-            p.starter
-            ? '<span class="badge badgeStarter">⭐ TITULAR</span>'
-            : '<span class="badge badgeSub">SUPLENTE</span>';
-
-
-        let sentBadge=
-            p.sentOff
-            ? '<span class="badge badgeSent">🟥 EXPULSADO</span>'
-            : "";
-
-
-        let actionButton;
-
+        let actionText;
+        let actionClass;
 
         if(p.sentOff){
-
-            actionButton=
-                '<button class="dark" disabled>'
-                +
-                '🟥 EXPULSADO'
-                +
-                '</button>';
-
+            actionText="🟥 EXPULSADO";
+            actionClass="dark";
         }else if(p.onCourt){
-
-            actionButton=
-                '<button class="red">'
-                +
-                '🔄 SALIR'
-                +
-                '</button>';
-
+            actionText="↩ SALIR";
+            actionClass="red";
         }else{
-
-            actionButton=
-                '<button class="green">'
-                +
-                '🟢 ENTRAR'
-                +
-                '</button>';
-
+            actionText="🟢 ENTRAR";
+            actionClass="green";
         }
-
-
-        /*
-           BOTÓN TITULAR/SUPLENTE
-        */
-
-        let starterButtonText=
-            p.starter
-            ? "⭐ TITULAR · CAMBIAR A SUPLENTE"
-            : "⭐ HACER TITULAR";
-
-
-        let starterButtonClass=
-            p.starter
-            ? "gold"
-            : "dark";
-
 
         d.innerHTML=
-
-            '<div class="playerTop">'
-            +
-
-            '<input class="number" '
-            +
-            'type="number" '
-            +
-            'value="'
-            +
-            esc(p.number)
-            +
-            '">'
-
-            +
-
-            '<input class="playerName" '
-            +
-            'value="'
-            +
-            esc(p.name)
-            +
-            '">'
-
-            +
-
-            '</div>'
-
-            +
-
-            '<div class="badges">'
-            +
-            starterBadge
-            +
-            courtBadge
-            +
-            sentBadge
-            +
-            '</div>'
-
-            +
-
-            '<button class="starterButton '
-            +
-            starterButtonClass
-            +
-            '" '
-            +
-            (
-                matchStarted || p.sentOff
-                ? "disabled"
-                : ""
-            )
-            +
-            '>'
-            +
-            starterButtonText
-            +
-            '</button>'
-
-            +
-
-            '<div class="playerActions">'
-            +
-            actionButton
-            +
-            '</div>'
-
-            +
-
-            '<div class="playerStats">'
-
-            +
-
-            '<div class="miniStat">'
-            +
-            '<strong>'
-            +
-            p.goals
-            +
-            '</strong>'
-            +
-            'GOLES'
-            +
-            '</div>'
-
-            +
-
-            '<div class="miniStat">'
-            +
-            '<strong>'
-            +
-            p.yellow
-            +
-            '</strong>'
-            +
-            '🟨'
-            +
-            '</div>'
-
-            +
-
-            '<div class="miniStat">'
-            +
-            '<strong>'
-            +
-            p.red
-            +
-            '</strong>'
-            +
-            '🟥'
-            +
-            '</div>'
-
-            +
-
-            '<div class="miniStat">'
-            +
-            '<strong>'
-            +
-            p.fouls
-            +
-            '</strong>'
-            +
-            'FALTAS'
-            +
-            '</div>'
-
-            +
-
-            '<div class="miniStat">'
-            +
-            '<strong>'
-            +
-            formatTime(p.seconds)
-            +
-            '</strong>'
-            +
-            'MIN'
-            +
-            '</div>'
-
-            +
-
+            '<div class="playerTop">'+
+              '<input class="number" type="number" value="'+esc(p.number)+'">'+
+              '<input class="playerName" value="'+esc(p.name)+'">'+
+            '</div>'+
+            '<div class="badges">'+
+              (p.starter
+                ? '<span class="badge badgeStarter">⭐ TITULAR</span>'
+                : '<span class="badge badgeSub">SUPLENTE</span>')+
+              (p.onCourt
+                ? '<span class="badge badgeCourt">🟢 PISTA</span>'
+                : '<span class="badge badgeBench">⚪ BANQUILLO</span>')+
+              (p.sentOff
+                ? '<span class="badge badgeSent">🟥 EXPULSADO</span>'
+                : '')+
+            '</div>'+
+            '<button class="starterButton '+starterClass+'" '+
+              (lineupLocked || p.sentOff ? 'disabled' : '')+
+              '>'+starterText+'</button>'+
+            '<div class="playerActions">'+
+              '<button class="'+actionClass+'" '+(p.sentOff ? 'disabled' : '')+'>'+
+                actionText+
+              '</button>'+
+            '</div>'+
+            '<div class="playerStats">'+
+              '<div class="miniStat"><strong>'+p.goals+'</strong>⚽</div>'+
+              '<div class="miniStat"><strong>'+p.fouls+'</strong>🚨</div>'+
+              '<div class="miniStat"><strong>'+p.yellow+'</strong>🟨</div>'+
+              '<div class="miniStat"><strong>'+p.red+'</strong>🟥</div>'+
+              '<div class="miniStat"><strong>'+formatTime(p.seconds)+'</strong>MIN</div>'+
             '</div>';
 
-
-        /*
-           CAMBIO DE DORSAL
-        */
-
-        d
-        .querySelector(".number")
-        .onchange=e=>{
-
+        d.querySelector(".number").onchange=e=>{
             p.number=e.target.value;
-
             updateSummary();
-
         };
 
-
-        /*
-           CAMBIO DE NOMBRE
-        */
-
-        d
-        .querySelector(".playerName")
-        .onchange=e=>{
-
+        d.querySelector(".playerName").onchange=e=>{
             p.name=e.target.value;
-
             updateSummary();
-
         };
 
-
-        /*
-           BOTÓN TITULAR
-        */
-
-        let starterButton=
-            d.querySelector(
-                ".starterButton"
-            );
-
-
-        starterButton.onclick=()=>{
-
-            toggleStarter(
-                arr,
-                i
-            );
-
+        d.querySelector(".starterButton").onclick=()=>{
+            toggleStarter(arr,i);
         };
 
-
-        /*
-           BOTÓN ENTRAR/SALIR
-        */
-
-        let action=
-            d.querySelector(
-                ".playerActions button"
-            );
-
-
+        const action=d.querySelector(".playerActions button");
         if(!p.sentOff){
-
-            action.onclick=()=>{
-
-                togglePlayer(
-                    arr,
-                    i
-                );
-
-            };
-
+            action.onclick=()=>togglePlayer(arr,i);
         }
 
-
         el.appendChild(d);
-
     });
-
-}
-
-
-/* =========================================================
-   UTILIDADES
-========================================================= */
-
-function formatTime(total){
-
-    let m=
-        Math.floor(total/60);
-
-    let s=
-        total%60;
-
-    return (
-        String(m).padStart(2,"0")
-        +
-        ":"
-        +
-        String(s).padStart(2,"0")
-    );
-
-}
-
-
-function esc(s){
-
-    return String(s)
-        .replace(/&/g,"&amp;")
-        .replace(/"/g,"&quot;")
-        .replace(/</g,"&lt;")
-        .replace(/>/g,"&gt;");
-
-}
-
-
-function homeTitle(){
-
-    return document
-        .getElementById("homeTitle")
-        .textContent;
-
-}
-
-
-function awayTitle(){
-
-    return document
-        .getElementById("awayTitle")
-        .textContent;
-
-}
-
-
-function requireMatch(){
-
-    if(!matchStarted){
-
-        startNewMatch();
-
-    }
-
-    return true;
-
-}
-
-
-/* =========================================================
-   MARCADOR
-========================================================= */
-
-function updateScore(){
-
-    document
-    .getElementById("homeGoals")
-    .textContent=homeGoals;
-
-    document
-    .getElementById("awayGoals")
-    .textContent=awayGoals;
-
-}
-
-
-/* =========================================================
-   INCIDENCIAS
-========================================================= */
-
-function addEvent(text){
-
-    events.push({
-
-        period:period,
-
-        time:periodMinute(),
-
-        text:text
-
-    });
-
-    renderEvents();
-
-}
-
-
-function renderEvents(){
-
-    let e=
-        document.getElementById(
-            "events"
-        );
-
-
-    if(!events.length){
-
-        e.innerHTML=
-            '<div class="small">'
-            +
-            'Todavía no hay incidencias.'
-            +
-            '</div>';
-
-        return;
-
-    }
-
-
-    e.innerHTML=
-        events
-        .slice()
-        .reverse()
-        .map(x=>
-            x.period
-            +
-            "ª PARTE · "
-            +
-            x.time
-            +
-            " · "
-            +
-            x.text
-        )
-        .join("<br>");
-
 }
 
 
