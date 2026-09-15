@@ -2433,12 +2433,11 @@ function showFiveFoulWarning(side,n){
         if(navigator.vibrate){
             navigator.vibrate([250,120,250,120,500]);
         }
-        if(typeof unlockAudio==="function") unlockAudio();
-        if(typeof playTone==="function"){
-            playTone(700,.18,0);
-            playTone(900,.18,.22);
-            playTone(700,.18,.44);
-            playTone(900,.30,.66);
+        // Usamos exactamente el mismo aviso sonoro que la expulsión.
+        if(typeof beepExpulsion==="function"){
+            beepExpulsion();
+        }else{
+            if(typeof unlockAudio==="function") unlockAudio();
         }
     }catch(e){}
 }
