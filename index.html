@@ -435,6 +435,16 @@ header .small{margin-left:auto;color:var(--muted);font-size:12px}
 </div>
 
 <script>
+
+function esc(value){
+    return String(value ?? "")
+        .replace(/&/g,"&amp;")
+        .replace(/</g,"&lt;")
+        .replace(/>/g,"&gt;")
+        .replace(/"/g,"&quot;")
+        .replace(/'/g,"&#39;");
+}
+
 function loadCrest(input, targetId, storageKey){
   const file=input.files && input.files[0];
   if(!file) return;
@@ -2997,10 +3007,6 @@ createPlayers();
 updateAll();
 
 </script>
-
-<script>restoreCrests();</script>
-</body>
-</html>
 <script>restoreCrests();</script>
 </body>
 </html>
