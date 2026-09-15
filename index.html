@@ -2407,14 +2407,55 @@ function updateFouls(){
 }
 
 
+let fiveFoulShownHome=false;
+let fiveFoulShownAway=false;
+
+function showFiveFoulWarning(side,n){
+
+    const box=document.getElementById("fiveFoulWarning");
+    const team=document.getElementById("fiveFoulTeam");
+
+    if(!box) return;
+
+    if(team){
+        const nameEl=document.getElementById(
+            side==="home" ? "homeName" : "awayName"
+        );
+        const name=(nameEl && nameEl.value)
+            ? nameEl.value.trim()
+            : (side==="home" ? "EQUIPO LOCAL" : "EQUIPO VISITANTE");
+        team.textContent=name+" · "+n+" faltas";
+    }
+
+    box.style.display="flex";
+
+    try{
+        if(navigator.vibrate){
+            navigator.vibrate([250,120,250,120,500]);
+        }
+        if(typeof unlockAudio==="function") unlockAudio();
+        if(typeof playTone==="function"){
+            playTone(700,.18,0);
+            playTone(900,.18,.22);
+            playTone(700,.18,.44);
+            playTone(900,.30,.66);
+        }
+    }catch(e){}
+}
+
 function foulWarning(id,n){
 
-    let el =
-        document.getElementById(id);
+    let el=document.getElementById(id);
+    const side=(id==="homeFoulWarning") ? "home" : "away";
 
     if(n<5){
 
         el.innerHTML="";
+
+        // Al comenzar un nuevo periodo las faltas vuelven a cero,
+        // permitiendo que el aviso vuelva a aparecer al llegar a 5.
+        if(side==="home") fiveFoulShownHome=false;
+        else fiveFoulShownAway=false;
 
         return;
 
@@ -2428,6 +2469,16 @@ function foulWarning(id,n){
             '⚠️ 5 FALTAS · DOBLE PENALTI'
             +
             '</div>';
+
+        if(side==="home" && !fiveFoulShownHome){
+            fiveFoulShownHome=true;
+            showFiveFoulWarning("home",n);
+        }
+
+        if(side==="away" && !fiveFoulShownAway){
+            fiveFoulShownAway=true;
+            showFiveFoulWarning("away",n);
+        }
 
     }else{
 
@@ -4103,7 +4154,7 @@ background:rgba(0,0,0,.78);padding:20px;">
       DOBLE PENALTI
     </div>
     <div id="fiveFoulTeam" style="font-size:18px;color:#ddd;margin-top:12px"></div>
-    <button id="closeFiveFoulWarning" style="
+    <button id="closeFiveFoulWarning" onclick="closeFiveFoulWarning()" style="
       margin-top:22px;padding:13px 28px;border:0;border-radius:12px;
       background:#f5c400;color:#111;font-weight:900;font-size:16px;">
       ENTENDIDO
@@ -4112,84 +4163,8 @@ background:rgba(0,0,0,.78);padding:20px;">
 </div>
 
 
-<script>
-/* V9 — aviso de 5 faltas / doble penalti.
-   No modifica el contador de faltas: únicamente observa el estado ya existente. */
-(function(){
-  function getNumber(ids){
-    for(const id of ids){
-      const el=document.getElementById(id);
-      if(el){
-        const n=parseInt((el.textContent||el.value||"").replace(/[^\d-]/g,""),10);
-        if(Number.isFinite(n)) return n;
-      }
-    }
-    return null;
-  }
 
-  function teamName(ids,fallback){
-    for(const id of ids){
-      const el=document.getElementById(id);
-      if(el){
-        const v=(el.value!==undefined?el.value:el.textContent||"").trim();
-        if(v) return v;
-      }
-    }
-    return fallback;
-  }
 
-  let lastShown = {home:false,away:false};
-
-  window.checkFiveFoulWarning = function(){
-    const home = getNumber(["homeFouls","homeFoulsValue","homeFoulCount","homeFoulsCurrent"]);
-    const away = getNumber(["awayFouls","awayFoulsValue","awayFoulCount","awayFoulsCurrent"]);
-
-    let side=null, count=0;
-    if(home!==null && home>=5 && !lastShown.home){
-      side="home"; count=home;
-    }else if(away!==null && away>=5 && !lastShown.away){
-      side="away"; count=away;
-    }
-
-    if(!side) return;
-
-    lastShown[side]=true;
-    const box=document.getElementById("fiveFoulWarning");
-    const team=document.getElementById("fiveFoulTeam");
-    if(team){
-      team.textContent =
-        (side==="home" ? teamName(["homeName"],"EQUIPO LOCAL") :
-                           teamName(["awayName"],"EQUIPO VISITANTE"))
-        + " · " + count + " faltas";
-    }
-    if(box){
-      box.style.display="flex";
-      try{ navigator.vibrate?.([250,120,250,120,500]); }catch(e){}
-    }
-  };
-
-  window.resetFiveFoulWarning = function(){
-    lastShown={home:false,away:false};
-    const box=document.getElementById("fiveFoulWarning");
-    if(box) box.style.display="none";
-  };
-
-  document.addEventListener("click",function(e){
-    if(e.target && e.target.id==="closeFiveFoulWarning"){
-      const box=document.getElementById("fiveFoulWarning");
-      if(box) box.style.display="none";
-    }
-  });
-
-  // Watch the existing scoreboard DOM so the original foul logic remains untouched.
-  const observer=new MutationObserver(function(){ window.checkFiveFoulWarning(); });
-  observer.observe(document.body,{subtree:true,childList:true,characterData:true});
-
-  document.addEventListener("DOMContentLoaded",function(){
-    window.checkFiveFoulWarning();
-  });
-})();
-</script>
-
+<script>function closeFiveFoulWarning(){const box=document.getElementById("fiveFoulWarning");if(box)box.style.display="none";}</script>
 </body>
 </html>
