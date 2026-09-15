@@ -74,13 +74,12 @@ header .small{margin-left:auto;color:var(--muted);font-size:12px}
 .upload input{width:100%;margin-top:4px}
 .shareBox{background:#0d1117;border:1px solid var(--line);border-radius:10px;padding:10px}
 .modal{z-index:100}
-@media(max-width:1100px){
+/* iPad landscape: keep the three-column match dashboard */
+@media(max-width:700px){
   .proTop{grid-template-columns:1fr}
-  .centerPanel{order:-1}
   .lower{grid-template-columns:1fr}
   .bottom{grid-template-columns:1fr}
 }
-@media(max-width:700px){
   header .small{display:none}
   .container{padding:8px}
   .roster{grid-template-columns:1fr}
