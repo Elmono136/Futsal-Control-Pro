@@ -855,6 +855,25 @@ header .small{color:#87909d;font-size:10px;text-transform:uppercase;letter-spaci
 
 </style>
 
+
+<style id="v13-settings-style">
+/* V13 — configuración rápida tipo reloj */
+#configCard{display:none;position:fixed;inset:0;z-index:100000;box-sizing:border-box;margin:0;padding:24px;overflow:auto;background:rgba(3,6,10,.86);backdrop-filter:blur(7px);}
+#configCard.quickSettingsOpen{display:block;}
+#configCard .quickSettingsInner{max-width:980px;margin:3vh auto 0;background:#151b22;border:2px solid #f5c400;border-radius:22px;padding:24px;box-shadow:0 25px 80px rgba(0,0,0,.7);}
+#configCard .quickSettingsClose{position:absolute;right:22px;top:18px;width:46px;height:46px;border-radius:50%;font-size:25px;border:1px solid #555;background:#252b33;color:#fff;cursor:pointer;}
+#configCard .quickSettingsTitle{display:flex;align-items:center;justify-content:space-between;gap:15px;margin:0 55px 18px 0;color:#f5c400;font-size:22px;}
+#configCard .quickSettingsHint{font-size:13px;color:#b8c0c8;margin:-8px 0 18px;}
+.quickEditTarget{cursor:pointer;}
+.quickEditTarget:active{transform:scale(.99);}
+#homeTitle.quickEditTarget,#awayTitle.quickEditTarget{border-radius:10px;padding:4px 8px;transition:.15s;}
+#homeTitle.quickEditTarget:hover,#awayTitle.quickEditTarget:hover{background:rgba(245,196,0,.10);}
+.matchMeta.quickEditTarget{cursor:pointer;}
+.matchMeta.quickEditTarget::after{content:' ✎';opacity:.65;font-size:12px;}
+.teamDashboardHead.quickEditTarget{border-radius:12px;padding:4px;}
+@media(max-width:900px){#configCard{padding:12px}.quickSettingsInner{padding:18px!important;margin-top:1vh!important}.quickSettingsTitle{font-size:19px!important}}
+</style>
+
 </head>
 
 <body>
@@ -871,9 +890,9 @@ header .small{color:#87909d;font-size:10px;text-transform:uppercase;letter-spaci
     <button onclick="startNewMatch()">🏟️<br>NUEVO</button>
     <button onclick="saveProState()">💾<br>GUARDAR</button>
     <button onclick="loadProState()">📂<br>CARGAR</button>
-    <button onclick="document.getElementById('configCard').scrollIntoView({behavior:'smooth'})">⚙️<br>CONFIGURACIÓN</button>
+    <button onclick="openQuickSettings()">⚙️<br>CONFIGURACIÓN</button>
   </div>
-  <div class="matchMeta">
+  <div class="matchMeta quickEditTarget" onclick="openQuickSettings()" title="Tocar para editar datos del partido">
     <span>📅 <b id="metaDateView">13/09/2026</b></span>
     <span>◷ <b id="metaTimeView">19:00</b></span>
     <span>📍 <b id="metaVenueView">PABELLÓN</b></span>
@@ -884,9 +903,11 @@ header .small{color:#87909d;font-size:10px;text-transform:uppercase;letter-spaci
 
 <!-- CONFIGURACIÓN -->
 
-<div class="card" id="configCard">
-
-<h3 class="configTitle">⚙️ CONFIGURACIÓN <span style="font-size:10px;color:#697481">PARTIDO</span></h3>
+<div class="card" id="configCard" aria-label="Configuración rápida del partido">
+  <div class="quickSettingsInner">
+    <button class="quickSettingsClose" type="button" onclick="closeQuickSettings()" aria-label="Cerrar">✕</button>
+    <h3 class="quickSettingsTitle">⚙️ CONFIGURACIÓN DEL PARTIDO <span style="font-size:11px;color:#8e98a3">EDICIÓN RÁPIDA</span></h3>
+    <div class="quickSettingsHint">Puedes abrir este panel tocando el nombre de cualquiera de los equipos, el escudo o los datos de fecha/hora/pabellón de la cabecera.</div>
 <div class="crestConfigGrid">
   <div class="crestConfig">
     <strong>Escudo local</strong>
@@ -940,6 +961,7 @@ header .small{color:#87909d;font-size:10px;text-transform:uppercase;letter-spaci
     🏟️ EMPEZAR NUEVO PARTIDO
 </button>
 
+  </div>
 </div>
 
 
@@ -970,7 +992,7 @@ header .small{color:#87909d;font-size:10px;text-transform:uppercase;letter-spaci
 
 <div>
 
-<div class="team" id="homeTitle">
+<div class="team quickEditTarget" id="homeTitle" onclick="openQuickSettings()" title="Tocar para editar equipo y escudo">
     EQUIPO LOCAL
 </div>
 
@@ -1000,7 +1022,7 @@ header .small{color:#87909d;font-size:10px;text-transform:uppercase;letter-spaci
 
 <div>
 
-<div class="team" id="awayTitle">
+<div class="team quickEditTarget" id="awayTitle" onclick="openQuickSettings()" title="Tocar para editar equipo y escudo">
     EQUIPO VISITANTE
 </div>
 
@@ -1187,7 +1209,7 @@ header .small{color:#87909d;font-size:10px;text-transform:uppercase;letter-spaci
 
 <div class="card">
 
-<div class="teamDashboardHead">
+<div class="teamDashboardHead quickEditTarget" onclick="openQuickSettings()" title="Tocar para editar equipo y escudo">
     <div id="homeCrestWrap" class="teamCrest placeholder">⚽</div>
     <div>
       <div class="teamDashboardName" id="homePlayersTitle">EQUIPO LOCAL</div>
@@ -1209,7 +1231,7 @@ header .small{color:#87909d;font-size:10px;text-transform:uppercase;letter-spaci
 
 <div class="card">
 
-<div class="teamDashboardHead">
+<div class="teamDashboardHead quickEditTarget" onclick="openQuickSettings()" title="Tocar para editar equipo y escudo">
     <div id="awayCrestWrap" class="teamCrest placeholder">⚽</div>
     <div>
       <div class="teamDashboardName" id="awayPlayersTitle">EQUIPO VISITANTE</div>
@@ -4443,6 +4465,44 @@ background:rgba(0,0,0,.78);padding:20px;">
 
 
 
-<script>function closeFiveFoulWarning(){const box=document.getElementById("fiveFoulWarning");if(box)box.style.display="none";}</script>
+<script>function closeFiveFoulWarning(){const box=document.getElementById("fiveFoulWarning");if(box)box.style.display="none";}
+/* =========================================================
+   V13 — CONFIGURACIÓN RÁPIDA
+   ========================================================= */
+function openQuickSettings(){
+  const card=document.getElementById('configCard');
+  if(!card) return;
+  card.classList.add('quickSettingsOpen');
+  document.body.style.overflow='hidden';
+  setTimeout(()=>{
+    const first=document.getElementById('homeName');
+    if(first) first.focus({preventScroll:true});
+  },80);
+}
+function closeQuickSettings(){
+  const card=document.getElementById('configCard');
+  if(!card) return;
+  card.classList.remove('quickSettingsOpen');
+  document.body.style.overflow='';
+  updateQuickTeamTitles();
+  updateMetaView();
+}
+function updateQuickTeamTitles(){
+  const hn=getTeamName('home'), an=getTeamName('away');
+  ['homeTitle','homeFoulName','homePlayersTitle'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=hn;});
+  ['awayTitle','awayFoulName','awayPlayersTitle'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=an;});
+}
+['homeName','awayName'].forEach(id=>{
+  const el=document.getElementById(id);
+  if(el) el.addEventListener('input',updateQuickTeamTitles);
+});
+// Cerrar tocando fuera del panel
+const _quickConfig=document.getElementById('configCard');
+if(_quickConfig){
+  _quickConfig.addEventListener('click',function(e){ if(e.target===_quickConfig) closeQuickSettings(); });
+}
+document.addEventListener('keydown',function(e){ if(e.key==='Escape') closeQuickSettings(); });
+
+</script>
 </body>
 </html>
