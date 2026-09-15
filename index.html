@@ -270,6 +270,21 @@ header .small{margin-left:auto;color:var(--muted);font-size:12px}
   visibility:visible!important;
   opacity:1!important;
 }
+
+/* V7: jugadores siempre visibles y accesibles en el panel */
+.roster{
+  display:grid!important;
+  grid-template-columns:1fr 1fr!important;
+  max-height:520px!important;
+  overflow-y:auto!important;
+  overflow-x:hidden!important;
+  -webkit-overflow-scrolling:touch;
+}
+.player{
+  display:block!important;
+  visibility:visible!important;
+  opacity:1!important;
+}
 </style>
 
 </head>
@@ -1356,6 +1371,32 @@ function resetCurrentPeriod(){
 /* =========================================================
    GOLES
 ========================================================= */
+
+
+function homeTitle(){
+
+    const el = document.getElementById("homeTitle");
+    return el ? el.textContent : "EQUIPO LOCAL";
+
+}
+
+function awayTitle(){
+
+    const el = document.getElementById("awayTitle");
+    return el ? el.textContent : "RIVAL";
+
+}
+
+function requireMatch(){
+
+    if(!matchStarted){
+        startNewMatch();
+    }
+
+    return true;
+
+}
+
 
 function openGoal(team){
 
