@@ -713,6 +713,146 @@ header .small{font-size:10px}
 
 <style>
 #fiveFoulWarning button:active{transform:scale(.97)}
+
+/* =========================================================
+   V12 — DASHBOARD VISUAL + ESCUDOS PERSONALIZABLES
+========================================================= */
+:root{
+  --gold:#f5c400;
+  --gold2:#e5b638;
+  --bg:#07090d;
+  --panel:#11161d;
+  --panel2:#151b23;
+  --line:#29313c;
+  --home:#d7192e;
+  --away:#0879dc;
+  --green:#19b95a;
+}
+html,body{background:var(--bg);min-height:100%;}
+body{font-family:Arial,Helvetica,sans-serif;}
+header{
+  position:sticky;top:0;z-index:50;
+  display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:18px;
+  padding:10px 18px;
+  background:linear-gradient(180deg,#151b23,#0d1117);
+  border-bottom:1px solid var(--gold);
+}
+header h1{font-size:23px;letter-spacing:.5px;color:#fff;}
+header h1 span{color:var(--gold)!important;}
+header .small{color:#87909d;font-size:10px;text-transform:uppercase;letter-spacing:1px;}
+.proBrand{display:flex;align-items:center;gap:10px;min-width:245px;}
+.proBall{font-size:38px;line-height:1;}
+.proBrandText{display:flex;flex-direction:column;}
+.proNav{display:flex;justify-content:center;gap:8px;}
+.proNav button{background:#151b23;border:1px solid #2d3540;padding:9px 14px;border-radius:10px;font-size:11px;min-width:82px;}
+.proNav button:hover{border-color:var(--gold);}
+.matchMeta{display:flex;align-items:center;gap:13px;border:1px solid #8d7412;border-radius:10px;padding:9px 13px;color:#fff;font-size:12px;white-space:nowrap;}
+.matchMeta span{display:flex;gap:6px;align-items:center;}
+.container{
+  max-width:1550px;width:100%;margin:0 auto;padding:12px;
+  display:grid!important;
+  grid-template-columns:minmax(275px,1fr) minmax(390px,1.25fr) minmax(275px,1fr) 270px!important;
+  grid-template-areas:
+    "home clock away config"
+    "home fouls away config"
+    "home actions away config"
+    "events events minutes summary";
+  gap:10px;
+  align-items:start;
+}
+.container>.card{margin:0;min-width:0;background:linear-gradient(180deg,#141a21,#0e1319);border:1px solid #28313c;border-radius:13px;box-shadow:0 5px 18px #0009;}
+.container>.card:nth-child(1){grid-area:config;}
+.container>.card:nth-child(2){grid-area:clock;}
+.container>.card:nth-child(3){grid-area:fouls;}
+.container>.card:nth-child(4){grid-area:actions;}
+.container>.card:nth-child(5){grid-area:home;}
+.container>.card:nth-child(6){grid-area:away;}
+.container>.card:nth-child(7){grid-area:events;}
+.container>.card:nth-child(8){grid-area:minutes;}
+.container>.card:nth-child(9){grid-area:summary;}
+.container>.card:nth-child(1){position:sticky;top:80px;}
+.container>.card:nth-child(5),.container>.card:nth-child(6){height:calc(100vh - 104px);max-height:none;overflow:hidden;}
+.container>.card:nth-child(5)>div[id$="Players"],.container>.card:nth-child(6)>div[id$="Players"]{height:calc(100vh - 255px);max-height:none;overflow-y:auto;padding-right:3px;-webkit-overflow-scrolling:touch;}
+.container>.card:nth-child(5){border-top:3px solid var(--home);}
+.container>.card:nth-child(6){border-top:3px solid var(--away);}
+.card h3{font-size:14px;letter-spacing:.3px;margin-bottom:9px;color:var(--gold);}
+.teamDashboardHead{display:flex;align-items:center;gap:10px;padding:2px 2px 10px;border-bottom:1px solid #29313c;margin-bottom:8px;}
+.teamCrest{width:52px;height:52px;object-fit:contain;border-radius:9px;background:#090c10;border:1px solid #333b46;padding:4px;flex:0 0 auto;}
+.teamCrest.placeholder{display:flex;align-items:center;justify-content:center;font-size:29px;color:#777;}
+.teamDashboardName{font-size:19px;font-weight:900;line-height:1.05;color:#fff;}
+.teamDashboardSub{font-size:9px;color:#7f8995;margin-top:4px;text-transform:uppercase;letter-spacing:1px;}
+.lineupInfo{background:#0d1218;border:1px solid #222b35;padding:7px;border-radius:8px;margin-bottom:7px;font-size:9px;}
+.player{background:#171d25;border:1px solid #27313b;border-radius:8px;padding:6px;margin:3px 0;}
+.player.onCourt{border-color:#1bb65a;box-shadow:inset 3px 0 #1bb65a;}
+.player.starter{border-left:3px solid var(--gold);}
+.playerTop{gap:4px;}
+.number{width:37px!important;padding:6px 2px!important;font-size:12px!important;background:#202832!important;}
+.playerName{padding:6px!important;font-size:12px!important;background:#202832!important;}
+.badges{gap:2px;margin-top:3px;}
+.badge{padding:3px 5px;font-size:8px;border-radius:6px;}
+.playerActions{margin-top:3px;gap:4px;}
+.playerActions button{padding:5px!important;font-size:9px!important;}
+.starterButton{margin-top:3px;padding:5px!important;font-size:9px!important;}
+.playerStats{margin-top:3px;gap:2px;}
+.miniStat{padding:3px 1px;font-size:7px;}
+.miniStat strong{font-size:11px;}
+.period{font-size:15px;background:#20262e;border:1px solid #313b47;border-radius:10px;padding:7px;margin-bottom:5px;color:#fff;font-weight:900;}
+.clock{font-size:94px;font-weight:900;letter-spacing:-3px;margin:2px 0 5px;color:var(--gold);}
+.clockHint{font-size:9px;margin-bottom:3px;}
+.clockType{font-size:10px;margin-bottom:8px;}
+.score{gap:18px;}
+.score .team{font-size:13px;max-width:150px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.score .goals{font-size:57px;margin:4px;}
+.scoreButtons button{padding:8px 11px;font-size:12px;}
+.bigClock{min-height:63px;font-size:22px;border-radius:10px;box-shadow:0 4px 12px #0007;}
+#clockBtn.blue{background:linear-gradient(180deg,#0db5ff,#0874d5);}
+#clockBtn.green{background:linear-gradient(180deg,#19d95e,#119c43);}
+.container>.card:nth-child(2) .dark{padding:10px;font-size:11px;}
+.actionGrid{grid-template-columns:repeat(3,1fr);gap:6px;}
+.actionGrid button{min-height:52px;font-size:13px;border-radius:9px;}
+.stat{padding:7px 0;}
+.foulNumber{font-size:23px;}
+.warning,.danger{padding:7px;font-size:11px;margin-top:6px;}
+.container>.card:nth-child(3) .stat button{padding:7px 10px;font-size:12px;}
+#firstHalfFouls,#secondHalfFouls{font-weight:bold;color:#fff;}
+.eventsCompact{max-height:190px;overflow:auto;}
+.shareBox{max-height:190px;overflow:auto;}
+.minutesCompact{max-height:190px;overflow:auto;}
+.configTitle{display:flex;align-items:center;justify-content:space-between;gap:8px;}
+.crestConfigGrid{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:10px;}
+.crestConfig{background:#0c1117;border:1px solid #27313c;border-radius:9px;padding:7px;text-align:center;}
+.crestConfig strong{display:block;font-size:9px;color:#9ca6b2;margin-bottom:5px;text-transform:uppercase;}
+.configCrestImg{width:58px;height:58px;object-fit:contain;border-radius:8px;background:#151a20;border:1px solid #333;padding:4px;display:block;margin:0 auto 6px;}
+.crestConfig button{width:100%;padding:6px 4px;font-size:9px;}
+.fileInput{display:none;}
+.metaInputs{display:grid;grid-template-columns:1fr 1fr;gap:7px;}
+.metaInputs .full{grid-column:1/-1;}
+.metaInputs input{padding:8px;font-size:12px;}
+.configDivider{height:1px;background:#27313c;margin:10px 0;}
+.quickButtons{display:grid;grid-template-columns:1fr 1fr;gap:6px;}
+.quickButtons button{font-size:10px;padding:8px 5px;}
+.footerTag{grid-column:1/-1;text-align:right;color:#58616d;font-size:9px;padding:2px 6px;}
+@media(max-width:1100px) and (min-width:701px){
+  header{grid-template-columns:1fr auto;}
+  .proNav{display:none;}
+  .container{grid-template-columns:minmax(245px,1fr) minmax(340px,1.25fr) minmax(245px,1fr)!important;grid-template-areas:"home clock away" "home fouls away" "home actions away" "config config config" "events events events" "minutes minutes summary";}
+  .container>.card:nth-child(1){position:static;}
+  .container>.card:nth-child(5),.container>.card:nth-child(6){height:650px;}
+  .container>.card:nth-child(5)>div[id$="Players"],.container>.card:nth-child(6)>div[id$="Players"]{height:540px;}
+}
+@media(max-width:700px){
+  header{display:block;text-align:center;}
+  .proBrand{justify-content:center;}
+  .proNav,.matchMeta{display:none;}
+  .container{display:block!important;padding:8px;}
+  .container>.card{margin-bottom:8px;}
+  .container>.card:nth-child(1){position:static;}
+  .container>.card:nth-child(5),.container>.card:nth-child(6){height:auto;max-height:none;}
+  .container>.card:nth-child(5)>div[id$="Players"],.container>.card:nth-child(6)>div[id$="Players"]{height:auto;max-height:520px;}
+  .clock{font-size:70px;}
+  .crestConfigGrid{grid-template-columns:1fr 1fr;}
+}
+
 </style>
 
 </head>
@@ -720,18 +860,52 @@ header .small{font-size:10px}
 <body>
 
 <header>
-    <div class="logo">⚽</div>
-    <h1>FUTSAL CONTROL <span style='color:#e5b638'>PRO</span></h1>
-    <div class="small">Control de partidos de fútbol sala</div>
+  <div class="proBrand">
+    <div class="proBall">⚽</div>
+    <div class="proBrandText">
+      <h1>FUTSAL CONTROL <span>PRO</span></h1>
+      <div class="small">CONTROL DE PARTIDOS DE FÚTBOL SALA</div>
+    </div>
+  </div>
+  <div class="proNav">
+    <button onclick="startNewMatch()">🏟️<br>NUEVO</button>
+    <button onclick="saveProState()">💾<br>GUARDAR</button>
+    <button onclick="loadProState()">📂<br>CARGAR</button>
+    <button onclick="document.getElementById('configCard').scrollIntoView({behavior:'smooth'})">⚙️<br>CONFIGURACIÓN</button>
+  </div>
+  <div class="matchMeta">
+    <span>📅 <b id="metaDateView">13/09/2026</b></span>
+    <span>◷ <b id="metaTimeView">19:00</b></span>
+    <span>📍 <b id="metaVenueView">PABELLÓN</b></span>
+  </div>
 </header>
 
 <div class="container">
 
 <!-- CONFIGURACIÓN -->
 
-<div class="card">
+<div class="card" id="configCard">
 
-<h3>⚙️ CONFIGURACIÓN</h3>
+<h3 class="configTitle">⚙️ CONFIGURACIÓN <span style="font-size:10px;color:#697481">PARTIDO</span></h3>
+<div class="crestConfigGrid">
+  <div class="crestConfig">
+    <strong>Escudo local</strong>
+    <img id="configHomeCrest" class="configCrestImg" alt="Escudo local" src="">
+    <input id="homeCrestFile" class="fileInput" type="file" accept="image/*" onchange="loadCrestFile('home',this)">
+    <button class="dark" onclick="document.getElementById('homeCrestFile').click()">📷 SUBIR ESCUDO</button>
+    <button class="dark" style="margin-top:4px" onclick="clearCrest('home')">✕ QUITAR</button>
+  </div>
+  <div class="crestConfig">
+    <strong>Escudo visitante</strong>
+    <img id="configAwayCrest" class="configCrestImg" alt="Escudo visitante" src="">
+    <input id="awayCrestFile" class="fileInput" type="file" accept="image/*" onchange="loadCrestFile('away',this)">
+    <button class="dark" onclick="document.getElementById('awayCrestFile').click()">📷 SUBIR ESCUDO</button>
+    <button class="dark" style="margin-top:4px" onclick="clearCrest('away')">✕ QUITAR</button>
+  </div>
+</div>
+
+<div class="configDivider"></div>
+
 
 <label>Tu equipo</label>
 <input id="homeName" value="EQUIPO LOCAL">
@@ -751,6 +925,14 @@ header .small{font-size:10px}
 </select>
 
 <br>
+
+<div class="metaInputs">
+  <div><label>Fecha</label><input id="matchDate" type="date" value="2026-09-13"></div>
+  <div><label>Hora</label><input id="matchTime" type="time" value="19:00"></div>
+  <div class="full"><label>Pabellón</label><input id="matchVenue" value="Pabellón Municipal"></div>
+</div>
+
+<div class="configDivider"></div>
 
 <button class="gold"
         style="width:100%;font-size:18px"
@@ -1005,11 +1187,13 @@ header .small{font-size:10px}
 
 <div class="card">
 
-<h3>
-    👥 <span id="homePlayersTitle">
-        EQUIPO LOCAL
-    </span>
-</h3>
+<div class="teamDashboardHead">
+    <div id="homeCrestWrap" class="teamCrest placeholder">⚽</div>
+    <div>
+      <div class="teamDashboardName" id="homePlayersTitle">EQUIPO LOCAL</div>
+      <div class="teamDashboardSub">LOCAL · PLANTILLA</div>
+    </div>
+</div>
 
 <div class="lineupInfo">
     ⭐ Selecciona los <strong>5 TITULARES</strong> antes de comenzar.
@@ -1025,11 +1209,13 @@ header .small{font-size:10px}
 
 <div class="card">
 
-<h3>
-    👥 <span id="awayPlayersTitle">
-        EQUIPO VISITANTE
-    </span>
-</h3>
+<div class="teamDashboardHead">
+    <div id="awayCrestWrap" class="teamCrest placeholder">⚽</div>
+    <div>
+      <div class="teamDashboardName" id="awayPlayersTitle">EQUIPO VISITANTE</div>
+      <div class="teamDashboardSub">VISITANTE · PLANTILLA</div>
+    </div>
+</div>
 
 <div class="lineupInfo">
     ⭐ Selecciona los <strong>5 TITULARES</strong> antes de comenzar.
@@ -1098,6 +1284,7 @@ header .small{font-size:10px}
 
 </div>
 
+<div class="footerTag">FUTSAL CONTROL PRO · DASHBOARD</div>
 </div>
 
 
@@ -4132,6 +4319,98 @@ seconds=periodDuration;
 createPlayers();
 
 updateAll();
+
+
+/* =========================================================
+   V12 — ESCUDOS + DATOS DEL PARTIDO + GUARDAR/CARGAR
+========================================================= */
+function crestKey(side){ return side==='home' ? 'futsalProCrestHome' : 'futsalProCrestAway'; }
+function getTeamName(side){
+  const id=side==='home'?'homeName':'awayName';
+  const el=document.getElementById(id);
+  return (el && el.value.trim()) || (side==='home'?'EQUIPO LOCAL':'EQUIPO VISITANTE');
+}
+function applyCrest(side,data){
+  const img=document.getElementById(side==='home'?'configHomeCrest':'configAwayCrest');
+  const wrap=document.getElementById(side==='home'?'homeCrestWrap':'awayCrestWrap');
+  if(img){ img.src=data||''; img.style.display=data?'block':'block'; }
+  if(wrap){
+    if(data){ wrap.classList.remove('placeholder'); wrap.innerHTML='<img src="'+data.replace(/"/g,'&quot;')+'" style="width:100%;height:100%;object-fit:contain;border-radius:7px" alt="Escudo">'; }
+    else { wrap.classList.add('placeholder'); wrap.textContent='⚽'; }
+  }
+}
+function loadSavedCrests(){
+  ['home','away'].forEach(side=>{
+    try{ applyCrest(side,localStorage.getItem(crestKey(side))||''); }catch(e){}
+  });
+}
+function loadCrestFile(side,input){
+  const file=input && input.files && input.files[0];
+  if(!file) return;
+  if(!file.type.startsWith('image/')){ alert('Selecciona una imagen válida.'); return; }
+  if(file.size>5*1024*1024){ alert('La imagen es demasiado grande. Máximo 5 MB.'); return; }
+  const reader=new FileReader();
+  reader.onload=()=>{
+    const data=reader.result;
+    try{ localStorage.setItem(crestKey(side),data); }catch(e){ alert('No se ha podido guardar el escudo en este dispositivo.'); }
+    applyCrest(side,data);
+  };
+  reader.readAsDataURL(file);
+}
+function clearCrest(side){
+  try{localStorage.removeItem(crestKey(side));}catch(e){}
+  applyCrest(side,'');
+  const input=document.getElementById(side==='home'?'homeCrestFile':'awayCrestFile');
+  if(input) input.value='';
+}
+function updateMetaView(){
+  const d=document.getElementById('matchDate'), t=document.getElementById('matchTime'), v=document.getElementById('matchVenue');
+  const dv=document.getElementById('metaDateView'), tv=document.getElementById('metaTimeView'), vv=document.getElementById('metaVenueView');
+  if(dv && d && d.value){ const p=d.value.split('-'); dv.textContent=p.length===3?p[2]+'/'+p[1]+'/'+p[0]:d.value; }
+  if(tv && t) tv.textContent=t.value||'--:--';
+  if(vv && v) vv.textContent=(v.value.trim()||'PABELLÓN').toUpperCase();
+}
+function saveProState(){
+  try{
+    const state={
+      homeName:document.getElementById('homeName')?.value||'',
+      awayName:document.getElementById('awayName')?.value||'',
+      clockMode:document.getElementById('clockMode')?.value||'stopped',
+      periodDuration,period,seconds,running,matchStarted,matchFinished,homeGoals,awayGoals,homeFouls,awayFouls,periodFouls,homePlayers,awayPlayers,events,
+      matchDate:document.getElementById('matchDate')?.value||'',matchTime:document.getElementById('matchTime')?.value||'',matchVenue:document.getElementById('matchVenue')?.value||''
+    };
+    localStorage.setItem('futsalProMatchState',JSON.stringify(state));
+    alert('💾 Partido guardado en este dispositivo.');
+  }catch(e){ alert('No se ha podido guardar el partido.'); }
+}
+function loadProState(){
+  try{
+    const raw=localStorage.getItem('futsalProMatchState');
+    if(!raw){ alert('No hay ningún partido guardado en este dispositivo.'); return; }
+    const s=JSON.parse(raw);
+    ['homeName','awayName','clockMode','matchDate','matchTime','matchVenue'].forEach(id=>{
+      const el=document.getElementById(id); if(el && s[id]!=null) el.value=s[id];
+    });
+    if(Array.isArray(s.homePlayers)) homePlayers=s.homePlayers;
+    if(Array.isArray(s.awayPlayers)) awayPlayers=s.awayPlayers;
+    if(Array.isArray(s.events)) events=s.events;
+    if(Array.isArray(s.periodFouls)) periodFouls=s.periodFouls;
+    periodDuration=Number(s.periodDuration)||20*60;
+    period=Number(s.period)||1; seconds=Number(s.seconds); running=false;
+    matchStarted=!!s.matchStarted; matchFinished=!!s.matchFinished;
+    homeGoals=Number(s.homeGoals)||0; awayGoals=Number(s.awayGoals)||0; homeFouls=Number(s.homeFouls)||0; awayFouls=Number(s.awayFouls)||0;
+    document.getElementById('clockMode').dispatchEvent(new Event('change'));
+    ['homeTitle','homeFoulName','homePlayersTitle'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=getTeamName('home');});
+    ['awayTitle','awayFoulName','awayPlayersTitle'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=getTeamName('away');});
+    updateAll(); updateMetaView(); loadSavedCrests();
+    alert('📂 Partido cargado.');
+  }catch(e){ alert('No se ha podido cargar el partido guardado.'); }
+}
+['matchDate','matchTime','matchVenue'].forEach(id=>{ const el=document.getElementById(id); if(el) el.addEventListener('input',updateMetaView); });
+const _oldStartNewMatch=startNewMatch;
+startNewMatch=function(){ _oldStartNewMatch(); updateMetaView(); };
+loadSavedCrests();
+updateMetaView();
 
 </script>
 
