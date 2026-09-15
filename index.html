@@ -74,6 +74,69 @@ header .small{margin-left:auto;color:var(--muted);font-size:12px}
 .upload input{width:100%;margin-top:4px}
 .shareBox{background:#0d1117;border:1px solid var(--line);border-radius:10px;padding:10px}
 .modal{z-index:100}
+
+/* Modal de selección: necesario para que goles, faltas y tarjetas sean utilizables */
+#actionModal{
+  position:fixed!important;
+  inset:0!important;
+  z-index:9999!important;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding:18px;
+  background:rgba(0,0,0,.78);
+}
+#actionModal .modalBox{
+  width:min(620px,96vw);
+  max-height:88vh;
+  overflow:auto;
+  background:#11151d;
+  border:1px solid #3a4250;
+  border-radius:18px;
+  padding:16px;
+  box-shadow:0 24px 80px rgba(0,0,0,.55);
+}
+#actionModal .modalTitle{
+  color:#f1d487;
+  font-size:20px;
+  font-weight:950;
+  margin-bottom:4px;
+}
+#actionModal .modalSubtitle{
+  color:#9ca5b3;
+  font-size:12px;
+  margin-bottom:12px;
+}
+#actionModal #modalContent{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px;
+}
+#actionModal #modalContent .choice{
+  width:100%;
+  min-height:48px;
+  text-align:left;
+  background:#202632;
+  border:1px solid #343c49;
+  color:#fff;
+  border-radius:11px;
+  padding:10px;
+}
+#actionModal #modalContent .teamChoice{
+  min-height:58px;
+  text-align:center;
+  font-size:15px;
+}
+#actionModal #modalContent .choice:disabled{
+  opacity:.4;
+  cursor:not-allowed;
+}
+#actionModal .close{
+  width:100%;
+  margin-top:12px;
+  background:#202632;
+}
+
 /* iPad landscape: keep the three-column match dashboard */
 @media(max-width:700px){
   .proTop{grid-template-columns:1fr}
@@ -85,6 +148,8 @@ header .small{margin-left:auto;color:var(--muted);font-size:12px}
   .roster{grid-template-columns:1fr}
   .centerActions{grid-template-columns:1fr 1fr}
 }
+
+.teamHead input::placeholder{color:#77808e}
 </style>
 
 </head>
@@ -101,8 +166,8 @@ header .small{margin-left:auto;color:var(--muted);font-size:12px}
 
     <section class="panel teamPanel">
       <div class="teamHead">
-        <div class="crest" id="homeCrest">🔵</div>
-        <input id="homeName" value="CIEZA FS" aria-label="Nombre equipo local">
+        <div class="crest" id="homeCrest">🏆</div>
+        <input id="homeName" value="EQUIPO LOCAL" aria-label="Nombre equipo local">
       </div>
       <div class="teamMeta">
         <span class="pill">LOCAL</span>
@@ -132,7 +197,7 @@ header .small{margin-left:auto;color:var(--muted);font-size:12px}
       <div class="clockHint">Pulsa el reloj para cambiar la duración del periodo</div>
       <div class="clockType" id="clockTypeLabel">🔴 RELOJ PARADO</div>
       <div class="score">
-        <div><div class="team" id="homeTitle">CIEZA FS</div></div>
+        <div><div class="team" id="homeTitle">EQUIPO LOCAL</div></div>
         <div style="font-size:22px;color:#697180">VS</div>
         <div><div class="team" id="awayTitle">RIVAL</div></div>
       </div>
@@ -147,7 +212,7 @@ header .small{margin-left:auto;color:var(--muted);font-size:12px}
     <section class="panel teamPanel">
       <div class="teamHead">
         <div class="crest" id="awayCrest">⚽</div>
-        <input id="awayName" value="RIVAL" aria-label="Nombre equipo visitante">
+        <input id="awayName" value="EQUIPO VISITANTE" aria-label="Nombre equipo visitante">
       </div>
       <div class="teamMeta">
         <span class="pill">VISITANTE</span>
@@ -174,7 +239,7 @@ header .small{margin-left:auto;color:var(--muted);font-size:12px}
 
   <div class="lower">
     <section class="panel section">
-      <h3>👥 CIEZA FS · ALINEACIÓN</h3>
+      <h3>👥 EQUIPO LOCAL · ALINEACIÓN</h3>
       <div class="lineupInfo">⭐ Elige los 5 titulares antes de iniciar. Usa ENTRAR/SALIR para las sustituciones.</div>
       <div id="homePlayers" class="roster"></div>
     </section>
@@ -182,11 +247,11 @@ header .small{margin-left:auto;color:var(--muted);font-size:12px}
     <section class="panel section">
       <h3>📋 INCIDENCIAS</h3>
       <div class="actionGrid">
-        <button class="gold" onclick="openGoal(1)">⚽<br>GOL CIEZA</button>
-        <button class="blue" onclick="openFoul(1)">🚨<br>FALTA CIEZA</button>
+        <button class="gold" onclick="openGoal(1)">⚽<br>GOL LOCAL</button>
+        <button class="blue" onclick="openFoul(1)">🚨<br>FALTA LOCAL</button>
         <button class="gold" onclick="openCard('yellow')">🟨<br>AMARILLA</button>
-        <button class="red" onclick="openGoal(0)">⚽<br>GOL RIVAL</button>
-        <button class="blue" onclick="openFoul(0)">🚨<br>FALTA RIVAL</button>
+        <button class="red" onclick="openGoal(0)">⚽<br>GOL VISITANTE</button>
+        <button class="blue" onclick="openFoul(0)">🚨<br>FALTA VISITANTE</button>
         <button class="red" onclick="openCard('red')">🟥<br>ROJA</button>
       </div>
       <div style="margin-top:12px" class="configRow">
@@ -749,7 +814,7 @@ function startNewMatch(){
         document
         .getElementById("homeName")
         .value
-        .trim() || "CIEZA FS";
+        .trim() || "EQUIPO LOCAL";
 
     const an =
         document
@@ -759,28 +824,17 @@ function startNewMatch(){
 
 
     [
-        "homeTitle",
-        "homeFoulName",
-        "homePlayersTitle"
+        "homeTitle"
     ].forEach(id=>{
-
-        document
-        .getElementById(id)
-        .textContent=hn;
-
+        const el=document.getElementById(id);
+        if(el) el.textContent=hn;
     });
 
-
     [
-        "awayTitle",
-        "awayFoulName",
-        "awayPlayersTitle"
+        "awayTitle"
     ].forEach(id=>{
-
-        document
-        .getElementById(id)
-        .textContent=an;
-
+        const el=document.getElementById(id);
+        if(el) el.textContent=an;
     });
 
 
