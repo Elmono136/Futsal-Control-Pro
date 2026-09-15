@@ -264,6 +264,12 @@ header .small{margin-left:auto;color:var(--muted);font-size:12px}
   margin-right:2px!important;
 }
 .player .miniStat:nth-child(5){display:none!important}
+
+#expulsionMessage.visible{
+  display:flex!important;
+  visibility:visible!important;
+  opacity:1!important;
+}
 </style>
 
 </head>
@@ -1034,6 +1040,17 @@ function ensureFiveStarters(arr){
 /* =========================================================
    RELOJ
 ========================================================= */
+
+function formatTime(totalSeconds){
+
+    totalSeconds = Math.max(0, Math.floor(Number(totalSeconds) || 0));
+
+    let m = Math.floor(totalSeconds / 60);
+    let s = totalSeconds % 60;
+
+    return String(m).padStart(2,"0") + ":" + String(s).padStart(2,"0");
+}
+
 
 function fmt(){
 
@@ -2172,6 +2189,11 @@ function showExpulsion(
     reason
 ){
 
+    const overlay = document.getElementById("expulsionMessage");
+    if(!overlay) return;
+
+    overlay.classList.add("visible");
+
     document
     .getElementById(
         "expulsionText"
@@ -2199,22 +2221,20 @@ function showExpulsion(
         +
         "</strong>";
 
-    document
-    .getElementById(
-        "expulsionMessage"
-    )
-    .style.display="flex";
+    overlay.style.display="flex";
+    overlay.style.visibility="visible";
+    overlay.style.opacity="1";
 
 }
 
 
 function closeExpulsion(){
 
-    document
-    .getElementById(
-        "expulsionMessage"
-    )
-    .style.display="none";
+    const overlay = document.getElementById("expulsionMessage");
+    if(!overlay) return;
+
+    overlay.classList.remove("visible");
+    overlay.style.display="none";
 
 }
 
@@ -2981,7 +3001,6 @@ updateAll();
 <script>restoreCrests();</script>
 </body>
 </html>
-<script>restoreCrests();</script>
 <script>restoreCrests();</script>
 </body>
 </html>
