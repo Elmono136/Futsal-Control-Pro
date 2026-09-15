@@ -888,6 +888,123 @@ header .small{color:#87909d;font-size:10px;text-transform:uppercase;letter-spaci
 @media (max-width:700px){
   .cardOnlyGrid button{min-height:68px;}
 }
+
+/* =========================================================
+   V15 — PLANTILLAS ULTRACOMPACTAS PARA IPAD APASISADO
+   Objetivo: mostrar el máximo de jugadores en pantalla sin
+   eliminar sus controles ni estadísticas.
+========================================================= */
+@media(min-width:701px) and (orientation:landscape){
+  .container>.card:nth-child(5),
+  .container>.card:nth-child(6){
+    height:calc(100vh - 104px);
+  }
+
+  .container>.card:nth-child(5)>div[id$="Players"],
+  .container>.card:nth-child(6)>div[id$="Players"]{
+    height:calc(100vh - 225px);
+    overflow-y:auto;
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:4px;
+    align-content:start;
+    padding:0 2px 4px 0;
+  }
+
+  .container>.card:nth-child(5) .lineupInfo,
+  .container>.card:nth-child(6) .lineupInfo{
+    font-size:8px;
+    padding:5px;
+    margin-bottom:5px;
+  }
+
+  .container>.card:nth-child(5) .player,
+  .container>.card:nth-child(6) .player{
+    margin:0;
+    padding:4px;
+    border-radius:7px;
+    min-width:0;
+  }
+
+  .container>.card:nth-child(5) .playerTop,
+  .container>.card:nth-child(6) .playerTop{
+    display:grid;
+    grid-template-columns:29px minmax(0,1fr);
+    gap:3px;
+  }
+
+  .container>.card:nth-child(5) .number,
+  .container>.card:nth-child(6) .number{
+    width:29px!important;
+    padding:4px 1px!important;
+    font-size:10px!important;
+  }
+
+  .container>.card:nth-child(5) .playerName,
+  .container>.card:nth-child(6) .playerName{
+    min-width:0;
+    width:100%;
+    padding:4px 3px!important;
+    font-size:10px!important;
+  }
+
+  .container>.card:nth-child(5) .badges,
+  .container>.card:nth-child(6) .badges{
+    margin-top:2px;
+    gap:2px;
+    flex-wrap:nowrap;
+    overflow:hidden;
+  }
+
+  .container>.card:nth-child(5) .badge,
+  .container>.card:nth-child(6) .badge{
+    padding:2px 3px;
+    font-size:6px;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+  }
+
+  .container>.card:nth-child(5) .starterButton,
+  .container>.card:nth-child(6) .starterButton{
+    margin-top:2px;
+    padding:3px 2px!important;
+    font-size:7px!important;
+    min-height:22px;
+    line-height:1.05;
+  }
+
+  .container>.card:nth-child(5) .playerActions,
+  .container>.card:nth-child(6) .playerActions{
+    margin-top:2px;
+    gap:2px;
+  }
+
+  .container>.card:nth-child(5) .playerActions button,
+  .container>.card:nth-child(6) .playerActions button{
+    padding:3px 2px!important;
+    font-size:7px!important;
+    min-height:21px;
+  }
+
+  .container>.card:nth-child(5) .playerStats,
+  .container>.card:nth-child(6) .playerStats{
+    margin-top:2px;
+    gap:1px;
+  }
+
+  .container>.card:nth-child(5) .miniStat,
+  .container>.card:nth-child(6) .miniStat{
+    padding:2px 0;
+    font-size:5px;
+    border-radius:4px;
+  }
+
+  .container>.card:nth-child(5) .miniStat strong,
+  .container>.card:nth-child(6) .miniStat strong{
+    font-size:8px;
+  }
+}
 </style>
 
 </head>
