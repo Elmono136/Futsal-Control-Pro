@@ -740,7 +740,18 @@ header .small{font-size:10px}
 .playerActions{grid-area:quick;display:none}
 .playerStats{display:none}
 .starterButton{display:none}
-.player .photoPicker{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer}
+/* El selector de foto solo ocupa un pequeño botón sobre la esquina de la foto.
+   El resto de la ficha queda libre para abrir el menú del jugador. */
+.player .photoPicker{
+  position:absolute;
+  left:34px;
+  top:34px;
+  width:18px;
+  height:18px;
+  opacity:0;
+  cursor:pointer;
+  z-index:3;
+}
 .player.isExpanded{
   grid-template-areas:
     "photo top"
