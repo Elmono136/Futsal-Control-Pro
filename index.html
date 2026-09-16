@@ -715,24 +715,51 @@ header .small{font-size:10px}
 .photoPicker{font-size:11px;max-width:150px;color:#bbb}
 .photoPicker::file-selector-button{background:#e5b638;color:#111;border:0;border-radius:8px;padding:7px;margin-right:5px;font-weight:bold}
 
-/* V18.1 — plantilla compacta y menú por jugador */
-.playerGridCompact{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
-.playerCompact{position:relative;display:flex;align-items:center;gap:8px;background:#1b222b;border:1px solid #303b48;border-radius:12px;padding:7px;min-height:76px;cursor:pointer}
-.playerCompact.onCourt{border:2px solid #208b4a;background:#173322}
-.playerCompact.starter{box-shadow:inset 4px 0 #e5b638}
-.playerCompact.sentOff{opacity:.55;border-color:#b51f2d}
-.playerCompact img{width:52px;height:52px;object-fit:cover;border-radius:50%;background:#333;flex:0 0 52px}
-.playerCompactInfo{min-width:0;flex:1}
-.playerCompactName{font-size:12px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.playerCompactNumber{font-size:18px;font-weight:900;color:#e5b638}
-.playerCompactStatus{font-size:9px;color:#b9c2cc;margin-top:3px;line-height:1.25}
-.playerPhotoMini{position:relative}
-.playerPhotoMini .photoPicker{position:absolute;right:-3px;bottom:-3px;width:22px;height:22px;padding:0;opacity:1}
-.playerMenuGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
-.playerMenuGrid button{min-height:48px}
-.playerMenuStats{display:grid;grid-template-columns:repeat(5,1fr);gap:5px;margin:12px 0}
-.playerMenuStats .miniStat{padding:8px 1px}
-@media(max-width:520px){.playerGridCompact{gap:6px}.playerCompact{padding:6px;min-height:70px}.playerCompact img{width:44px;height:44px;flex-basis:44px}.playerCompactNumber{font-size:16px}.playerCompactName{font-size:11px}.playerMenuStats{grid-template-columns:repeat(5,1fr)}}
+/* V18.1 - plantilla compacta con menú al tocar */
+.player{
+  position:relative;
+  display:grid;
+  grid-template-columns:52px 1fr;
+  grid-template-areas:
+    "photo top"
+    "photo badges"
+    "photo quick";
+  align-items:center;
+  gap:4px 9px;
+  padding:7px;
+  margin:4px 0;
+  min-height:64px;
+  cursor:pointer;
+}
+.playerPhotoWrap{grid-area:photo;display:flex;align-items:center;justify-content:center;position:relative}
+.playerPhoto{width:48px;height:48px;border-radius:50%;object-fit:cover;border:2px solid #555}
+.playerTop{grid-area:top;display:flex;align-items:center;gap:6px;min-width:0}
+.playerTop .number{width:42px!important;font-weight:800}
+.playerTop .playerName{min-width:0;width:100%;font-weight:700}
+.badges{grid-area:badges;display:flex;gap:3px;flex-wrap:wrap}
+.playerActions{grid-area:quick;display:none}
+.playerStats{display:none}
+.starterButton{display:none}
+.player .photoPicker{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer}
+.player.isExpanded{
+  grid-template-areas:
+    "photo top"
+    "photo badges"
+    "photo quick"
+    "photo details";
+}
+.player.isExpanded .playerActions,
+.player.isExpanded .starterButton,
+.player.isExpanded .playerStats{display:flex}
+.player.isExpanded .playerActions{grid-area:quick}
+.player.isExpanded .playerStats{grid-area:details;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:3px}
+.player.isExpanded .starterButton{grid-column:2;display:block}
+.player.isExpanded .playerActions button{width:100%}
+@media(min-width:700px){
+  #homePlayers,#awayPlayers{display:grid;grid-template-columns:1fr 1fr;gap:5px}
+  .player{margin:0}
+}
+
 </style>
 
 <style>
@@ -3472,60 +3499,6 @@ function leavePlayer(
    RENDER JUGADORES
 ========================================================= */
 
-
-function openPlayerMenu(team,i){
-    const arr=team===1?homePlayers:awayPlayers;
-    const p=arr[i];
-    if(!p) return;
-    const teamName=team===1?homeTitle():awayTitle();
-    document.getElementById("modalTitle").textContent="👤 "+(p.name||"Jugador")+" · #"+p.number;
-    document.getElementById("modalSubtitle").textContent=teamName;
-    const content=document.getElementById("modalContent");
-    content.innerHTML="";
-    const stats=document.createElement("div");
-    stats.className="playerMenuStats";
-    stats.innerHTML=
-      '<div class="miniStat"><strong>'+p.goals+'</strong>GOLES</div>'+
-      '<div class="miniStat"><strong>'+p.yellow+'</strong>🟨</div>'+
-      '<div class="miniStat"><strong>'+p.red+'</strong>🟥</div>'+
-      '<div class="miniStat"><strong>'+p.fouls+'</strong>FALTAS</div>'+
-      '<div class="miniStat"><strong>'+formatTime(p.seconds)+'</strong>MIN</div>';
-    content.appendChild(stats);
-    const grid=document.createElement("div");
-    grid.className="playerMenuGrid";
-    const addBtn=(label,cls,fn,disabled=false)=>{
-      const b=document.createElement("button");
-      b.textContent=label;b.className=cls||"dark";b.disabled=disabled;
-      b.onclick=()=>{fn();};
-      grid.appendChild(b);
-    };
-    addBtn(p.onCourt?"🔄 HACER SALIR":"🟢 HACER ENTRAR",p.onCourt?"red":"green",()=>{
-      togglePlayer(arr,i);closeModal();
-    },!!p.sentOff);
-    addBtn(p.starter?"⭐ PASAR A SUPLENTE":"⭐ HACER TITULAR","gold",()=>{
-      toggleStarter(arr,i);closeModal();
-    },!!matchStarted||!!p.sentOff);
-    addBtn("⚽ + GOL","blue",()=>{
-      registerGoal(team,i);closeModal();
-    },!!p.sentOff);
-    addBtn("🚩 + FALTA","orange",()=>{
-      registerFoul(team,i);closeModal();
-    },!!p.sentOff);
-    addBtn("🟨 AMARILLA","yellow",()=>{
-      registerCard(team,i,"yellow");closeModal();
-    },!!p.sentOff);
-    addBtn("🟥 ROJA","red",()=>{
-      registerCard(team,i,"red");closeModal();
-    },!!p.sentOff);
-    content.appendChild(grid);
-    const note=document.createElement("div");
-    note.className="notice";
-    note.style.marginTop="10px";
-    note.textContent=p.sentOff?"🟥 Jugador expulsado":(p.onCourt?"🟢 En pista":"⚪ En banquillo");
-    content.appendChild(note);
-    document.getElementById("actionModal").style.display="flex";
-}
-
 function renderPlayers(){
 
     renderTeamPlayers(
@@ -3541,40 +3514,387 @@ function renderPlayers(){
 }
 
 
-function renderTeamPlayers(id,arr){
-    const el=document.getElementById(id);
+function renderTeamPlayers(
+    id,
+    arr
+){
+
+    let el=
+        document.getElementById(id);
+
     el.innerHTML="";
-    el.className="playerGridCompact";
+
+
     arr.forEach((p,i)=>{
-        const d=document.createElement("div");
-        d.className="playerCompact "+(p.onCourt?"onCourt ":"")+(p.sentOff?"sentOff ":"")+(p.starter?"starter":"");
-        const photo=p.photo||"data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%2758%27 height=%2758%27%3E%3Crect width=%27100%25%27 height=%27100%25%27 fill=%27%23333333%27/%3E%3Ctext x=%2750%25%27 y=%2758%27 text-anchor=%27middle%27 font-size=%2730%27 fill=%27%23e5b638%27%3E⚽%3C/text%3E%3C/svg%3E";
-        const status=(p.sentOff?"🟥 EXPULSADO":p.onCourt?"🟢 EN PISTA":"⚪ BANQUILLO")+(p.starter?" · ⭐ TITULAR":"");
+
+        let d=
+            document.createElement(
+                "div"
+            );
+
+
+        d.className=
+            "player "
+            +
+            (
+                p.onCourt
+                ? "onCourt "
+                : ""
+            )
+            +
+            (
+                p.sentOff
+                ? "sentOff "
+                : ""
+            )
+            +
+            (
+                p.starter
+                ? "starter"
+                : ""
+            );
+
+
+        let courtBadge=
+            p.onCourt
+            ? '<span class="badge badgeCourt">🟢 EN PISTA</span>'
+            : '<span class="badge badgeBench">⚪ BANQUILLO</span>';
+
+
+        let starterBadge=
+            p.starter
+            ? '<span class="badge badgeStarter">⭐ TITULAR</span>'
+            : '<span class="badge badgeSub">SUPLENTE</span>';
+
+
+        let sentBadge=
+            p.sentOff
+            ? '<span class="badge badgeSent">🟥 EXPULSADO</span>'
+            : "";
+
+
+        let actionButton;
+
+
+        if(p.sentOff){
+
+            actionButton=
+                '<button class="dark" disabled>'
+                +
+                '🟥 EXPULSADO'
+                +
+                '</button>';
+
+        }else if(p.onCourt){
+
+            actionButton=
+                '<button class="red">'
+                +
+                '🔄 SALIR'
+                +
+                '</button>';
+
+        }else{
+
+            actionButton=
+                '<button class="green">'
+                +
+                '🟢 ENTRAR'
+                +
+                '</button>';
+
+        }
+
+
+        /*
+           BOTÓN TITULAR/SUPLENTE
+        */
+
+        let starterButtonText=
+            p.starter
+            ? "⭐ TITULAR · CAMBIAR A SUPLENTE"
+            : "⭐ HACER TITULAR";
+
+
+        let starterButtonClass=
+            p.starter
+            ? "gold"
+            : "dark";
+
+
         d.innerHTML=
-          '<div class="playerPhotoMini"><img src="'+photo+'" alt="Foto de '+esc(p.name)+'"><input class="photoPicker" type="file" accept="image/*" title="Cambiar foto"></div>'+
-          '<div class="playerCompactInfo"><div class="playerCompactNumber">#'+esc(p.number)+'</div><div class="playerCompactName">'+esc(p.name||"Sin nombre")+'</div><div class="playerCompactStatus">'+status+'</div></div>';
-        d.onclick=(ev)=>{if(ev.target.classList.contains("photoPicker"))return;openPlayerMenu(arr===homePlayers?1:2,i);};
-        const picker=d.querySelector(".photoPicker");
-        picker.onclick=ev=>ev.stopPropagation();
-        picker.onchange=e=>{
-          const file=e.target.files&&e.target.files[0]; if(!file)return;
-          const reader=new FileReader();
-          reader.onload=ev=>{
-            const img=new Image();
-            img.onload=()=>{
-              const canvas=document.createElement("canvas"),max=180;
-              const scale=Math.min(1,max/Math.max(img.width,img.height));
-              canvas.width=Math.max(1,Math.round(img.width*scale));
-              canvas.height=Math.max(1,Math.round(img.height*scale));
-              canvas.getContext("2d").drawImage(img,0,0,canvas.width,canvas.height);
-              p.photo=canvas.toDataURL("image/jpeg",.78);saveProState();renderPlayers();
-            };
-            img.src=ev.target.result;
-          };
-          reader.readAsDataURL(file);
+
+            '<div class="playerPhotoWrap">'
+            +
+            '<img class="playerPhoto" src="'
+            +
+            (p.photo || "data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%2758%27 height=%2758%27%3E%3Crect width=%27100%25%27 height=%27100%25%27 fill=%27%23333333%27/%3E%3Ctext x=%2750%25%27 y=%2758%27 text-anchor=%27middle%27 font-size=%2730%27 fill=%27%23e5b638%27%3E⚽%3C/text%3E%3C/svg%3E")
+            +
+            '" alt="Foto del jugador">'
+            +
+            '<input class="photoPicker" type="file" accept="image/*" title="Añadir foto">'
+            +
+            '</div>'
+            +
+            '<div class="playerTop">'
+            +
+
+            '<input class="number" '
+            +
+            'type="number" '
+            +
+            'value="'
+            +
+            esc(p.number)
+            +
+            '">'
+
+            +
+
+            '<input class="playerName" autocomplete="off" spellcheck="false" '
+            +
+            'value="'
+            +
+            esc(p.name)
+            +
+            '">'
+
+            +
+
+            '</div>'
+
+            +
+
+            '<div class="badges">'
+            +
+            starterBadge
+            +
+            courtBadge
+            +
+            sentBadge
+            +
+            '</div>'
+
+            +
+
+            '<button class="starterButton '
+            +
+            starterButtonClass
+            +
+            '" '
+            +
+            (
+                matchStarted || p.sentOff
+                ? "disabled"
+                : ""
+            )
+            +
+            '>'
+            +
+            starterButtonText
+            +
+            '</button>'
+
+            +
+
+            '<div class="playerActions">'
+            +
+            actionButton
+            +
+            '</div>'
+
+            +
+
+            '<div class="playerStats">'
+
+            +
+
+            '<div class="miniStat">'
+            +
+            '<strong>'
+            +
+            p.goals
+            +
+            '</strong>'
+            +
+            'GOLES'
+            +
+            '</div>'
+
+            +
+
+            '<div class="miniStat">'
+            +
+            '<strong>'
+            +
+            p.yellow
+            +
+            '</strong>'
+            +
+            '🟨'
+            +
+            '</div>'
+
+            +
+
+            '<div class="miniStat">'
+            +
+            '<strong>'
+            +
+            p.red
+            +
+            '</strong>'
+            +
+            '🟥'
+            +
+            '</div>'
+
+            +
+
+            '<div class="miniStat">'
+            +
+            '<strong>'
+            +
+            p.fouls
+            +
+            '</strong>'
+            +
+            'FALTAS'
+            +
+            '</div>'
+
+            +
+
+            '<div class="miniStat">'
+            +
+            '<strong>'
+            +
+            formatTime(p.seconds)
+            +
+            '</strong>'
+            +
+            'MIN'
+            +
+            '</div>'
+
+            +
+
+            '</div>';
+
+
+        d.onclick=(ev)=>{
+            if(ev.target.closest("input,button,.photoPicker")) return;
+            d.classList.toggle("isExpanded");
         };
+
+        const photoPicker=d.querySelector(".photoPicker");
+        photoPicker.onchange=e=>{
+            const file=e.target.files && e.target.files[0];
+            if(!file) return;
+            const reader=new FileReader();
+            reader.onload=ev=>{
+                const img=new Image();
+                img.onload=()=>{
+                    const canvas=document.createElement("canvas");
+                    const max=180;
+                    const scale=Math.min(1,max/Math.max(img.width,img.height));
+                    canvas.width=Math.max(1,Math.round(img.width*scale));
+                    canvas.height=Math.max(1,Math.round(img.height*scale));
+                    canvas.getContext("2d").drawImage(img,0,0,canvas.width,canvas.height);
+                    p.photo=canvas.toDataURL("image/jpeg",0.78);
+                    saveProState();
+                    renderPlayers();
+                };
+                img.src=ev.target.result;
+            };
+            reader.readAsDataURL(file);
+        };
+
+
+        /*
+           CAMBIO DE DORSAL
+        */
+
+        const numberInput=d.querySelector(".number");
+        const nameInput=d.querySelector(".playerName");
+
+        const savePlayerIdentity=()=>{
+            p.number=numberInput.value.trim();
+            p.name=nameInput.value.trim() || ("Jugador " + p.number);
+            saveProState();
+            updateSummary();
+        };
+
+        numberInput.oninput=()=>{
+            p.number=numberInput.value;
+            updateSummary();
+        };
+
+        numberInput.onchange=savePlayerIdentity;
+        numberInput.onblur=savePlayerIdentity;
+
+
+        /*
+           CAMBIO DE NOMBRE
+        */
+
+        nameInput.oninput=()=>{
+            p.name=nameInput.value;
+            updateSummary();
+        };
+
+        nameInput.onchange=savePlayerIdentity;
+        nameInput.onblur=savePlayerIdentity;
+
+
+        /*
+           BOTÓN TITULAR
+        */
+
+        let starterButton=
+            d.querySelector(
+                ".starterButton"
+            );
+
+
+        starterButton.onclick=()=>{
+
+            toggleStarter(
+                arr,
+                i
+            );
+
+        };
+
+
+        /*
+           BOTÓN ENTRAR/SALIR
+        */
+
+        let action=
+            d.querySelector(
+                ".playerActions button"
+            );
+
+
+        if(!p.sentOff){
+
+            action.onclick=()=>{
+
+                togglePlayer(
+                    arr,
+                    i
+                );
+
+            };
+
+        }
+
+
         el.appendChild(d);
+
     });
+
 }
 
 
