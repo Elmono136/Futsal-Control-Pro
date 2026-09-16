@@ -3802,7 +3802,7 @@ function renderTeamPlayers(
                     canvas.height=Math.max(1,Math.round(img.height*scale));
                     canvas.getContext("2d").drawImage(img,0,0,canvas.width,canvas.height);
                     p.photo=canvas.toDataURL("image/jpeg",0.78);
-                    saveProState();
+                    saveProState(true);
                     renderPlayers();
                 };
                 img.src=ev.target.result;
@@ -3818,10 +3818,18 @@ function renderTeamPlayers(
         const numberInput=d.querySelector(".number");
         const nameInput=d.querySelector(".playerName");
 
+        [numberInput,nameInput].forEach(input=>{
+            if(!input) return;
+            ["click","pointerdown","touchstart"].forEach(type=>{
+                input.addEventListener(type,ev=>ev.stopPropagation(),{passive:true});
+            });
+            input.addEventListener("focus",()=>d.classList.add("editing"));
+        });
+
         const savePlayerIdentity=()=>{
             p.number=numberInput.value.trim();
             p.name=nameInput.value.trim() || ("Jugador " + p.number);
-            saveProState();
+            saveProState(true);
             updateSummary();
         };
 
@@ -4617,7 +4625,7 @@ function updateMetaView(){
   if(tv && t) tv.textContent=t.value||'--:--';
   if(vv && v) vv.textContent=(v.value.trim()||'PABELLÓN').toUpperCase();
 }
-function saveProState(){
+function saveProState(silent=false){
   try{
     const state={
       homeName:document.getElementById('homeName')?.value||'',
@@ -4627,7 +4635,7 @@ function saveProState(){
       matchDate:document.getElementById('matchDate')?.value||'',matchTime:document.getElementById('matchTime')?.value||'',matchVenue:document.getElementById('matchVenue')?.value||''
     };
     localStorage.setItem('futsalProMatchState',JSON.stringify(state));
-    alert('💾 Partido guardado en este dispositivo.');
+    if(!silent) alert('💾 Partido guardado en este dispositivo.');
   }catch(e){ alert('No se ha podido guardar el partido.'); }
 }
 function loadProState(){
