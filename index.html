@@ -1,0 +1,4953 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<title>Futsal Control PRO</title>
+
+<style>
+*{box-sizing:border-box}
+
+body{
+    margin:0;
+    background:#080808;
+    color:#fff;
+    font-family:Arial,sans-serif;
+}
+
+header{
+    padding:14px;
+    text-align:center;
+    background:#151515;
+    border-bottom:2px solid #e5b638;
+    position:sticky;
+    top:0;
+    z-index:20;
+}
+
+.logo{
+    font-size:42px;
+}
+
+h1{
+    margin:0;
+    color:#e5b638;
+    font-size:30px;
+}
+
+.small{
+    font-size:13px;
+    color:#aaa;
+}
+
+.container{
+    max-width:700px;
+    margin:auto;
+    padding:12px;
+}
+
+.card{
+    background:#151515;
+    border-radius:18px;
+    padding:15px;
+    margin-bottom:14px;
+    box-shadow:0 4px 15px #0008;
+}
+
+h2,h3{
+    margin-top:0;
+    color:#e5b638;
+}
+
+label{
+    display:block;
+    color:#aaa;
+    font-size:13px;
+    margin-bottom:5px;
+}
+
+input,select{
+    width:100%;
+    padding:12px;
+    border-radius:9px;
+    border:1px solid #444;
+    background:#222;
+    color:#fff;
+    font-size:16px;
+}
+
+button{
+    border:0;
+    border-radius:12px;
+    padding:13px 15px;
+    font-weight:bold;
+    font-size:15px;
+    cursor:pointer;
+    color:#fff;
+}
+
+button:disabled{
+    opacity:.4;
+}
+
+.gold{
+    background:#e5b638;
+    color:#111;
+}
+
+.red{
+    background:#b51f2d;
+    color:#fff;
+}
+
+.blue{
+    background:#1976b9;
+    color:#fff;
+}
+
+.dark{
+    background:#292929;
+    color:#fff;
+}
+
+.green{
+    background:#208b4a;
+    color:#fff;
+}
+
+.row{
+    display:flex;
+    gap:8px;
+    flex-wrap:wrap;
+}
+
+.row>*{
+    flex:1;
+}
+
+.period{
+    text-align:center;
+    color:#bbb;
+    font-size:19px;
+    margin-bottom:5px;
+}
+
+.clock{
+    text-align:center;
+    font-size:76px;
+    font-weight:900;
+    color:#e5b638;
+    line-height:1;
+    margin:8px 0;
+    cursor:pointer;
+    user-select:none;
+}
+
+.clockHint{
+    text-align:center;
+    color:#999;
+    font-size:12px;
+    margin-bottom:6px;
+}
+
+.clockType{
+    text-align:center;
+    color:#e5b638;
+    font-weight:bold;
+    margin-bottom:12px;
+}
+
+.bigClock{
+    width:100%;
+    min-height:90px;
+    font-size:25px;
+}
+
+.score{
+    display:flex;
+    justify-content:space-around;
+    align-items:center;
+    text-align:center;
+}
+
+.team{
+    font-size:18px;
+    font-weight:bold;
+}
+
+.goals{
+    font-size:68px;
+    font-weight:900;
+    line-height:1;
+    margin:7px;
+}
+
+.scoreButtons{
+    display:flex;
+    gap:7px;
+}
+
+.scoreButtons button{
+    flex:1;
+}
+
+.stat{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:12px 0;
+    border-bottom:1px solid #333;
+}
+
+.foulNumber{
+    font-size:27px;
+    font-weight:bold;
+    margin:0 10px;
+}
+
+.warning{
+    background:#5b3300;
+    color:#ffd45a;
+    border-radius:10px;
+    padding:10px;
+    margin-top:10px;
+    text-align:center;
+    font-weight:bold;
+}
+
+.danger{
+    background:#641722;
+    color:#ffb5bd;
+    border-radius:10px;
+    padding:10px;
+    margin-top:10px;
+    text-align:center;
+    font-weight:bold;
+}
+
+.actionGrid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:8px;
+}
+
+.actionGrid button{
+    min-height:65px;
+    font-size:17px;
+}
+
+.player{
+    background:#222;
+    border-radius:14px;
+    padding:10px;
+    margin:8px 0;
+    border:2px solid transparent;
+}
+
+.player.onCourt{
+    border-color:#208b4a;
+}
+
+.player.starter{
+    border-left:5px solid #e5b638;
+}
+
+.player.sentOff{
+    border-color:#b51f2d;
+    opacity:.65;
+}
+
+.playerTop{
+    display:flex;
+    gap:8px;
+    align-items:center;
+}
+
+.number{
+    width:65px!important;
+    text-align:center;
+}
+
+.playerName{
+    flex:1;
+}
+
+.badges{
+    display:flex;
+    gap:6px;
+    flex-wrap:wrap;
+    margin-top:8px;
+}
+
+.badge{
+    display:inline-block;
+    padding:7px 10px;
+    border-radius:8px;
+    font-size:13px;
+    font-weight:bold;
+}
+
+.badgeStarter{
+    background:#e5b638;
+    color:#111;
+}
+
+.badgeCourt{
+    background:#208b4a;
+    color:#fff;
+}
+
+.badgeBench{
+    background:#444;
+    color:#bbb;
+}
+
+.badgeSent{
+    background:#b51f2d;
+    color:#fff;
+}
+
+.badgeSub{
+    background:#444;
+    color:#bbb;
+}
+
+.playerActions{
+    display:flex;
+    gap:7px;
+    margin-top:9px;
+}
+
+.playerActions button{
+    flex:1;
+}
+
+.playerStats{
+    display:grid;
+    grid-template-columns:repeat(5,1fr);
+    gap:5px;
+    margin-top:8px;
+}
+
+.miniStat{
+    background:#171717;
+    border-radius:8px;
+    padding:7px 2px;
+    text-align:center;
+    font-size:11px;
+    color:#aaa;
+}
+
+.miniStat strong{
+    display:block;
+    color:#fff;
+    font-size:18px;
+}
+
+.starterButton{
+    width:100%;
+    margin-top:8px;
+}
+
+.lineupInfo{
+    background:#202020;
+    border-radius:10px;
+    padding:10px;
+    margin-bottom:10px;
+    text-align:center;
+    color:#bbb;
+    font-size:13px;
+}
+
+.lineupInfo strong{
+    color:#e5b638;
+}
+
+.expulsionMessage{
+    position:fixed;
+    inset:0;
+    background:#000d;
+    z-index:200;
+    display:none;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+}
+
+.expulsionBox{
+    width:100%;
+    max-width:500px;
+    background:#641722;
+    border:3px solid #b51f2d;
+    border-radius:20px;
+    padding:25px 18px;
+    text-align:center;
+    box-shadow:0 0 40px #b51f2d88;
+}
+
+.expulsionIcon{
+    font-size:65px;
+}
+
+.expulsionTitle{
+    color:#fff;
+    font-size:30px;
+    font-weight:900;
+    margin:8px 0;
+}
+
+.expulsionText{
+    color:#ffd5d9;
+    font-size:18px;
+    line-height:1.4;
+}
+
+.modal{
+    position:fixed;
+    inset:0;
+    background:#000c;
+    z-index:100;
+    display:none;
+    align-items:flex-end;
+    justify-content:center;
+}
+
+.modalBox{
+    width:100%;
+    max-width:700px;
+    background:#181818;
+    border-radius:20px 20px 0 0;
+    padding:18px;
+    max-height:90vh;
+    overflow:auto;
+}
+
+.modalTitle{
+    color:#e5b638;
+    font-size:22px;
+    font-weight:bold;
+    margin-bottom:5px;
+}
+
+.modalSubtitle{
+    color:#aaa;
+    margin-bottom:12px;
+}
+
+.choice{
+    width:100%;
+    margin:5px 0;
+    text-align:left;
+    background:#292929;
+    color:#fff;
+    min-height:52px;
+}
+
+.choice.onCourtChoice{
+    border:2px solid #208b4a;
+    background:#183522;
+}
+
+.choice.sentOffChoice{
+    border:2px solid #b51f2d;
+    opacity:.55;
+}
+
+.choice .greenDot{
+    color:#32c968;
+    font-size:18px;
+    margin-right:6px;
+}
+
+.choice .grayDot{
+    color:#777;
+    font-size:18px;
+    margin-right:6px;
+}
+
+.teamChoice{
+    min-height:70px;
+    font-size:19px;
+    margin:7px 0;
+}
+
+.close{
+    width:100%;
+    margin-top:10px;
+    background:#444;
+    color:#fff;
+}
+
+.shareBox{
+    background:#202020;
+    border-radius:12px;
+    padding:12px;
+    white-space:pre-wrap;
+    font-size:13px;
+    color:#ddd;
+}
+
+.notice{
+    background:#202020;
+    border-radius:10px;
+    padding:10px;
+    text-align:center;
+    color:#aaa;
+}
+
+@media(max-width:500px){
+
+    .clock{
+        font-size:64px;
+    }
+
+    .goals{
+        font-size:58px;
+    }
+
+    button{
+        padding:12px 10px;
+    }
+
+    .playerStats{
+        grid-template-columns:repeat(5,1fr);
+    }
+
+}
+
+/* =========================================================
+   FUTSAL CONTROL PRO — INTERFAZ DASHBOARD
+   La lógica de partido procede de la versión estable.
+========================================================= */
+
+body{
+    background:#090b0f;
+}
+
+header{
+    text-align:left;
+    padding:10px 18px;
+    background:#11151b;
+    border-bottom:1px solid #e5b638;
+}
+
+header .logo{display:none}
+header h1{font-size:22px}
+header .small{font-size:10px}
+
+.container{
+    max-width:1400px;
+    padding:10px;
+}
+
+.card{
+    background:#11161d;
+    border:1px solid #222a34;
+    margin-bottom:10px;
+    padding:12px;
+}
+
+.clock{
+    font-size:78px;
+}
+
+.bigClock{
+    min-height:68px;
+    font-size:23px;
+}
+
+.score{
+    gap:12px;
+}
+
+.actionGrid button{
+    min-height:58px;
+    font-size:15px;
+}
+
+.player{
+    margin:4px 0;
+    padding:7px;
+    border-radius:10px;
+}
+
+.playerTop{
+    gap:5px;
+}
+
+.number{
+    width:42px!important;
+    padding:7px 3px!important;
+    font-size:13px!important;
+}
+
+.playerName{
+    padding:7px!important;
+    font-size:13px!important;
+}
+
+.badges{
+    gap:3px;
+    margin-top:4px;
+}
+
+.badge{
+    padding:4px 6px;
+    font-size:9px;
+}
+
+.starterButton{
+    margin-top:4px;
+    padding:7px!important;
+    font-size:10px!important;
+}
+
+.playerActions{
+    margin-top:4px;
+}
+
+.playerActions button{
+    padding:7px!important;
+    font-size:10px!important;
+}
+
+.playerStats{
+    margin-top:4px;
+    gap:3px;
+}
+
+.miniStat{
+    padding:4px 1px;
+    font-size:8px;
+}
+
+.miniStat strong{
+    font-size:12px;
+}
+
+.lineupInfo{
+    padding:7px;
+    margin-bottom:6px;
+    font-size:10px;
+}
+
+@media(min-width:701px) and (orientation:landscape){
+
+    .container{
+        display:grid;
+        grid-template-columns:minmax(250px,1fr) minmax(360px,1.35fr) minmax(250px,1fr);
+        gap:10px;
+        align-items:start;
+    }
+
+    /* Reloj/partido ocupa toda la fila superior */
+    .container > .card:nth-child(2){
+        grid-column:1 / 4;
+        grid-row:1;
+    }
+
+    .container > .card:nth-child(1){
+        grid-column:1;
+        grid-row:2;
+    }
+
+    .container > .card:nth-child(3){
+        grid-column:3;
+        grid-row:2;
+    }
+
+    .container > .card:nth-child(4){
+        grid-column:2;
+        grid-row:2;
+    }
+
+    .container > .card:nth-child(5){
+        grid-column:1;
+        grid-row:3;
+    }
+
+    .container > .card:nth-child(6){
+        grid-column:3;
+        grid-row:3;
+    }
+
+    .container > .card:nth-child(7){
+        grid-column:2;
+        grid-row:3;
+    }
+
+    .container > .card:nth-child(8){
+        grid-column:1;
+        grid-row:4;
+    }
+
+    .container > .card:nth-child(9){
+        grid-column:2 / 4;
+        grid-row:4;
+    }
+
+    .container > .card:nth-child(5),
+    .container > .card:nth-child(6){
+        max-height:620px;
+        overflow:hidden;
+    }
+
+    .container > .card:nth-child(5) > div[id$="Players"],
+    .container > .card:nth-child(6) > div[id$="Players"]{
+        max-height:510px;
+        overflow-y:auto;
+        -webkit-overflow-scrolling:touch;
+    }
+
+    .score .team{font-size:15px}
+    .score .goals{font-size:56px}
+}
+
+@media(max-width:700px){
+    .container{
+        display:block;
+    }
+}
+
+
+.playerPhotoWrap{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.playerPhoto{width:58px;height:58px;border-radius:50%;object-fit:cover;border:2px solid #e5b638;background:#333;flex-shrink:0}
+.photoPicker{font-size:11px;max-width:150px;color:#bbb}
+.photoPicker::file-selector-button{background:#e5b638;color:#111;border:0;border-radius:8px;padding:7px;margin-right:5px;font-weight:bold}
+
+/* V18.1 - plantilla compacta con menú al tocar */
+.player{
+  position:relative;
+  display:grid;
+  grid-template-columns:52px 1fr;
+  grid-template-areas:
+    "photo top"
+    "photo badges"
+    "photo quick";
+  align-items:center;
+  gap:4px 9px;
+  padding:7px;
+  margin:4px 0;
+  min-height:64px;
+  cursor:pointer;
+}
+.playerPhotoWrap{grid-area:photo;display:flex;align-items:center;justify-content:center;position:relative}
+.playerPhoto{width:48px;height:48px;border-radius:50%;object-fit:cover;border:2px solid #555}
+.playerTop{grid-area:top;display:flex;align-items:center;gap:6px;min-width:0}
+.playerTop .number{width:42px!important;font-weight:800}
+.playerTop .playerName{min-width:0;width:100%;font-weight:700}
+.badges{grid-area:badges;display:flex;gap:3px;flex-wrap:wrap}
+.playerActions{grid-area:quick;display:none}
+.playerStats{display:none}
+.starterButton{display:none}
+/* El selector de foto solo ocupa un pequeño botón sobre la esquina de la foto.
+   El resto de la ficha queda libre para abrir el menú del jugador. */
+.player .photoPicker{
+  position:absolute;
+  left:34px;
+  top:34px;
+  width:18px;
+  height:18px;
+  opacity:0;
+  cursor:pointer;
+  z-index:3;
+}
+.player.isExpanded{
+  grid-template-areas:
+    "photo top"
+    "photo badges"
+    "photo quick"
+    "photo details";
+}
+.player.isExpanded .playerActions,
+.player.isExpanded .starterButton,
+.player.isExpanded .playerStats{display:flex}
+.player.isExpanded .playerActions{grid-area:quick}
+.player.isExpanded .playerStats{grid-area:details;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:3px}
+.player.isExpanded .starterButton{grid-column:2;display:block}
+.player.isExpanded .playerActions button{width:100%}
+@media(min-width:700px){
+  #homePlayers,#awayPlayers{display:grid;grid-template-columns:1fr 1fr;gap:5px}
+  .player{margin:0}
+}
+
+</style>
+
+<style>
+#fiveFoulWarning button:active{transform:scale(.97)}
+
+/* =========================================================
+   V12 — DASHBOARD VISUAL + ESCUDOS PERSONALIZABLES
+========================================================= */
+:root{
+  --gold:#f5c400;
+  --gold2:#e5b638;
+  --bg:#07090d;
+  --panel:#11161d;
+  --panel2:#151b23;
+  --line:#29313c;
+  --home:#d7192e;
+  --away:#0879dc;
+  --green:#19b95a;
+}
+html,body{background:var(--bg);min-height:100%;overflow-x:hidden;overflow-y:auto;}
+body{font-family:Arial,Helvetica,sans-serif;}
+header{
+  position:sticky;top:0;z-index:50;
+  display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:18px;
+  padding:10px 18px;
+  background:linear-gradient(180deg,#151b23,#0d1117);
+  border-bottom:1px solid var(--gold);
+}
+header h1{font-size:23px;letter-spacing:.5px;color:#fff;}
+header h1 span{color:var(--gold)!important;}
+header .small{color:#87909d;font-size:10px;text-transform:uppercase;letter-spacing:1px;}
+.proBrand{display:flex;align-items:center;gap:10px;min-width:245px;}
+.proBall{font-size:38px;line-height:1;}
+.proBrandText{display:flex;flex-direction:column;}
+.proNav{display:flex;justify-content:center;gap:8px;}
+.proNav button{background:#151b23;border:1px solid #2d3540;padding:9px 14px;border-radius:10px;font-size:11px;min-width:82px;}
+.proNav button:hover{border-color:var(--gold);}
+.matchMeta{display:flex;align-items:center;gap:13px;border:1px solid #8d7412;border-radius:10px;padding:9px 13px;color:#fff;font-size:12px;white-space:nowrap;}
+.matchMeta span{display:flex;gap:6px;align-items:center;}
+.container{
+  max-width:1550px;width:100%;margin:0 auto;padding:12px;
+  display:grid!important;
+  grid-template-columns:minmax(275px,1fr) minmax(390px,1.25fr) minmax(275px,1fr) 270px!important;
+  grid-template-areas:
+    "home clock away config"
+    "home fouls away config"
+    "home actions away config"
+    "events events minutes summary";
+  gap:10px;
+  align-items:start;
+}
+.container>.card{margin:0;min-width:0;background:linear-gradient(180deg,#141a21,#0e1319);border:1px solid #28313c;border-radius:13px;box-shadow:0 5px 18px #0009;}
+.container>.card:nth-child(1){grid-area:config;}
+.container>.card:nth-child(2){grid-area:clock;}
+.container>.card:nth-child(3){grid-area:fouls;}
+.container>.card:nth-child(4){grid-area:actions;}
+.container>.card:nth-child(5){grid-area:home;}
+.container>.card:nth-child(6){grid-area:away;}
+.container>.card:nth-child(7){grid-area:events;}
+.container>.card:nth-child(8){grid-area:minutes;}
+.container>.card:nth-child(9){grid-area:summary;}
+.container>.card:nth-child(1){position:sticky;top:80px;}
+.container>.card:nth-child(5),.container>.card:nth-child(6){height:calc(100vh - 104px);max-height:none;overflow:hidden;}
+.container>.card:nth-child(5)>div[id$="Players"],.container>.card:nth-child(6)>div[id$="Players"]{height:calc(100vh - 255px);max-height:none;overflow-y:auto;padding-right:3px;-webkit-overflow-scrolling:touch;}
+.container>.card:nth-child(5){border-top:3px solid var(--home);}
+.container>.card:nth-child(6){border-top:3px solid var(--away);}
+.card h3{font-size:14px;letter-spacing:.3px;margin-bottom:9px;color:var(--gold);}
+.teamDashboardHead{display:flex;align-items:center;gap:10px;padding:2px 2px 10px;border-bottom:1px solid #29313c;margin-bottom:8px;}
+.teamCrest{width:52px;height:52px;object-fit:contain;border-radius:9px;background:#090c10;border:1px solid #333b46;padding:4px;flex:0 0 auto;}
+.teamCrest.placeholder{display:flex;align-items:center;justify-content:center;font-size:29px;color:#777;}
+.teamDashboardName{font-size:19px;font-weight:900;line-height:1.05;color:#fff;}
+.teamDashboardSub{font-size:9px;color:#7f8995;margin-top:4px;text-transform:uppercase;letter-spacing:1px;}
+.lineupInfo{background:#0d1218;border:1px solid #222b35;padding:7px;border-radius:8px;margin-bottom:7px;font-size:9px;}
+.player{background:#171d25;border:1px solid #27313b;border-radius:8px;padding:6px;margin:3px 0;}
+.player.onCourt{border-color:#1bb65a;box-shadow:inset 3px 0 #1bb65a;}
+.player.starter{border-left:3px solid var(--gold);}
+.playerTop{gap:4px;}
+.number{width:37px!important;padding:6px 2px!important;font-size:12px!important;background:#202832!important;}
+.playerName{padding:6px!important;font-size:12px!important;background:#202832!important;}
+.badges{gap:2px;margin-top:3px;}
+.badge{padding:3px 5px;font-size:8px;border-radius:6px;}
+.playerActions{margin-top:3px;gap:4px;}
+.playerActions button{padding:5px!important;font-size:9px!important;}
+.starterButton{margin-top:3px;padding:5px!important;font-size:9px!important;}
+.playerStats{margin-top:3px;gap:2px;}
+.miniStat{padding:3px 1px;font-size:7px;}
+.miniStat strong{font-size:11px;}
+.period{font-size:15px;background:#20262e;border:1px solid #313b47;border-radius:10px;padding:7px;margin-bottom:5px;color:#fff;font-weight:900;}
+.clock{font-size:94px;font-weight:900;letter-spacing:-3px;margin:2px 0 5px;color:var(--gold);}
+.clockHint{font-size:9px;margin-bottom:3px;}
+.clockType{font-size:10px;margin-bottom:8px;}
+.score{gap:18px;}
+.score .team{font-size:13px;max-width:150px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.score .goals{font-size:57px;margin:4px;}
+.scoreButtons button{padding:8px 11px;font-size:12px;}
+.bigClock{min-height:63px;font-size:22px;border-radius:10px;box-shadow:0 4px 12px #0007;}
+#clockBtn.blue{background:linear-gradient(180deg,#0db5ff,#0874d5);}
+#clockBtn.green{background:linear-gradient(180deg,#19d95e,#119c43);}
+.container>.card:nth-child(2) .dark{padding:10px;font-size:11px;}
+.actionGrid{grid-template-columns:repeat(3,1fr);gap:6px;}
+.actionGrid button{min-height:52px;font-size:13px;border-radius:9px;}
+.stat{padding:7px 0;}
+.foulNumber{font-size:23px;}
+.warning,.danger{padding:7px;font-size:11px;margin-top:6px;}
+.container>.card:nth-child(3) .stat button{padding:7px 10px;font-size:12px;}
+#firstHalfFouls,#secondHalfFouls{font-weight:bold;color:#fff;}
+.eventsCompact{max-height:190px;overflow:auto;}
+.shareBox{max-height:190px;overflow:auto;}
+.minutesCompact{max-height:190px;overflow:auto;}
+.configTitle{display:flex;align-items:center;justify-content:space-between;gap:8px;}
+.crestConfigGrid{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:10px;}
+.crestConfig{background:#0c1117;border:1px solid #27313c;border-radius:9px;padding:7px;text-align:center;}
+.crestConfig strong{display:block;font-size:9px;color:#9ca6b2;margin-bottom:5px;text-transform:uppercase;}
+.configCrestImg{width:58px;height:58px;object-fit:contain;border-radius:8px;background:#151a20;border:1px solid #333;padding:4px;display:block;margin:0 auto 6px;}
+.crestConfig button{width:100%;padding:6px 4px;font-size:9px;}
+.fileInput{display:none;}
+.metaInputs{display:grid;grid-template-columns:1fr 1fr;gap:7px;}
+.metaInputs .full{grid-column:1/-1;}
+.metaInputs input{padding:8px;font-size:12px;}
+.configDivider{height:1px;background:#27313c;margin:10px 0;}
+.quickButtons{display:grid;grid-template-columns:1fr 1fr;gap:6px;}
+.quickButtons button{font-size:10px;padding:8px 5px;}
+.footerTag{grid-column:1/-1;text-align:right;color:#58616d;font-size:9px;padding:2px 6px;}
+@media(max-width:1100px) and (min-width:701px){
+  header{grid-template-columns:1fr auto;}
+  .proNav{display:flex;overflow-x:auto;justify-content:flex-start;gap:6px;padding:6px 4px;width:100%;}.proNav button{flex:0 0 auto;min-width:70px;padding:7px 8px;font-size:10px;}
+  .container{grid-template-columns:minmax(245px,1fr) minmax(340px,1.25fr) minmax(245px,1fr)!important;grid-template-areas:"home clock away" "home fouls away" "home actions away" "config config config" "events events events" "minutes minutes summary";}
+  .container>.card:nth-child(1){position:static;}
+  .container>.card:nth-child(5),.container>.card:nth-child(6){height:650px;}
+  .container>.card:nth-child(5)>div[id$="Players"],.container>.card:nth-child(6)>div[id$="Players"]{height:540px;}
+}
+@media(max-width:700px){
+  header{display:block;text-align:center;}
+  .proBrand{justify-content:center;}
+  .proNav{display:flex;overflow-x:auto;justify-content:flex-start;gap:6px;padding:6px 4px;width:100%;}.proNav button{flex:0 0 auto;min-width:70px;padding:7px 8px;font-size:10px;}.matchMeta{display:flex;}
+  .container{display:block!important;padding:8px;}
+  .container>.card{margin-bottom:8px;}
+  .container>.card:nth-child(1){position:static;}
+  /* En móvil las listas deben crecer completas y permitir el scroll de la página.
+     Evita que la tarjeta corte la lista después de unos jugadores. */
+  .container>.card:nth-child(5),.container>.card:nth-child(6){
+    height:auto!important;
+    max-height:none!important;
+    overflow:visible!important;
+  }
+  .container>.card:nth-child(5)>div[id$="Players"],
+  .container>.card:nth-child(6)>div[id$="Players"]{
+    height:auto!important;
+    max-height:none!important;
+    overflow:visible!important;
+    -webkit-overflow-scrolling:auto;
+  }
+  .clock{font-size:70px;}
+  .crestConfigGrid{grid-template-columns:1fr 1fr;}
+}
+
+</style>
+
+
+<style id="v13-settings-style">
+/* V13 — configuración rápida tipo reloj */
+#configCard{display:none;position:fixed;inset:0;z-index:100000;box-sizing:border-box;margin:0;padding:24px;overflow:auto;background:rgba(3,6,10,.86);backdrop-filter:blur(7px);}
+#configCard.quickSettingsOpen{display:block;}
+#configCard .quickSettingsInner{max-width:980px;margin:3vh auto 0;background:#151b22;border:2px solid #f5c400;border-radius:22px;padding:24px;box-shadow:0 25px 80px rgba(0,0,0,.7);}
+#configCard .quickSettingsClose{position:absolute;right:22px;top:18px;width:46px;height:46px;border-radius:50%;font-size:25px;border:1px solid #555;background:#252b33;color:#fff;cursor:pointer;}
+#configCard .quickSettingsTitle{display:flex;align-items:center;justify-content:space-between;gap:15px;margin:0 55px 18px 0;color:#f5c400;font-size:22px;}
+#configCard .quickSettingsHint{font-size:13px;color:#b8c0c8;margin:-8px 0 18px;}
+.quickEditTarget{cursor:pointer;}
+.quickEditTarget:active{transform:scale(.99);}
+#homeTitle.quickEditTarget,#awayTitle.quickEditTarget{border-radius:10px;padding:4px 8px;transition:.15s;}
+#homeTitle.quickEditTarget:hover,#awayTitle.quickEditTarget:hover{background:rgba(245,196,0,.10);}
+.matchMeta.quickEditTarget{cursor:pointer;}
+.matchMeta.quickEditTarget::after{content:' ✎';opacity:.65;font-size:12px;}
+.teamDashboardHead.quickEditTarget{border-radius:12px;padding:4px;}
+@media(max-width:900px){#configCard{padding:12px}.quickSettingsInner{padding:18px!important;margin-top:1vh!important}.quickSettingsTitle{font-size:19px!important}}
+
+/* V14 — registro de incidencias reducido: goles y faltas se gestionan desde sus contadores */
+.cardOnlyGrid{
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:10px;
+}
+.cardOnlyGrid button{
+  min-height:74px;
+  font-size:1rem;
+}
+.cardTarjetas h3{
+  margin-bottom:10px;
+}
+@media (max-width:700px){
+  .cardOnlyGrid button{min-height:68px;}
+}
+
+/* =========================================================
+   V15 — PLANTILLAS ULTRACOMPACTAS PARA IPAD APASISADO
+   Objetivo: mostrar el máximo de jugadores en pantalla sin
+   eliminar sus controles ni estadísticas.
+========================================================= */
+@media(min-width:701px) and (orientation:landscape){
+  .container>.card:nth-child(5),
+  .container>.card:nth-child(6){
+    height:calc(100vh - 104px);
+  }
+
+  .container>.card:nth-child(5)>div[id$="Players"],
+  .container>.card:nth-child(6)>div[id$="Players"]{
+    height:calc(100vh - 225px);
+    overflow-y:auto;
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:4px;
+    align-content:start;
+    padding:0 2px 4px 0;
+  }
+
+  .container>.card:nth-child(5) .lineupInfo,
+  .container>.card:nth-child(6) .lineupInfo{
+    font-size:8px;
+    padding:5px;
+    margin-bottom:5px;
+  }
+
+  .container>.card:nth-child(5) .player,
+  .container>.card:nth-child(6) .player{
+    margin:0;
+    padding:4px;
+    border-radius:7px;
+    min-width:0;
+  }
+
+  .container>.card:nth-child(5) .playerTop,
+  .container>.card:nth-child(6) .playerTop{
+    display:grid;
+    grid-template-columns:29px minmax(0,1fr);
+    gap:3px;
+  }
+
+  .container>.card:nth-child(5) .number,
+  .container>.card:nth-child(6) .number{
+    width:29px!important;
+    padding:4px 1px!important;
+    font-size:10px!important;
+  }
+
+  .container>.card:nth-child(5) .playerName,
+  .container>.card:nth-child(6) .playerName{
+    min-width:0;
+    width:100%;
+    padding:4px 3px!important;
+    font-size:10px!important;
+  }
+
+  .container>.card:nth-child(5) .badges,
+  .container>.card:nth-child(6) .badges{
+    margin-top:2px;
+    gap:2px;
+    flex-wrap:nowrap;
+    overflow:hidden;
+  }
+
+  .container>.card:nth-child(5) .badge,
+  .container>.card:nth-child(6) .badge{
+    padding:2px 3px;
+    font-size:6px;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+  }
+
+  .container>.card:nth-child(5) .starterButton,
+  .container>.card:nth-child(6) .starterButton{
+    margin-top:2px;
+    padding:3px 2px!important;
+    font-size:7px!important;
+    min-height:22px;
+    line-height:1.05;
+  }
+
+  .container>.card:nth-child(5) .playerActions,
+  .container>.card:nth-child(6) .playerActions{
+    margin-top:2px;
+    gap:2px;
+  }
+
+  .container>.card:nth-child(5) .playerActions button,
+  .container>.card:nth-child(6) .playerActions button{
+    padding:3px 2px!important;
+    font-size:7px!important;
+    min-height:21px;
+  }
+
+  .container>.card:nth-child(5) .playerStats,
+  .container>.card:nth-child(6) .playerStats{
+    margin-top:2px;
+    gap:1px;
+  }
+
+  .container>.card:nth-child(5) .miniStat,
+  .container>.card:nth-child(6) .miniStat{
+    padding:2px 0;
+    font-size:5px;
+    border-radius:4px;
+  }
+
+  .container>.card:nth-child(5) .miniStat strong,
+  .container>.card:nth-child(6) .miniStat strong{
+    font-size:8px;
+  }
+}
+</style>
+
+
+<style>
+/* V16 — HISTORIAL Y ESTADÍSTICAS DE TEMPORADA */
+#seasonModal{display:none;position:fixed;inset:0;z-index:100000;background:rgba(0,0,0,.82);padding:18px;overflow:auto}
+#seasonModal.show{display:flex;align-items:flex-start;justify-content:center}
+.seasonBox{width:min(1100px,96vw);margin:2vh auto;background:#151a21;border:2px solid #f5c400;border-radius:22px;box-shadow:0 25px 80px rgba(0,0,0,.65);overflow:hidden;color:#fff}
+.seasonHead{display:flex;justify-content:space-between;align-items:center;padding:16px 20px;border-bottom:1px solid rgba(245,196,0,.45)}
+.seasonHead h2{margin:0;color:#f5c400;font-size:24px}.seasonClose{background:#333;color:#fff;border:0;border-radius:10px;padding:9px 14px;font-size:20px}
+.seasonTools{display:flex;gap:10px;flex-wrap:wrap;padding:14px 20px;background:#1d242d}.seasonTools input,.seasonTools select{background:#252e38;color:#fff;border:1px solid #697480;border-radius:9px;padding:10px 12px;font-size:15px}
+.seasonBtn{border:0;border-radius:10px;padding:11px 15px;font-weight:800;background:#f5c400;color:#111}.seasonBtn.alt{background:#37414d;color:#fff}.seasonBtn.red{background:#d71920;color:#fff}
+.seasonTabs{display:flex;gap:8px;padding:0 20px;background:#1d242d}.seasonTab{border:0;background:#2b3540;color:#fff;padding:11px 16px;border-radius:10px 10px 0 0;font-weight:800}.seasonTab.active{background:#f5c400;color:#111}
+.seasonBody{padding:18px 20px;max-height:70vh;overflow:auto}.seasonEmpty{padding:28px;text-align:center;color:#bbc2ca}
+.historyCard{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;background:#202832;border:1px solid #44505d;border-radius:12px;padding:12px 14px;margin-bottom:9px}.historyMain b{color:#f5c400}.historySub{font-size:13px;color:#b9c1ca;margin-top:4px}.historyActions{display:flex;gap:7px;flex-wrap:wrap}.historyActions button{border:0;border-radius:8px;padding:8px 10px;background:#3a4652;color:#fff;font-weight:700}.historyActions button.danger{background:#8d151b}
+.statWrap{overflow:auto}.statTable{width:100%;border-collapse:collapse;min-width:760px}.statTable th,.statTable td{padding:9px 8px;border-bottom:1px solid #39434e;text-align:center}.statTable th{background:#252e38;color:#f5c400;position:sticky;top:0}.statTable td:first-child,.statTable th:first-child{text-align:left}.statTable tr:hover td{background:#222b34}
+.customGrid{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:15px}.metric{background:#2b3540;border-radius:9px;padding:8px 10px}.metric input{margin-right:6px}.customTitle{font-size:18px;color:#f5c400;font-weight:900;margin:8px 0 12px}
+@media(max-width:800px){.seasonBox{width:98vw}.seasonHead h2{font-size:19px}.seasonBody{padding:12px}.historyCard{grid-template-columns:1fr}.seasonTools{padding:10px}}
+
+/* V18 ROW: una ficha por fila, con foto y controles desplegables */
+@media (min-width:0px){
+  .container>.card:nth-child(5)>div[id$="Players"],
+  .container>.card:nth-child(6)>div[id$="Players"]{
+    height:auto!important;
+    max-height:none!important;
+    overflow:visible!important;
+    display:grid!important;
+    grid-template-columns:minmax(0,1fr)!important;
+    gap:8px!important;
+    align-content:start!important;
+  }
+
+  .container>.card:nth-child(5) .player,
+  .container>.card:nth-child(6) .player{
+    width:100%!important;
+    min-height:76px!important;
+    margin:0!important;
+    padding:8px!important;
+    display:grid!important;
+    grid-template-columns:64px minmax(0,1fr)!important;
+    grid-template-areas:
+      "photo top"
+      "photo badges"
+      "photo quick"
+      "photo details"!important;
+    align-items:center!important;
+    gap:4px 9px!important;
+  }
+
+  .container>.card:nth-child(5) .playerPhoto,
+  .container>.card:nth-child(6) .playerPhoto{
+    width:58px!important;
+    height:58px!important;
+  }
+
+  .container>.card:nth-child(5) .playerTop,
+  .container>.card:nth-child(6) .playerTop{
+    display:flex!important;
+    align-items:center!important;
+    gap:6px!important;
+    min-width:0!important;
+  }
+
+  .container>.card:nth-child(5) .playerName,
+  .container>.card:nth-child(6) .playerName{
+    min-width:0!important;
+    font-size:14px!important;
+    padding:7px!important;
+  }
+
+  .container>.card:nth-child(5) .number,
+  .container>.card:nth-child(6) .number{
+    width:48px!important;
+    font-size:14px!important;
+    padding:7px 3px!important;
+  }
+
+  .container>.card:nth-child(5) .badges,
+  .container>.card:nth-child(6) .badges{
+    margin-top:0!important;
+    gap:4px!important;
+  }
+
+  .container>.card:nth-child(5) .playerActions,
+  .container>.card:nth-child(6) .playerActions{
+    display:none!important;
+  }
+
+  .container>.card:nth-child(5) .playerStats,
+  .container>.card:nth-child(6) .playerStats{
+    display:none!important;
+  }
+
+  .container>.card:nth-child(5) .photoPicker,
+  .container>.card:nth-child(6) .photoPicker{
+    left:auto!important;
+    top:0!important;
+    right:0!important;
+    width:24px!important;
+    height:24px!important;
+    z-index:4!important;
+  }
+}
+</style>
+
+</head>
+
+<body>
+
+<header>
+  <div class="proBrand">
+    <div class="proBall">⚽</div>
+    <div class="proBrandText">
+      <h1>FUTSAL CONTROL <span>PRO</span></h1>
+      <div class="small">CONTROL DE PARTIDOS DE FÚTBOL SALA</div>
+    </div>
+  </div>
+  <div class="proNav">
+    <button onclick="startNewMatch()">🏟️<br>NUEVO</button>
+    <button onclick="saveProState()">💾<br>GUARDAR</button>
+    <button onclick="loadProState()">📂<br>CARGAR</button>
+    <button onclick="openHistory()">📊<br>HISTORIAL</button>
+    <button onclick="openQuickSettings()">⚙️<br>CONFIGURACIÓN</button>
+  </div>
+  <div class="matchMeta quickEditTarget" onclick="openQuickSettings()" title="Tocar para editar datos del partido">
+    <span>📅 <b id="metaDateView">13/09/2026</b></span>
+    <span>◷ <b id="metaTimeView">19:00</b></span>
+    <span>📍 <b id="metaVenueView">PABELLÓN</b></span>
+  </div>
+</header>
+
+<div class="container">
+
+<!-- CONFIGURACIÓN -->
+
+<div class="card" id="configCard" aria-label="Configuración rápida del partido">
+  <div class="quickSettingsInner">
+    <button class="quickSettingsClose" type="button" onclick="closeQuickSettings()" aria-label="Cerrar">✕</button>
+    <h3 class="quickSettingsTitle">⚙️ CONFIGURACIÓN DEL PARTIDO <span style="font-size:11px;color:#8e98a3">EDICIÓN RÁPIDA</span></h3>
+    <div class="quickSettingsHint">Puedes abrir este panel tocando el nombre de cualquiera de los equipos, el escudo o los datos de fecha/hora/pabellón de la cabecera.</div>
+<div class="crestConfigGrid">
+  <div class="crestConfig">
+    <strong>Escudo local</strong>
+    <img id="configHomeCrest" class="configCrestImg" alt="Escudo local" src="">
+    <input id="homeCrestFile" class="fileInput" type="file" accept="image/*" onchange="loadCrestFile('home',this)">
+    <button class="dark" onclick="document.getElementById('homeCrestFile').click()">📷 SUBIR ESCUDO</button>
+    <button class="dark" style="margin-top:4px" onclick="clearCrest('home')">✕ QUITAR</button>
+  </div>
+  <div class="crestConfig">
+    <strong>Escudo visitante</strong>
+    <img id="configAwayCrest" class="configCrestImg" alt="Escudo visitante" src="">
+    <input id="awayCrestFile" class="fileInput" type="file" accept="image/*" onchange="loadCrestFile('away',this)">
+    <button class="dark" onclick="document.getElementById('awayCrestFile').click()">📷 SUBIR ESCUDO</button>
+    <button class="dark" style="margin-top:4px" onclick="clearCrest('away')">✕ QUITAR</button>
+  </div>
+</div>
+
+<div class="configDivider"></div>
+
+
+<label>Tu equipo</label>
+<input id="homeName" value="EQUIPO LOCAL">
+
+<br>
+
+<label>Equipo visitante</label>
+<input id="awayName" value="EQUIPO VISITANTE">
+
+<br>
+
+<label>Tipo de reloj</label>
+
+<select id="clockMode">
+    <option value="stopped">🔴 Reloj parado</option>
+    <option value="running">🟢 Reloj corrido</option>
+</select>
+
+<br>
+
+<div class="metaInputs">
+  <div><label>Fecha</label><input id="matchDate" type="date" value="2026-09-13"></div>
+  <div><label>Hora</label><input id="matchTime" type="time" value="19:00"></div>
+  <div class="full"><label>Pabellón</label><input id="matchVenue" value="Pabellón Municipal"></div>
+</div>
+
+<div class="configDivider"></div>
+
+<button class="gold"
+        style="width:100%;font-size:18px"
+        onclick="startNewMatch()">
+    🏟️ EMPEZAR NUEVO PARTIDO
+</button>
+
+  </div>
+</div>
+
+
+<!-- RELOJ Y MARCADOR -->
+
+<div class="card">
+
+<div class="period" id="periodLabel">
+    1ª PARTE
+</div>
+
+<div class="clock"
+     id="clock"
+     onclick="editPeriodTime()">
+    20:00
+</div>
+
+<div class="clockHint">
+    ⏱️ Pulsa el reloj para cambiar la duración del periodo
+</div>
+
+<div class="clockType"
+     id="clockTypeLabel">
+    🔴 RELOJ PARADO
+</div>
+
+<div class="score">
+
+<div>
+
+<div class="team quickEditTarget" id="homeTitle" onclick="openQuickSettings()" title="Tocar para editar equipo y escudo">
+    EQUIPO LOCAL
+</div>
+
+<div class="goals" id="homeGoals">
+    0
+</div>
+
+<div class="scoreButtons">
+
+<button class="gold"
+        onclick="openGoal(1)">
+    ⚽ GOL
+</button>
+
+<button class="dark"
+        onclick="undoGoal(1)">
+    −
+</button>
+
+</div>
+
+</div>
+
+<div style="font-size:30px">
+    —
+</div>
+
+<div>
+
+<div class="team quickEditTarget" id="awayTitle" onclick="openQuickSettings()" title="Tocar para editar equipo y escudo">
+    EQUIPO VISITANTE
+</div>
+
+<div class="goals" id="awayGoals">
+    0
+</div>
+
+<div class="scoreButtons">
+
+<button class="red"
+        onclick="openGoal(0)">
+    ⚽ GOL
+</button>
+
+<button class="dark"
+        onclick="undoGoal(0)">
+    −
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+<br>
+
+<button id="clockBtn"
+        class="blue bigClock"
+        onclick="toggleClock()">
+    ▶ INICIAR
+</button>
+
+<br><br>
+
+<button class="dark"
+        style="width:100%"
+        onclick="resetCurrentPeriod()">
+    ↺ REINICIAR TIEMPO
+</button>
+
+</div>
+
+
+<!-- FALTAS -->
+
+<div class="card">
+
+<h3>🚨 FALTAS</h3>
+
+<div class="stat">
+
+<b id="homeFoulName">
+    EQUIPO LOCAL
+</b>
+
+<div>
+
+<button class="dark"
+        onclick="changeFoul(1,-1)">
+    −
+</button>
+
+<span class="foulNumber"
+      id="homeFouls">
+    0
+</span>
+
+<button class="gold"
+        onclick="openFoul(1)">
+    +1
+</button>
+
+</div>
+
+</div>
+
+<div id="homeFoulWarning"></div>
+
+
+<div class="stat">
+
+<b id="awayFoulName">
+    EQUIPO VISITANTE
+</b>
+
+<div>
+
+<button class="dark"
+        onclick="changeFoul(0,-1)">
+    −
+</button>
+
+<span class="foulNumber"
+      id="awayFouls">
+    0
+</span>
+
+<button class="red"
+        onclick="openFoul(0)">
+    +1
+</button>
+
+</div>
+
+</div>
+
+<div id="awayFoulWarning"></div>
+
+
+<div style="margin-top:12px;background:#202020;border-radius:12px;padding:12px">
+
+<b>📊 FALTAS POR PARTE</b>
+
+<div style="margin-top:10px">
+    1ª PARTE ·
+    <span id="firstHalfFouls">
+        0 - 0
+    </span>
+</div>
+
+<div style="margin-top:6px">
+    2ª PARTE ·
+    <span id="secondHalfFouls">
+        0 - 0
+    </span>
+</div>
+
+</div>
+
+</div>
+
+
+<!-- REGISTRAR TARJETAS -->
+
+<div class="card cardTarjetas">
+
+<h3>📋 REGISTRAR TARJETA</h3>
+
+<div class="actionGrid cardOnlyGrid">
+
+<button class="gold"
+        onclick="openCard('yellow')">
+    🟨<br>AMARILLA
+</button>
+
+<button class="red"
+        onclick="openCard('red')">
+    🟥<br>ROJA
+</button>
+
+</div>
+
+</div>
+
+
+<!-- JUGADORES CIEZA -->
+
+<div class="card">
+
+<div class="teamDashboardHead quickEditTarget" onclick="openQuickSettings()" title="Tocar para editar equipo y escudo">
+    <div id="homeCrestWrap" class="teamCrest placeholder">⚽</div>
+    <div>
+      <div class="teamDashboardName" id="homePlayersTitle">EQUIPO LOCAL</div>
+      <div class="teamDashboardSub">LOCAL · PLANTILLA</div>
+    </div>
+</div>
+
+<div class="lineupInfo">
+    ⭐ Selecciona los <strong>5 TITULARES</strong> antes de comenzar.
+    Los cinco primeros vienen seleccionados por defecto.
+</div>
+
+<div id="homePlayers"></div>
+
+</div>
+
+
+<!-- JUGADORES EQUIPO VISITANTE -->
+
+<div class="card">
+
+<div class="teamDashboardHead quickEditTarget" onclick="openQuickSettings()" title="Tocar para editar equipo y escudo">
+    <div id="awayCrestWrap" class="teamCrest placeholder">⚽</div>
+    <div>
+      <div class="teamDashboardName" id="awayPlayersTitle">EQUIPO VISITANTE</div>
+      <div class="teamDashboardSub">VISITANTE · PLANTILLA</div>
+    </div>
+</div>
+
+<div class="lineupInfo">
+    ⭐ Selecciona los <strong>5 TITULARES</strong> antes de comenzar.
+    Los cinco primeros vienen seleccionados por defecto.
+</div>
+
+<div id="awayPlayers"></div>
+
+</div>
+
+
+<!-- INCIDENCIAS -->
+
+<div class="card">
+
+<h3>📋 INCIDENCIAS</h3>
+
+<div id="events">
+
+<div class="small">
+    Todavía no hay incidencias.
+</div>
+
+</div>
+
+</div>
+
+
+<!-- MINUTOS -->
+
+<div class="card">
+
+<h3>⏱️ MINUTOS JUGADOS</h3>
+
+<div id="minutesSummary"></div>
+
+</div>
+
+
+<!-- ESTADÍSTICAS -->
+
+<div class="card">
+
+<h3>📊 ESTADÍSTICAS</h3>
+
+<div id="summary"
+     class="shareBox">
+    Todavía no hay estadísticas.
+</div>
+
+<br>
+
+<button class="blue"
+        style="width:100%"
+        onclick="shareMatch()">
+    📤 COMPARTIR ESTADÍSTICAS
+</button>
+
+<br><br>
+
+<button class="gold"
+        style="width:100%"
+        onclick="copySummary()">
+    📋 COPIAR RESUMEN
+</button>
+
+</div>
+
+<div class="footerTag">FUTSAL CONTROL PRO · DASHBOARD</div>
+</div>
+
+
+<!-- MODAL -->
+
+<div class="modal"
+     id="actionModal">
+
+<div class="modalBox">
+
+<div class="modalTitle"
+     id="modalTitle">
+    Selecciona jugador
+</div>
+
+<div class="modalSubtitle"
+     id="modalSubtitle">
+</div>
+
+<div id="modalContent"></div>
+
+<button class="close"
+        onclick="closeModal()">
+    CANCELAR
+</button>
+
+</div>
+
+</div>
+
+
+<!-- AVISO EXPULSIÓN -->
+
+<div class="expulsionMessage"
+     id="expulsionMessage">
+
+<div class="expulsionBox">
+
+<div class="expulsionIcon">
+    🟥
+</div>
+
+<div class="expulsionTitle">
+    ¡JUGADOR EXPULSADO!
+</div>
+
+<div class="expulsionText"
+     id="expulsionText">
+</div>
+
+<br>
+
+<button class="gold"
+        style="width:100%"
+        onclick="closeExpulsion()">
+    ACEPTAR
+</button>
+
+</div>
+
+</div>
+
+
+<script>
+
+/* =========================================================
+   ESTADO DEL PARTIDO
+========================================================= */
+
+let period = 1;
+
+let periodDuration = 20 * 60;
+
+let seconds = periodDuration;
+
+let running = false;
+
+let timer = null;
+
+let matchStarted = false;
+let lineupLocked = false;
+
+let matchFinished = false;
+
+let homeGoals = 0;
+
+let awayGoals = 0;
+
+let homeFouls = 0;
+
+let awayFouls = 0;
+
+let homePlayers = [];
+
+let awayPlayers = [];
+
+let events = [];
+
+let pendingAction = null;
+
+let periodFouls = [
+    {home:0,away:0},
+    {home:0,away:0}
+];
+
+
+/* =========================================================
+   AUDIO
+========================================================= */
+
+let audioContext = null;
+
+function unlockAudio(){
+
+    try{
+
+        const A =
+            window.AudioContext ||
+            window.webkitAudioContext;
+
+        if(!A) return;
+
+        if(!audioContext){
+            audioContext = new A();
+        }
+
+        if(audioContext.state === "suspended"){
+            audioContext.resume();
+        }
+
+    }catch(e){}
+
+}
+
+
+function playTone(frequency,duration,delay=0){
+
+    try{
+
+        unlockAudio();
+
+        if(!audioContext) return;
+
+        const osc =
+            audioContext.createOscillator();
+
+        const gain =
+            audioContext.createGain();
+
+        osc.frequency.value = frequency;
+
+        gain.gain.value = 0.18;
+
+        osc.connect(gain);
+
+        gain.connect(audioContext.destination);
+
+        const start =
+            audioContext.currentTime + delay;
+
+        osc.start(start);
+
+        osc.stop(start + duration);
+
+    }catch(e){}
+
+}
+
+
+function beepPeriod(){
+
+    try{
+
+        unlockAudio();
+
+        if(navigator.vibrate){
+            navigator.vibrate([
+                300,150,300,150,500
+            ]);
+        }
+
+        playTone(850,.18,0);
+        playTone(850,.18,.25);
+        playTone(850,.18,.50);
+        playTone(850,.18,.75);
+
+    }catch(e){}
+
+}
+
+
+function beepExpulsion(){
+
+    try{
+
+        unlockAudio();
+
+        if(navigator.vibrate){
+            navigator.vibrate([
+                500,200,500,200,800
+            ]);
+        }
+
+        playTone(500,.25,0);
+        playTone(850,.25,.30);
+        playTone(500,.25,.60);
+        playTone(850,.35,.90);
+
+    }catch(e){}
+
+}
+
+
+/* =========================================================
+   JUGADORES
+========================================================= */
+
+function player(i){
+
+    return {
+        number:i,
+        name:"Jugador "+i,
+        photo:"",
+
+        /*
+           LOS 5 PRIMEROS SON TITULARES
+           POR DEFECTO
+        */
+        starter:i<=5,
+
+        onCourt:false,
+
+        sentOff:false,
+
+        goals:0,
+
+        yellow:0,
+
+        red:0,
+
+        fouls:0,
+
+        seconds:0
+    };
+
+}
+
+
+function createPlayers(){
+
+    homePlayers=[];
+    awayPlayers=[];
+
+    for(let i=1;i<=14;i++){
+
+        homePlayers.push(player(i));
+        awayPlayers.push(player(i));
+
+    }
+
+    /*
+       LOS CINCO TITULARES
+       COMIENZAN EN PISTA
+    */
+
+    homePlayers.forEach(p=>{
+        p.onCourt=p.starter;
+    });
+
+    awayPlayers.forEach(p=>{
+        p.onCourt=p.starter;
+    });
+
+    renderPlayers();
+
+}
+
+
+/* =========================================================
+   REINICIAR ESTADÍSTICAS MANTENIENDO TITULARES
+========================================================= */
+
+function resetPlayersForNewMatch(arr){
+
+    arr.forEach(p=>{
+
+        p.onCourt=p.starter;
+
+        p.sentOff=false;
+
+        p.goals=0;
+
+        p.yellow=0;
+
+        p.red=0;
+
+        p.fouls=0;
+
+        p.seconds=0;
+
+    });
+
+}
+
+
+/* =========================================================
+   SELECCIÓN DE TITULARES
+========================================================= */
+
+function toggleStarter(
+    arr,
+    i
+){
+
+    /*
+       UNA VEZ INICIADO EL PARTIDO
+       NO SE PUEDE CAMBIAR LA ALINEACIÓN
+    */
+
+    if(lineupLocked){
+
+        alert(
+            "🔒 La alineación está cerrada porque el reloj ya ha comenzado."
+        );
+
+        return;
+
+    }
+
+
+    let p=arr[i];
+
+    if(!p || p.sentOff) return;
+
+
+    /*
+       SI YA ES TITULAR:
+       LO CONVERTIMOS EN SUPLENTE
+    */
+
+    if(p.starter){
+
+        p.starter=false;
+
+        p.onCourt=false;
+
+        renderPlayers();
+
+        return;
+
+    }
+
+
+    /*
+       CONTAMOS LOS TITULARES ACTUALES
+    */
+
+    let starters =
+        arr.filter(x=>x.starter).length;
+
+
+    /*
+       NO PUEDE HABER MÁS DE 5
+    */
+
+    if(starters>=5){
+
+        alert(
+            "⚠️ Ya tienes 5 titulares seleccionados.\n\n"
+            +
+            "Primero cambia uno de ellos a suplente."
+        );
+
+        return;
+
+    }
+
+
+    p.starter=true;
+
+    p.onCourt=true;
+
+    renderPlayers();
+
+    updateSummary();
+
+}
+
+
+/* =========================================================
+   CONFIGURACIÓN
+========================================================= */
+
+document
+.getElementById("clockMode")
+.addEventListener("change",()=>{
+
+    document
+    .getElementById("clockTypeLabel")
+    .textContent =
+        document.getElementById("clockMode").value === "running"
+        ? "🟢 RELOJ CORRIDO"
+        : "🔴 RELOJ PARADO";
+
+});
+
+
+/* =========================================================
+   MODIFICAR DURACIÓN
+========================================================= */
+
+function editPeriodTime(){
+
+    if(matchStarted && running){
+
+        alert(
+            "⏸️ Primero pausa el reloj para modificar la duración."
+        );
+
+        return;
+    }
+
+    let currentMinutes =
+        Math.max(
+            1,
+            Math.round(periodDuration/60)
+        );
+
+    let value =
+        prompt(
+            "⏱️ Duración del periodo en minutos:",
+            currentMinutes
+        );
+
+    if(value === null) return;
+
+    let minutes =
+        parseInt(value);
+
+    if(!Number.isFinite(minutes) || minutes<1){
+
+        alert("Introduce una duración válida.");
+
+        return;
+    }
+
+    periodDuration =
+        minutes * 60;
+
+    seconds =
+        periodDuration;
+
+    fmt();
+
+}
+
+
+/* =========================================================
+   PARTIDO NUEVO
+========================================================= */
+
+function startNewMatch(){
+
+    unlockAudio();
+
+    stopClock();
+
+    period = 1;
+
+    periodDuration =
+        periodDuration || 20*60;
+
+    seconds =
+        periodDuration;
+
+    homeGoals = 0;
+
+    awayGoals = 0;
+
+    homeFouls = 0;
+
+    awayFouls = 0;
+
+    events = [];
+
+    periodFouls = [
+        {home:0,away:0},
+        {home:0,away:0}
+    ];
+
+
+    /*
+       SI YA EXISTEN JUGADORES,
+       MANTENEMOS LOS TITULARES
+       QUE EL USUARIO HAYA ELEGIDO.
+    */
+
+    if(
+        homePlayers.length === 0 ||
+        awayPlayers.length === 0
+    ){
+
+        createPlayers();
+
+    }else{
+
+        /*
+           Comprobamos que haya
+           exactamente 5 titulares.
+        */
+
+        ensureFiveStarters(homePlayers);
+
+        ensureFiveStarters(awayPlayers);
+
+        resetPlayersForNewMatch(
+            homePlayers
+        );
+
+        resetPlayersForNewMatch(
+            awayPlayers
+        );
+
+        renderPlayers();
+
+    }
+
+
+    matchStarted = true;
+    lineupLocked = false;
+
+    matchFinished = false;
+
+
+    const hn =
+        document
+        .getElementById("homeName")
+        .value
+        .trim() || "EQUIPO LOCAL";
+
+    const an =
+        document
+        .getElementById("awayName")
+        .value
+        .trim() || "EQUIPO VISITANTE";
+
+
+    [
+        "homeTitle",
+        "homeFoulName",
+        "homePlayersTitle"
+    ].forEach(id=>{
+
+        document
+        .getElementById(id)
+        .textContent=hn;
+
+    });
+
+
+    [
+        "awayTitle",
+        "awayFoulName",
+        "awayPlayersTitle"
+    ].forEach(id=>{
+
+        document
+        .getElementById(id)
+        .textContent=an;
+
+    });
+
+
+    updateAll();
+
+    addEvent("🏟️ PARTIDO INICIADO");
+
+
+    document
+    .getElementById("clockBtn")
+    .textContent="▶ INICIAR";
+
+
+    if(
+        document
+        .getElementById("clockMode")
+        .value === "running"
+    ){
+
+        startClock();
+
+    }
+
+}
+
+
+/* =========================================================
+   GARANTIZAR 5 TITULARES
+========================================================= */
+
+function ensureFiveStarters(arr){
+
+    let starters =
+        arr.filter(p=>p.starter);
+
+
+    /*
+       Si por alguna razón hay menos de 5,
+       completamos desde los primeros suplentes.
+    */
+
+    if(starters.length<5){
+
+        for(let p of arr){
+
+            if(
+                starters.length>=5
+            ) break;
+
+            if(!p.starter && !p.sentOff){
+
+                p.starter=true;
+
+                starters.push(p);
+
+            }
+
+        }
+
+    }
+
+
+    /*
+       Si hubiera más de 5 por algún error,
+       dejamos únicamente los primeros 5.
+    */
+
+    if(starters.length>5){
+
+        starters
+        .slice(5)
+        .forEach(p=>{
+            p.starter=false;
+        });
+
+    }
+
+}
+
+
+/* =========================================================
+   RELOJ
+========================================================= */
+
+function fmt(){
+
+    let m =
+        Math.floor(seconds/60);
+
+    let s =
+        seconds%60;
+
+    document
+    .getElementById("clock")
+    .textContent =
+        String(m).padStart(2,"0")
+        +":"
+        +String(s).padStart(2,"0");
+
+    document
+    .getElementById("periodLabel")
+    .textContent =
+        period===1
+        ? "1ª PARTE"
+        : "2ª PARTE";
+
+}
+
+
+function elapsed(){
+
+    return Math.max(
+        0,
+        periodDuration - seconds
+    );
+
+}
+
+
+function periodMinute(){
+
+    let e=elapsed();
+
+    let m=Math.floor(e/60);
+
+    let s=e%60;
+
+    return (
+        String(m).padStart(2,"0")
+        +":"
+        +String(s).padStart(2,"0")
+    );
+
+}
+
+
+function toggleClock(){
+
+    unlockAudio();
+
+    if(!matchStarted){
+
+        startNewMatch();
+
+    }
+
+    if(matchFinished) return;
+
+    if(running){
+
+        stopClock();
+
+    }else{
+
+        startClock();
+
+    }
+
+}
+
+
+function startClock(){
+
+    unlockAudio();
+
+    if(seconds<=0){
+
+        finishPeriod();
+
+        return;
+
+    }
+
+    if(running) return;
+
+    running=true;
+
+    let b =
+        document
+        .getElementById("clockBtn");
+
+    b.textContent="⏸ PAUSAR";
+
+    b.className="red bigClock";
+
+    clearInterval(timer);
+
+    timer=setInterval(()=>{
+
+        if(seconds>0){
+
+            seconds--;
+
+            updatePlayerTime();
+
+            fmt();
+
+            updateSummary();
+
+        }
+
+        if(seconds<=0){
+
+            clearInterval(timer);
+
+            timer=null;
+
+            running=false;
+
+            finishPeriod();
+
+        }
+
+    },1000);
+
+}
+
+
+function stopClock(){
+
+    running=false;
+
+    if(timer){
+
+        clearInterval(timer);
+
+        timer=null;
+
+    }
+
+    if(!matchFinished){
+
+        let b =
+            document
+            .getElementById("clockBtn");
+
+        b.textContent="▶ INICIAR";
+
+        b.className="blue bigClock";
+
+    }
+
+}
+
+
+/* =========================================================
+   MINUTOS
+========================================================= */
+
+function updatePlayerTime(){
+
+    if(!running) return;
+
+    [
+        homePlayers,
+        awayPlayers
+    ].forEach(team=>{
+
+        team.forEach(p=>{
+
+            if(
+                p.onCourt &&
+                !p.sentOff
+            ){
+
+                p.seconds++;
+
+            }
+
+        });
+
+    });
+
+    renderPlayers();
+
+}
+
+
+/* =========================================================
+   FINAL DE PERIODOS
+========================================================= */
+
+function finishPeriod(){
+
+    stopClock();
+
+    seconds=0;
+
+    fmt();
+
+    beepPeriod();
+
+
+    if(period===1){
+
+        addEvent(
+            "⏱️ FINAL DE LA PRIMERA PARTE"
+        );
+
+
+        homeFouls=0;
+
+        awayFouls=0;
+
+        period=2;
+
+        seconds=periodDuration;
+
+        fmt();
+
+        updateFouls();
+
+        updateSummary();
+
+        addEvent(
+            "🔄 COMIENZA LA SEGUNDA PARTE"
+        );
+
+        document
+        .getElementById("clockBtn")
+        .textContent="▶ INICIAR";
+
+    }else{
+
+        matchFinished=true;
+
+        addEvent(
+            "🏁 PARTIDO FINALIZADO"
+        );
+
+        document
+        .getElementById("clockBtn")
+        .textContent=
+            "🏁 PARTIDO FINALIZADO";
+
+        document
+        .getElementById("clockBtn")
+        .className=
+            "dark bigClock";
+
+        updateSummary();
+
+    }
+
+}
+
+
+/* =========================================================
+   REINICIAR TIEMPO
+========================================================= */
+
+function resetCurrentPeriod(){
+
+    if(!matchStarted) return;
+
+    stopClock();
+
+    seconds=periodDuration;
+
+    fmt();
+
+    addEvent(
+        "↺ TIEMPO REINICIADO · "
+        +
+        (
+            period===1
+            ? "1ª PARTE"
+            : "2ª PARTE"
+        )
+    );
+
+}
+
+
+/* =========================================================
+   GOLES
+========================================================= */
+
+function openGoal(team){
+
+    if(!requireMatch()) return;
+
+    showPlayerSelector(
+        "⚽ ¿QUIÉN HA MARCADO?",
+        team,
+        "goal"
+    );
+
+}
+
+
+function registerGoal(team,i){
+
+    if(team===1){
+
+        homeGoals++;
+
+        if(i!==null){
+
+            let p=homePlayers[i];
+
+            p.goals++;
+
+            addEvent(
+                "⚽ GOL · "
+                +
+                homeTitle()
+                +
+                " · #"
+                +
+                p.number
+                +
+                " "
+                +
+                p.name
+                +
+                " · "
+                +
+                homeGoals
+                +
+                "-"
+                +
+                awayGoals
+            );
+
+        }else{
+
+            addEvent(
+                "⚽ GOL · "
+                +
+                homeTitle()
+                +
+                " · Jugador no identificado · "
+                +
+                homeGoals
+                +
+                "-"
+                +
+                awayGoals
+            );
+
+        }
+
+    }else{
+
+        awayGoals++;
+
+        if(i!==null){
+
+            let p=awayPlayers[i];
+
+            p.goals++;
+
+            addEvent(
+                "⚽ GOL · "
+                +
+                awayTitle()
+                +
+                " · #"
+                +
+                p.number
+                +
+                " "
+                +
+                p.name
+                +
+                " · "
+                +
+                homeGoals
+                +
+                "-"
+                +
+                awayGoals
+            );
+
+        }else{
+
+            addEvent(
+                "⚽ GOL · "
+                +
+                awayTitle()
+                +
+                " · Jugador no identificado · "
+                +
+                homeGoals
+                +
+                "-"
+                +
+                awayGoals
+            );
+
+        }
+
+    }
+
+    updateScore();
+
+    updateSummary();
+
+}
+
+
+function undoGoal(team){
+
+    if(
+        team===1 &&
+        homeGoals>0
+    ){
+
+        homeGoals--;
+
+    }else if(
+        team===0 &&
+        awayGoals>0
+    ){
+
+        awayGoals--;
+
+    }else{
+
+        return;
+
+    }
+
+    addEvent(
+        "↩️ GOL CORREGIDO"
+    );
+
+    updateScore();
+
+    updateSummary();
+
+}
+
+
+/* =========================================================
+   FALTAS
+========================================================= */
+
+function openFoul(team){
+
+    if(!requireMatch()) return;
+
+    showPlayerSelector(
+        "🚨 ¿QUIÉN HA COMETIDO LA FALTA?",
+        team,
+        "foul"
+    );
+
+}
+
+
+function registerFoul(team,i){
+
+    if(team===1){
+
+        homeFouls++;
+
+        periodFouls[
+            period-1
+        ].home++;
+
+
+        if(i!==null){
+
+            let p=homePlayers[i];
+
+            p.fouls++;
+
+            addEvent(
+                "🚨 FALTA · "
+                +
+                homeTitle()
+                +
+                " · #"
+                +
+                p.number
+                +
+                " "
+                +
+                p.name
+            );
+
+        }else{
+
+            addEvent(
+                "🚨 FALTA · "
+                +
+                homeTitle()
+                +
+                " · Jugador no identificado"
+            );
+
+        }
+
+    }else{
+
+        awayFouls++;
+
+        periodFouls[
+            period-1
+        ].away++;
+
+
+        if(i!==null){
+
+            let p=awayPlayers[i];
+
+            p.fouls++;
+
+            addEvent(
+                "🚨 FALTA · "
+                +
+                awayTitle()
+                +
+                " · #"
+                +
+                p.number
+                +
+                " "
+                +
+                p.name
+            );
+
+        }else{
+
+            addEvent(
+                "🚨 FALTA · "
+                +
+                awayTitle()
+                +
+                " · Jugador no identificado"
+            );
+
+        }
+
+    }
+
+    updateFouls();
+
+    updateSummary();
+
+}
+
+
+function changeFoul(team,v){
+
+    if(team===1){
+
+        let old=homeFouls;
+
+        homeFouls=Math.max(
+            0,
+            homeFouls+v
+        );
+
+        let difference=homeFouls-old;
+
+        periodFouls[
+            period-1
+        ].home=Math.max(
+            0,
+            periodFouls[
+                period-1
+            ].home+difference
+        );
+
+    }else{
+
+        let old=awayFouls;
+
+        awayFouls=Math.max(
+            0,
+            awayFouls+v
+        );
+
+        let difference=awayFouls-old;
+
+        periodFouls[
+            period-1
+        ].away=Math.max(
+            0,
+            periodFouls[
+                period-1
+            ].away+difference
+        );
+
+    }
+
+    updateFouls();
+
+    updateSummary();
+
+}
+
+
+function updateFouls(){
+
+    document
+    .getElementById("homeFouls")
+    .textContent=homeFouls;
+
+    document
+    .getElementById("awayFouls")
+    .textContent=awayFouls;
+
+
+    foulWarning(
+        "homeFoulWarning",
+        homeFouls
+    );
+
+    foulWarning(
+        "awayFoulWarning",
+        awayFouls
+    );
+
+
+    document
+    .getElementById("firstHalfFouls")
+    .textContent =
+        periodFouls[0].home
+        +
+        " - "
+        +
+        periodFouls[0].away;
+
+
+    document
+    .getElementById("secondHalfFouls")
+    .textContent =
+        periodFouls[1].home
+        +
+        " - "
+        +
+        periodFouls[1].away;
+
+}
+
+
+let fiveFoulShownHome=false;
+let fiveFoulShownAway=false;
+
+function showFiveFoulWarning(side,n){
+
+    const box=document.getElementById("fiveFoulWarning");
+    const team=document.getElementById("fiveFoulTeam");
+
+    if(!box) return;
+
+    if(team){
+        const nameEl=document.getElementById(
+            side==="home" ? "homeName" : "awayName"
+        );
+        const name=(nameEl && nameEl.value)
+            ? nameEl.value.trim()
+            : (side==="home" ? "EQUIPO LOCAL" : "EQUIPO VISITANTE");
+        team.textContent=name+" · "+n+" faltas";
+    }
+
+    box.style.display="flex";
+
+    try{
+        if(navigator.vibrate){
+            navigator.vibrate([250,120,250,120,500]);
+        }
+        // Usamos exactamente el mismo aviso sonoro que la expulsión.
+        if(typeof beepExpulsion==="function"){
+            beepExpulsion();
+        }else{
+            if(typeof unlockAudio==="function") unlockAudio();
+        }
+    }catch(e){}
+}
+
+function foulWarning(id,n){
+
+    let el=document.getElementById(id);
+    const side=(id==="homeFoulWarning") ? "home" : "away";
+
+    if(n<5){
+
+        el.innerHTML="";
+
+        // Al comenzar un nuevo periodo las faltas vuelven a cero,
+        // permitiendo que el aviso vuelva a aparecer al llegar a 5.
+        if(side==="home") fiveFoulShownHome=false;
+        else fiveFoulShownAway=false;
+
+        return;
+
+    }
+
+    if(n===5){
+
+        el.innerHTML=
+            '<div class="warning">'
+            +
+            '⚠️ 5 FALTAS · DOBLE PENALTI'
+            +
+            '</div>';
+
+        if(side==="home" && !fiveFoulShownHome){
+            fiveFoulShownHome=true;
+            showFiveFoulWarning("home",n);
+        }
+
+        if(side==="away" && !fiveFoulShownAway){
+            fiveFoulShownAway=true;
+            showFiveFoulWarning("away",n);
+        }
+
+    }else{
+
+        el.innerHTML=
+            '<div class="danger">'
+            +
+            '🚨 DOBLE PENALTI · '
+            +
+            n
+            +
+            ' FALTAS'
+            +
+            '</div>';
+
+    }
+
+}
+
+
+/* =========================================================
+   TARJETAS
+========================================================= */
+
+function openCard(type){
+
+    if(!requireMatch()) return;
+
+    pendingAction={
+        type:type
+    };
+
+    let c=
+        document.getElementById(
+            "modalContent"
+        );
+
+    let t=
+        document.getElementById(
+            "modalTitle"
+        );
+
+    let s=
+        document.getElementById(
+            "modalSubtitle"
+        );
+
+
+    c.innerHTML="";
+
+    t.textContent=
+        type==="yellow"
+        ? "🟨 ¿A QUÉ EQUIPO?"
+        : "🟥 ¿A QUÉ EQUIPO?";
+
+    s.textContent=
+        "Selecciona primero el equipo";
+
+
+    let homeButton=
+        document.createElement(
+            "button"
+        );
+
+    homeButton.className=
+        "choice teamChoice gold";
+
+    homeButton.textContent=
+        "🔵 "
+        +
+        homeTitle();
+
+    homeButton.onclick=()=>{
+
+        showPlayerSelector(
+            type==="yellow"
+            ? "🟨 ¿QUIÉN RECIBE LA AMARILLA?"
+            : "🟥 ¿QUIÉN RECIBE LA ROJA?",
+            1,
+            "card",
+            type
+        );
+
+    };
+
+
+    let awayButton=
+        document.createElement(
+            "button"
+        );
+
+    awayButton.className=
+        "choice teamChoice red";
+
+    awayButton.textContent=
+        "🔴 "
+        +
+        awayTitle();
+
+    awayButton.onclick=()=>{
+
+        showPlayerSelector(
+            type==="yellow"
+            ? "🟨 ¿QUIÉN RECIBE LA AMARILLA?"
+            : "🟥 ¿QUIÉN RECIBE LA ROJA?",
+            0,
+            "card",
+            type
+        );
+
+    };
+
+
+    c.appendChild(homeButton);
+
+    c.appendChild(awayButton);
+
+    document
+    .getElementById("actionModal")
+    .style.display="flex";
+
+}
+
+
+/* =========================================================
+   SELECTOR JUGADORES
+========================================================= */
+
+function showPlayerSelector(
+    title,
+    team,
+    action,
+    type
+){
+
+    let c=
+        document.getElementById(
+            "modalContent"
+        );
+
+    let t=
+        document.getElementById(
+            "modalTitle"
+        );
+
+    let s=
+        document.getElementById(
+            "modalSubtitle"
+        );
+
+
+    let arr=
+        team===1
+        ? homePlayers
+        : awayPlayers;
+
+
+    c.innerHTML="";
+
+    t.textContent=title;
+
+    s.textContent=
+        team===1
+        ? homeTitle()
+        : awayTitle();
+
+
+    arr.forEach((p,i)=>{
+
+        let b=
+            document.createElement(
+                "button"
+            );
+
+        b.className="choice";
+
+
+        if(p.sentOff){
+
+            b.classList.add(
+                "sentOffChoice"
+            );
+
+        }else if(p.onCourt){
+
+            b.classList.add(
+                "onCourtChoice"
+            );
+
+        }
+
+
+        let indicator=
+            p.onCourt
+            ? '<span class="greenDot">●</span>'
+            : '<span class="grayDot">●</span>';
+
+
+        let status=
+            p.sentOff
+            ? " · EXPULSADO"
+            : p.onCourt
+            ? " · EN PISTA"
+            : " · BANQUILLO";
+
+
+        b.innerHTML=
+            indicator
+            +
+            "#"
+            +
+            p.number
+            +
+            " "
+            +
+            esc(p.name)
+            +
+            status;
+
+
+        b.disabled=p.sentOff;
+
+
+        b.onclick=()=>{
+
+            closeModal();
+
+            if(action==="goal"){
+
+                registerGoal(
+                    team,
+                    i
+                );
+
+            }else if(action==="foul"){
+
+                registerFoul(
+                    team,
+                    i
+                );
+
+            }else if(action==="card"){
+
+                registerCard(
+                    team,
+                    i,
+                    type
+                );
+
+            }
+
+        };
+
+
+        c.appendChild(b);
+
+    });
+
+
+    if(
+        action==="goal" ||
+        action==="foul"
+    ){
+
+        let u=
+            document.createElement(
+                "button"
+            );
+
+        u.className="choice";
+
+        u.textContent=
+            "❓ Jugador no identificado";
+
+        u.onclick=()=>{
+
+            closeModal();
+
+            if(action==="goal"){
+
+                registerGoal(
+                    team,
+                    null
+                );
+
+            }else{
+
+                registerFoul(
+                    team,
+                    null
+                );
+
+            }
+
+        };
+
+        c.appendChild(u);
+
+    }
+
+
+    document
+    .getElementById("actionModal")
+    .style.display="flex";
+
+}
+
+
+/* =========================================================
+   REGISTRAR TARJETA
+========================================================= */
+
+function registerCard(
+    team,
+    i,
+    type
+){
+
+    let arr=
+        team===1
+        ? homePlayers
+        : awayPlayers;
+
+    let p=arr[i];
+
+    let name=
+        team===1
+        ? homeTitle()
+        : awayTitle();
+
+
+    if(!p || p.sentOff) return;
+
+
+    if(type==="red"){
+
+        p.red++;
+
+        p.sentOff=true;
+
+        p.onCourt=false;
+
+
+        addEvent(
+            "🟥 TARJETA ROJA · "
+            +
+            name
+            +
+            " · #"
+            +
+            p.number
+            +
+            " "
+            +
+            p.name
+            +
+            " · EXPULSADO"
+        );
+
+
+        beepExpulsion();
+
+
+        showExpulsion(
+            name,
+            p,
+            "🟥 TARJETA ROJA DIRECTA"
+        );
+
+
+    }else{
+
+        p.yellow++;
+
+
+        /*
+           PRIMERA AMARILLA
+        */
+
+        if(p.yellow===1){
+
+            addEvent(
+                "🟨 TARJETA AMARILLA · "
+                +
+                name
+                +
+                " · #"
+                +
+                p.number
+                +
+                " "
+                +
+                p.name
+            );
+
+        }
+
+
+        /*
+           SEGUNDA AMARILLA
+           = ROJA + EXPULSIÓN
+        */
+
+        if(p.yellow>=2){
+
+            p.red++;
+
+            p.sentOff=true;
+
+            p.onCourt=false;
+
+
+            addEvent(
+                "🟨🟨🟥 DOBLE AMARILLA · "
+                +
+                name
+                +
+                " · #"
+                +
+                p.number
+                +
+                " "
+                +
+                p.name
+                +
+                " · EXPULSADO"
+            );
+
+
+            beepExpulsion();
+
+
+            showExpulsion(
+                name,
+                p,
+                "🟨🟨 SEGUNDA AMARILLA · 🟥 EXPULSIÓN"
+            );
+
+        }
+
+    }
+
+
+    renderPlayers();
+
+    updateSummary();
+
+}
+
+
+/* =========================================================
+   AVISO EXPULSIÓN
+========================================================= */
+
+function showExpulsion(
+    teamName,
+    p,
+    reason
+){
+
+    document
+    .getElementById(
+        "expulsionText"
+    )
+    .innerHTML=
+        "<strong>"
+        +
+        esc(teamName)
+        +
+        "</strong><br><br>"
+        +
+        "#"
+        +
+        esc(p.number)
+        +
+        " "
+        +
+        esc(p.name)
+        +
+        "<br><br>"
+        +
+        "<strong>"
+        +
+        reason
+        +
+        "</strong>";
+
+    document
+    .getElementById(
+        "expulsionMessage"
+    )
+    .style.display="flex";
+
+}
+
+
+function closeExpulsion(){
+
+    document
+    .getElementById(
+        "expulsionMessage"
+    )
+    .style.display="none";
+
+}
+
+
+/* =========================================================
+   ENTRAR / SALIR
+========================================================= */
+
+function togglePlayer(
+    arr,
+    i
+){
+
+    let p=arr[i];
+
+    if(!p || p.sentOff) return;
+
+
+    /*
+       SI ESTÁ EN PISTA, SALE
+    */
+
+    if(p.onCourt){
+
+        leavePlayer(
+            arr,
+            i
+        );
+
+        return;
+
+    }
+
+
+    /*
+       CONTAMOS LOS JUGADORES EN PISTA
+    */
+
+    let playersOnCourt =
+        arr.filter(
+            x=>x.onCourt && !x.sentOff
+        ).length;
+
+
+    /*
+       NO SE PUEDEN SUPERAR 5
+    */
+
+    if(playersOnCourt>=5){
+
+        alert(
+            "⚠️ YA HAY 5 JUGADORES EN PISTA.\n\n"
+            +
+            "Primero debe salir un jugador."
+        );
+
+        return;
+
+    }
+
+
+    p.onCourt=true;
+
+
+    addEvent(
+        "🟢 ENTRA · "
+        +
+        (
+            arr===homePlayers
+            ? homeTitle()
+            : awayTitle()
+        )
+        +
+        " · #"
+        +
+        p.number
+        +
+        " "
+        +
+        p.name
+    );
+
+
+    renderPlayers();
+
+    updateSummary();
+
+}
+
+
+function leavePlayer(
+    arr,
+    i
+){
+
+    let p=arr[i];
+
+    if(!p.onCourt) return;
+
+    p.onCourt=false;
+
+
+    addEvent(
+        "🔄 SALE · "
+        +
+        (
+            arr===homePlayers
+            ? homeTitle()
+            : awayTitle()
+        )
+        +
+        " · #"
+        +
+        p.number
+        +
+        " "
+        +
+        p.name
+    );
+
+
+    renderPlayers();
+
+    updateSummary();
+
+}
+
+
+/* =========================================================
+   RENDER JUGADORES
+========================================================= */
+
+function renderPlayers(){
+
+    renderTeamPlayers(
+        "homePlayers",
+        homePlayers
+    );
+
+    renderTeamPlayers(
+        "awayPlayers",
+        awayPlayers
+    );
+
+}
+
+
+function renderTeamPlayers(
+    id,
+    arr
+){
+
+    let el=
+        document.getElementById(id);
+
+    el.innerHTML="";
+
+
+    arr.forEach((p,i)=>{
+
+        let d=
+            document.createElement(
+                "div"
+            );
+
+
+        d.className=
+            "player "
+            +
+            (
+                p.onCourt
+                ? "onCourt "
+                : ""
+            )
+            +
+            (
+                p.sentOff
+                ? "sentOff "
+                : ""
+            )
+            +
+            (
+                p.starter
+                ? "starter"
+                : ""
+            );
+
+
+        let courtBadge=
+            p.onCourt
+            ? '<span class="badge badgeCourt">🟢 EN PISTA</span>'
+            : '<span class="badge badgeBench">⚪ BANQUILLO</span>';
+
+
+        let starterBadge=
+            p.starter
+            ? '<span class="badge badgeStarter">⭐ TITULAR</span>'
+            : '<span class="badge badgeSub">SUPLENTE</span>';
+
+
+        let sentBadge=
+            p.sentOff
+            ? '<span class="badge badgeSent">🟥 EXPULSADO</span>'
+            : "";
+
+
+        let actionButton;
+
+
+        if(p.sentOff){
+
+            actionButton=
+                '<button class="dark" disabled>'
+                +
+                '🟥 EXPULSADO'
+                +
+                '</button>';
+
+        }else if(p.onCourt){
+
+            actionButton=
+                '<button class="red">'
+                +
+                '🔄 SALIR'
+                +
+                '</button>';
+
+        }else{
+
+            actionButton=
+                '<button class="green">'
+                +
+                '🟢 ENTRAR'
+                +
+                '</button>';
+
+        }
+
+
+        /*
+           BOTÓN TITULAR/SUPLENTE
+        */
+
+        let starterButtonText=
+            p.starter
+            ? "⭐ TITULAR · CAMBIAR A SUPLENTE"
+            : "⭐ HACER TITULAR";
+
+
+        let starterButtonClass=
+            p.starter
+            ? "gold"
+            : "dark";
+
+
+        d.innerHTML=
+
+            '<div class="playerPhotoWrap">'
+            +
+            '<img class="playerPhoto" src="'
+            +
+            (p.photo || "data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%2758%27 height=%2758%27%3E%3Crect width=%27100%25%27 height=%27100%25%27 fill=%27%23333333%27/%3E%3Ctext x=%2750%25%27 y=%2758%27 text-anchor=%27middle%27 font-size=%2730%27 fill=%27%23e5b638%27%3E⚽%3C/text%3E%3C/svg%3E")
+            +
+            '" alt="Foto del jugador">'
+            +
+            '<input class="photoPicker" type="file" accept="image/*" title="Añadir foto">'
+            +
+            '</div>'
+            +
+            '<div class="playerTop">'
+            +
+
+            '<input class="number" '
+            +
+            'type="number" '
+            +
+            'value="'
+            +
+            esc(p.number)
+            +
+            '">'
+
+            +
+
+            '<input class="playerName" autocomplete="off" spellcheck="false" '
+            +
+            'value="'
+            +
+            esc(p.name)
+            +
+            '">'
+
+            +
+
+            '</div>'
+
+            +
+
+            '<div class="badges">'
+            +
+            starterBadge
+            +
+            courtBadge
+            +
+            sentBadge
+            +
+            '</div>'
+
+            +
+
+            '<button class="starterButton '
+            +
+            starterButtonClass
+            +
+            '" '
+            +
+            (
+                matchStarted || p.sentOff
+                ? "disabled"
+                : ""
+            )
+            +
+            '>'
+            +
+            starterButtonText
+            +
+            '</button>'
+
+            +
+
+            '<div class="playerActions">'
+            +
+            actionButton
+            +
+            '</div>'
+
+            +
+
+            '<div class="playerStats">'
+
+            +
+
+            '<div class="miniStat">'
+            +
+            '<strong>'
+            +
+            p.goals
+            +
+            '</strong>'
+            +
+            'GOLES'
+            +
+            '</div>'
+
+            +
+
+            '<div class="miniStat">'
+            +
+            '<strong>'
+            +
+            p.yellow
+            +
+            '</strong>'
+            +
+            '🟨'
+            +
+            '</div>'
+
+            +
+
+            '<div class="miniStat">'
+            +
+            '<strong>'
+            +
+            p.red
+            +
+            '</strong>'
+            +
+            '🟥'
+            +
+            '</div>'
+
+            +
+
+            '<div class="miniStat">'
+            +
+            '<strong>'
+            +
+            p.fouls
+            +
+            '</strong>'
+            +
+            'FALTAS'
+            +
+            '</div>'
+
+            +
+
+            '<div class="miniStat">'
+            +
+            '<strong>'
+            +
+            formatTime(p.seconds)
+            +
+            '</strong>'
+            +
+            'MIN'
+            +
+            '</div>'
+
+            +
+
+            '</div>';
+
+
+        d.onclick=(ev)=>{
+            if(ev.target.closest("input,button,.photoPicker")) return;
+            d.classList.toggle("isExpanded");
+        };
+
+        const photoPicker=d.querySelector(".photoPicker");
+        photoPicker.onchange=e=>{
+            const file=e.target.files && e.target.files[0];
+            if(!file) return;
+            const reader=new FileReader();
+            reader.onload=ev=>{
+                const img=new Image();
+                img.onload=()=>{
+                    const canvas=document.createElement("canvas");
+                    const max=180;
+                    const scale=Math.min(1,max/Math.max(img.width,img.height));
+                    canvas.width=Math.max(1,Math.round(img.width*scale));
+                    canvas.height=Math.max(1,Math.round(img.height*scale));
+                    canvas.getContext("2d").drawImage(img,0,0,canvas.width,canvas.height);
+                    p.photo=canvas.toDataURL("image/jpeg",0.78);
+                    saveProState(true);
+                    renderPlayers();
+                };
+                img.src=ev.target.result;
+            };
+            reader.readAsDataURL(file);
+        };
+
+
+        /*
+           CAMBIO DE DORSAL
+        */
+
+        const numberInput=d.querySelector(".number");
+        const nameInput=d.querySelector(".playerName");
+
+        [numberInput,nameInput].forEach(input=>{
+            if(!input) return;
+            ["click","pointerdown","touchstart"].forEach(type=>{
+                input.addEventListener(type,ev=>ev.stopPropagation(),{passive:true});
+            });
+            input.addEventListener("focus",()=>d.classList.add("editing"));
+        });
+
+        const savePlayerIdentity=()=>{
+            p.number=numberInput.value.trim();
+            p.name=nameInput.value.trim() || ("Jugador " + p.number);
+            saveProState(true);
+            updateSummary();
+        };
+
+        numberInput.oninput=()=>{
+            p.number=numberInput.value;
+            updateSummary();
+        };
+
+        numberInput.onchange=savePlayerIdentity;
+        numberInput.onblur=savePlayerIdentity;
+
+
+        /*
+           CAMBIO DE NOMBRE
+        */
+
+        nameInput.oninput=()=>{
+            p.name=nameInput.value;
+            updateSummary();
+        };
+
+        nameInput.onchange=savePlayerIdentity;
+        nameInput.onblur=savePlayerIdentity;
+
+
+        /*
+           BOTÓN TITULAR
+        */
+
+        let starterButton=
+            d.querySelector(
+                ".starterButton"
+            );
+
+
+        starterButton.onclick=()=>{
+
+            toggleStarter(
+                arr,
+                i
+            );
+
+        };
+
+
+        /*
+           BOTÓN ENTRAR/SALIR
+        */
+
+        let action=
+            d.querySelector(
+                ".playerActions button"
+            );
+
+
+        if(!p.sentOff){
+
+            action.onclick=()=>{
+
+                togglePlayer(
+                    arr,
+                    i
+                );
+
+            };
+
+        }
+
+
+        el.appendChild(d);
+
+    });
+
+}
+
+
+/* =========================================================
+   UTILIDADES
+========================================================= */
+
+function formatTime(total){
+
+    let m=
+        Math.floor(total/60);
+
+    let s=
+        total%60;
+
+    return (
+        String(m).padStart(2,"0")
+        +
+        ":"
+        +
+        String(s).padStart(2,"0")
+    );
+
+}
+
+
+function esc(s){
+
+    return String(s)
+        .replace(/&/g,"&amp;")
+        .replace(/"/g,"&quot;")
+        .replace(/</g,"&lt;")
+        .replace(/>/g,"&gt;");
+
+}
+
+
+function homeTitle(){
+
+    return document
+        .getElementById("homeTitle")
+        .textContent;
+
+}
+
+
+function awayTitle(){
+
+    return document
+        .getElementById("awayTitle")
+        .textContent;
+
+}
+
+
+function requireMatch(){
+
+    if(!matchStarted){
+
+        startNewMatch();
+
+    }
+
+    return true;
+
+}
+
+
+/* =========================================================
+   MARCADOR
+========================================================= */
+
+function updateScore(){
+
+    document
+    .getElementById("homeGoals")
+    .textContent=homeGoals;
+
+    document
+    .getElementById("awayGoals")
+    .textContent=awayGoals;
+
+}
+
+
+/* =========================================================
+   INCIDENCIAS
+========================================================= */
+
+function addEvent(text){
+
+    events.push({
+
+        period:period,
+
+        time:periodMinute(),
+
+        text:text
+
+    });
+
+    renderEvents();
+
+}
+
+
+function renderEvents(){
+
+    let e=
+        document.getElementById(
+            "events"
+        );
+
+
+    if(!events.length){
+
+        e.innerHTML=
+            '<div class="small">'
+            +
+            'Todavía no hay incidencias.'
+            +
+            '</div>';
+
+        return;
+
+    }
+
+
+    e.innerHTML=
+        events
+        .slice()
+        .reverse()
+        .map(x=>
+            x.period
+            +
+            "ª PARTE · "
+            +
+            x.time
+            +
+            " · "
+            +
+            x.text
+        )
+        .join("<br>");
+
+}
+
+
+/* =========================================================
+   RESUMEN
+========================================================= */
+
+function formatPlayers(arr){
+
+    return arr
+        .map(p=>
+            "#"
+            +
+            p.number
+            +
+            " "
+            +
+            p.name
+            +
+            " · "
+            +
+            formatTime(p.seconds)
+        )
+        .join("\n");
+
+}
+
+
+function updateSummary(){
+
+    let homeCards=[];
+
+    let awayCards=[];
+
+
+    homePlayers.forEach(p=>{
+
+        if(p.yellow || p.red){
+
+            homeCards.push(
+                "#"
+                +
+                p.number
+                +
+                " "
+                +
+                p.name
+                +
+                " · "
+                +
+                "🟨".repeat(
+                    Math.min(p.yellow,2)
+                )
+                +
+                (
+                    p.red
+                    ? " 🟥"
+                    : ""
+                )
+            );
+
+        }
+
+    });
+
+
+    awayPlayers.forEach(p=>{
+
+        if(p.yellow || p.red){
+
+            awayCards.push(
+                "#"
+                +
+                p.number
+                +
+                " "
+                +
+                p.name
+                +
+                " · "
+                +
+                "🟨".repeat(
+                    Math.min(p.yellow,2)
+                )
+                +
+                (
+                    p.red
+                    ? " 🟥"
+                    : ""
+                )
+            );
+
+        }
+
+    });
+
+
+    let incidents=
+        events
+        .map(x=>
+            x.period
+            +
+            "ª PARTE · "
+            +
+            x.time
+            +
+            " · "
+            +
+            x.text
+        )
+        .join("\n");
+
+
+    let text=
+
+        "⚽ FUTSAL CONTROL\n\n"
+
+        +
+
+        "🏁 "
+        +
+        homeTitle()
+        +
+        " "
+        +
+        homeGoals
+        +
+        " - "
+        +
+        awayGoals
+        +
+        " "
+        +
+        awayTitle()
+
+        +
+
+        "\n\n════════════════════\n"
+        +
+        homeTitle()
+        +
+        "\n════════════════════\n\n"
+
+        +
+
+        "⭐ TITULARES\n"
+        +
+        (
+            homePlayers
+            .filter(p=>p.starter)
+            .map(p=>
+                "#"
+                +
+                p.number
+                +
+                " "
+                +
+                p.name
+            )
+            .join("\n")
+            ||
+            "Sin titulares"
+        )
+
+        +
+
+        "\n\n⚽ GOLES\n"
+        +
+        (
+            homePlayers
+            .filter(p=>p.goals)
+            .map(p=>
+                "#"
+                +
+                p.number
+                +
+                " "
+                +
+                p.name
+                +
+                " · "
+                +
+                p.goals
+                +
+                " gol(es)"
+            )
+            .join("\n")
+            ||
+            "Sin goles identificados"
+        )
+
+        +
+
+        "\n\n🚨 FALTAS\n"
+        +
+        "Faltas actuales: "
+        +
+        homeFouls
+        +
+
+        "\n1ª parte: "
+        +
+        periodFouls[0].home
+        +
+
+        "\n2ª parte: "
+        +
+        periodFouls[1].home
+
+        +
+
+        "\n\n🟨🟥 TARJETAS\n"
+        +
+        (
+            homeCards.join("\n")
+            ||
+            "Sin tarjetas"
+        )
+
+        +
+
+        "\n\n════════════════════\n"
+        +
+        awayTitle()
+        +
+        "\n════════════════════\n\n"
+
+        +
+
+        "⭐ TITULARES\n"
+        +
+        (
+            awayPlayers
+            .filter(p=>p.starter)
+            .map(p=>
+                "#"
+                +
+                p.number
+                +
+                " "
+                +
+                p.name
+            )
+            .join("\n")
+            ||
+            "Sin titulares"
+        )
+
+        +
+
+        "\n\n⚽ GOLES\n"
+        +
+        (
+            awayPlayers
+            .filter(p=>p.goals)
+            .map(p=>
+                "#"
+                +
+                p.number
+                +
+                " "
+                +
+                p.name
+                +
+                " · "
+                +
+                p.goals
+                +
+                " gol(es)"
+            )
+            .join("\n")
+            ||
+            "Sin goles identificados"
+        )
+
+        +
+
+        "\n\n🚨 FALTAS\n"
+        +
+        "Faltas actuales: "
+        +
+        awayFouls
+        +
+
+        "\n1ª parte: "
+        +
+        periodFouls[0].away
+        +
+
+        "\n2ª parte: "
+        +
+        periodFouls[1].away
+
+        +
+
+        "\n\n🟨🟥 TARJETAS\n"
+        +
+        (
+            awayCards.join("\n")
+            ||
+            "Sin tarjetas"
+        )
+
+        +
+
+        "\n\n════════════════════\n"
+        +
+        "📊 FALTAS POR PARTE\n"
+        +
+        "════════════════════\n"
+
+        +
+
+        "1ª PARTE · "
+        +
+        periodFouls[0].home
+        +
+        " - "
+        +
+        periodFouls[0].away
+
+        +
+
+        "\n2ª PARTE · "
+        +
+        periodFouls[1].home
+        +
+        " - "
+        +
+        periodFouls[1].away
+
+        +
+
+        "\n\n════════════════════\n"
+        +
+        "⏱️ MINUTOS JUGADOS\n"
+        +
+        "════════════════════\n\n"
+
+        +
+
+        homeTitle()
+        +
+        "\n"
+        +
+        formatPlayers(homePlayers)
+
+        +
+
+        "\n\n"
+        +
+        awayTitle()
+        +
+        "\n"
+        +
+        formatPlayers(awayPlayers)
+
+        +
+
+        "\n\n════════════════════\n"
+        +
+        "📋 INCIDENCIAS\n"
+        +
+        "════════════════════\n"
+
+        +
+        (
+            incidents ||
+            "Sin incidencias"
+        );
+
+
+    document
+    .getElementById("summary")
+    .textContent=text;
+
+
+    document
+    .getElementById("minutesSummary")
+    .textContent=
+
+        homeTitle()
+        +
+        "\n"
+        +
+        formatPlayers(homePlayers)
+
+        +
+
+        "\n\n"
+        +
+        awayTitle()
+        +
+        "\n"
+        +
+        formatPlayers(awayPlayers);
+
+}
+
+
+/* =========================================================
+   COPIAR / COMPARTIR
+========================================================= */
+
+async function copySummary(){
+
+    let text=
+        document
+        .getElementById("summary")
+        .textContent;
+
+
+    try{
+
+        await navigator.clipboard.writeText(text);
+
+        alert(
+            "✅ Resumen copiado."
+        );
+
+    }catch(e){
+
+        let ta=
+            document.createElement(
+                "textarea"
+            );
+
+        ta.value=text;
+
+        document.body.appendChild(ta);
+
+        ta.select();
+
+        document.execCommand("copy");
+
+        ta.remove();
+
+        alert(
+            "✅ Resumen copiado."
+        );
+
+    }
+
+}
+
+
+async function shareMatch(){
+
+    let text=
+        document
+        .getElementById("summary")
+        .textContent;
+
+
+    if(navigator.share){
+
+        try{
+
+            await navigator.share({
+
+                title:
+                    "Futsal Control",
+
+                text:text
+
+            });
+
+            return;
+
+        }catch(e){}
+
+    }
+
+
+    await copySummary();
+
+}
+
+
+/* =========================================================
+   MODAL
+========================================================= */
+
+function closeModal(){
+
+    document
+    .getElementById("actionModal")
+    .style.display="none";
+
+    pendingAction=null;
+
+}
+
+
+/* =========================================================
+   ACTUALIZAR TODO
+========================================================= */
+
+function updateAll(){
+
+    updateScore();
+
+    updateFouls();
+
+    fmt();
+
+    renderPlayers();
+
+    renderEvents();
+
+    updateSummary();
+
+}
+
+
+/* =========================================================
+   INICIO
+========================================================= */
+
+periodDuration=20*60;
+
+seconds=periodDuration;
+
+createPlayers();
+
+updateAll();
+
+
+/* =========================================================
+   V12 — ESCUDOS + DATOS DEL PARTIDO + GUARDAR/CARGAR
+========================================================= */
+function crestKey(side){ return side==='home' ? 'futsalProCrestHome' : 'futsalProCrestAway'; }
+function getTeamName(side){
+  const id=side==='home'?'homeName':'awayName';
+  const el=document.getElementById(id);
+  return (el && el.value.trim()) || (side==='home'?'EQUIPO LOCAL':'EQUIPO VISITANTE');
+}
+function applyCrest(side,data){
+  const img=document.getElementById(side==='home'?'configHomeCrest':'configAwayCrest');
+  const wrap=document.getElementById(side==='home'?'homeCrestWrap':'awayCrestWrap');
+  if(img){ img.src=data||''; img.style.display=data?'block':'block'; }
+  if(wrap){
+    if(data){ wrap.classList.remove('placeholder'); wrap.innerHTML='<img src="'+data.replace(/"/g,'&quot;')+'" style="width:100%;height:100%;object-fit:contain;border-radius:7px" alt="Escudo">'; }
+    else { wrap.classList.add('placeholder'); wrap.textContent='⚽'; }
+  }
+}
+function loadSavedCrests(){
+  ['home','away'].forEach(side=>{
+    try{ applyCrest(side,localStorage.getItem(crestKey(side))||''); }catch(e){}
+  });
+}
+function loadCrestFile(side,input){
+  const file=input && input.files && input.files[0];
+  if(!file) return;
+  if(!file.type.startsWith('image/')){ alert('Selecciona una imagen válida.'); return; }
+  if(file.size>5*1024*1024){ alert('La imagen es demasiado grande. Máximo 5 MB.'); return; }
+  const reader=new FileReader();
+  reader.onload=()=>{
+    const data=reader.result;
+    try{ localStorage.setItem(crestKey(side),data); }catch(e){ alert('No se ha podido guardar el escudo en este dispositivo.'); }
+    applyCrest(side,data);
+  };
+  reader.readAsDataURL(file);
+}
+function clearCrest(side){
+  try{localStorage.removeItem(crestKey(side));}catch(e){}
+  applyCrest(side,'');
+  const input=document.getElementById(side==='home'?'homeCrestFile':'awayCrestFile');
+  if(input) input.value='';
+}
+function updateMetaView(){
+  const d=document.getElementById('matchDate'), t=document.getElementById('matchTime'), v=document.getElementById('matchVenue');
+  const dv=document.getElementById('metaDateView'), tv=document.getElementById('metaTimeView'), vv=document.getElementById('metaVenueView');
+  if(dv && d && d.value){ const p=d.value.split('-'); dv.textContent=p.length===3?p[2]+'/'+p[1]+'/'+p[0]:d.value; }
+  if(tv && t) tv.textContent=t.value||'--:--';
+  if(vv && v) vv.textContent=(v.value.trim()||'PABELLÓN').toUpperCase();
+}
+function saveProState(silent=false){
+  try{
+    const state={
+      homeName:document.getElementById('homeName')?.value||'',
+      awayName:document.getElementById('awayName')?.value||'',
+      clockMode:document.getElementById('clockMode')?.value||'stopped',
+      periodDuration,period,seconds,running,matchStarted,matchFinished,homeGoals,awayGoals,homeFouls,awayFouls,periodFouls,homePlayers,awayPlayers,events,
+      matchDate:document.getElementById('matchDate')?.value||'',matchTime:document.getElementById('matchTime')?.value||'',matchVenue:document.getElementById('matchVenue')?.value||''
+    };
+    localStorage.setItem('futsalProMatchState',JSON.stringify(state));
+    if(!silent) alert('💾 Partido guardado en este dispositivo.');
+  }catch(e){ alert('No se ha podido guardar el partido.'); }
+}
+function loadProState(){
+  try{
+    const raw=localStorage.getItem('futsalProMatchState');
+    if(!raw){ alert('No hay ningún partido guardado en este dispositivo.'); return; }
+    const s=JSON.parse(raw);
+    ['homeName','awayName','clockMode','matchDate','matchTime','matchVenue'].forEach(id=>{
+      const el=document.getElementById(id); if(el && s[id]!=null) el.value=s[id];
+    });
+    if(Array.isArray(s.homePlayers)) homePlayers=s.homePlayers;
+    if(Array.isArray(s.awayPlayers)) awayPlayers=s.awayPlayers;
+    if(Array.isArray(s.events)) events=s.events;
+    if(Array.isArray(s.periodFouls)) periodFouls=s.periodFouls;
+    periodDuration=Number(s.periodDuration)||20*60;
+    period=Number(s.period)||1; seconds=Number(s.seconds); running=false;
+    matchStarted=!!s.matchStarted; matchFinished=!!s.matchFinished;
+    homeGoals=Number(s.homeGoals)||0; awayGoals=Number(s.awayGoals)||0; homeFouls=Number(s.homeFouls)||0; awayFouls=Number(s.awayFouls)||0;
+    document.getElementById('clockMode').dispatchEvent(new Event('change'));
+    ['homeTitle','homeFoulName','homePlayersTitle'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=getTeamName('home');});
+    ['awayTitle','awayFoulName','awayPlayersTitle'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=getTeamName('away');});
+    updateAll(); updateMetaView(); loadSavedCrests();
+    alert('📂 Partido cargado.');
+  }catch(e){ alert('No se ha podido cargar el partido guardado.'); }
+}
+['matchDate','matchTime','matchVenue'].forEach(id=>{ const el=document.getElementById(id); if(el) el.addEventListener('input',updateMetaView); });
+const _oldStartNewMatch=startNewMatch;
+startNewMatch=function(){ _oldStartNewMatch(); updateMetaView(); };
+loadSavedCrests();
+updateMetaView();
+
+</script>
+
+
+<div id="fiveFoulWarning" aria-live="assertive" style="
+display:none;position:fixed;inset:0;z-index:99999;
+align-items:center;justify-content:center;
+background:rgba(0,0,0,.78);padding:20px;">
+  <div style="
+  width:min(720px,92vw);text-align:center;
+  background:#15191f;border:4px solid #f5c400;
+  border-radius:24px;padding:28px 20px;
+  box-shadow:0 0 0 6px rgba(245,196,0,.15),0 20px 70px rgba(0,0,0,.6);">
+    <div style="font-size:64px;line-height:1">⚠️</div>
+    <div style="font-size:34px;font-weight:900;color:#f5c400;margin-top:10px">
+      5 FALTAS
+    </div>
+    <div style="font-size:25px;font-weight:900;color:white;margin-top:4px">
+      DOBLE PENALTI
+    </div>
+    <div id="fiveFoulTeam" style="font-size:18px;color:#ddd;margin-top:12px"></div>
+    <button id="closeFiveFoulWarning" onclick="closeFiveFoulWarning()" style="
+      margin-top:22px;padding:13px 28px;border:0;border-radius:12px;
+      background:#f5c400;color:#111;font-weight:900;font-size:16px;">
+      ENTENDIDO
+    </button>
+  </div>
+</div>
+
+
+
+
+<script>function closeFiveFoulWarning(){const box=document.getElementById("fiveFoulWarning");if(box)box.style.display="none";}
+/* =========================================================
+   V13 — CONFIGURACIÓN RÁPIDA
+   ========================================================= */
+function openQuickSettings(){
+  const card=document.getElementById('configCard');
+  if(!card) return;
+  card.classList.add('quickSettingsOpen');
+  document.body.style.overflow='hidden';
+  setTimeout(()=>{
+    const first=document.getElementById('homeName');
+    if(first) first.focus({preventScroll:true});
+  },80);
+}
+function closeQuickSettings(){
+  const card=document.getElementById('configCard');
+  if(!card) return;
+  card.classList.remove('quickSettingsOpen');
+  document.body.style.overflow='';
+  updateQuickTeamTitles();
+  updateMetaView();
+}
+function updateQuickTeamTitles(){
+  const hn=getTeamName('home'), an=getTeamName('away');
+  ['homeTitle','homeFoulName','homePlayersTitle'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=hn;});
+  ['awayTitle','awayFoulName','awayPlayersTitle'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=an;});
+}
+['homeName','awayName'].forEach(id=>{
+  const el=document.getElementById(id);
+  if(el) el.addEventListener('input',updateQuickTeamTitles);
+});
+// Cerrar tocando fuera del panel
+const _quickConfig=document.getElementById('configCard');
+if(_quickConfig){
+  _quickConfig.addEventListener('click',function(e){ if(e.target===_quickConfig) closeQuickSettings(); });
+}
+document.addEventListener('keydown',function(e){ if(e.key==='Escape') closeQuickSettings(); });
+
+</script>
+
+<div id="seasonModal" aria-hidden="true">
+  <div class="seasonBox">
+    <div class="seasonHead"><h2>📊 HISTORIAL Y ESTADÍSTICAS</h2><button class="seasonClose" onclick="closeHistory()">✕</button></div>
+    <div class="seasonTools">
+      <input id="seasonNameInput" value="Temporada 2026/27" placeholder="Nombre de temporada">
+      <button class="seasonBtn" onclick="archiveCurrentMatch()">💾 ARCHIVAR PARTIDO ACTUAL</button>
+      <button class="seasonBtn alt" onclick="renderSeasonStats()">🔄 ACTUALIZAR</button>
+      <button class="seasonBtn red" onclick="clearSeasonHistory()">🗑️ BORRAR HISTORIAL</button>
+    </div>
+    <div class="seasonTabs">
+      <button class="seasonTab active" id="tabHistory" onclick="showSeasonTab('history')">PARTIDOS</button>
+      <button class="seasonTab" id="tabStats" onclick="showSeasonTab('stats')">ESTADÍSTICAS TEMPORADA</button>
+      <button class="seasonTab" id="tabCustom" onclick="showSeasonTab('custom')">ESTADÍSTICA PERSONALIZADA</button>
+    </div>
+    <div class="seasonBody">
+      <div id="seasonHistoryPanel"></div>
+      <div id="seasonStatsPanel" style="display:none"></div>
+      <div id="seasonCustomPanel" style="display:none"></div>
+    </div>
+  </div>
+</div>
+
+
+<script>
+/* =========================================================
+   V16 — HISTORIAL DE PARTIDOS + ESTADÍSTICAS DE TEMPORADA
+   Capa independiente: no altera la lógica del partido.
+========================================================= */
+const HISTORY_KEY='futsalProMatchHistoryV1';
+const SEASON_KEY='futsalProSeasonNameV1';
+function getHistory(){try{return JSON.parse(localStorage.getItem(HISTORY_KEY)||'[]')}catch(e){return[]}}
+function setHistory(a){try{localStorage.setItem(HISTORY_KEY,JSON.stringify(a));return true}catch(e){alert('No se ha podido guardar el historial en este dispositivo.');return false}}
+function currentMatchSnapshot(){
+  const hn=(document.getElementById('homeName')?.value||'EQUIPO LOCAL').trim();
+  const an=(document.getElementById('awayName')?.value||'EQUIPO VISITANTE').trim();
+  return {id:Date.now().toString(36)+'-'+Math.random().toString(36).slice(2,7),savedAt:new Date().toISOString(),
+    season:document.getElementById('seasonNameInput')?.value||localStorage.getItem(SEASON_KEY)||'Temporada 2026/27',
+    date:document.getElementById('matchDate')?.value||'',time:document.getElementById('matchTime')?.value||'',venue:document.getElementById('matchVenue')?.value||'',
+    homeName:hn,awayName:an,homeGoals:Number(homeGoals)||0,awayGoals:Number(awayGoals)||0,
+    homeFouls:Number(homeFouls)||0,awayFouls:Number(awayFouls)||0,periodFouls:JSON.parse(JSON.stringify(periodFouls||[])),
+    homePlayers:JSON.parse(JSON.stringify(homePlayers||[])),awayPlayers:JSON.parse(JSON.stringify(awayPlayers||[])),events:JSON.parse(JSON.stringify(events||[]))};
+}
+function archiveCurrentMatch(){
+  if(!matchStarted && events.length===0){alert('Inicia o registra el partido antes de archivarlo.');return}
+  const season=document.getElementById('seasonNameInput')?.value||'Temporada 2026/27';
+  try{localStorage.setItem(SEASON_KEY,season)}catch(e){}
+  const h=getHistory(); const snap=currentMatchSnapshot(); snap.season=season;
+  h.unshift(snap); if(!setHistory(h))return;
+  renderHistory(); renderSeasonStats(); alert('📊 Partido archivado en el historial.');
+}
+function openHistory(){
+  const m=document.getElementById('seasonModal'); if(!m)return; m.classList.add('show');m.setAttribute('aria-hidden','false');
+  const inp=document.getElementById('seasonNameInput'); if(inp) inp.value=localStorage.getItem(SEASON_KEY)||'Temporada 2026/27';
+  showSeasonTab('history');
+}
+function closeHistory(){const m=document.getElementById('seasonModal');if(m){m.classList.remove('show');m.setAttribute('aria-hidden','true')}}
+function escHist(v){return String(v??'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]))}
+function fmtDateHist(v){if(!v)return 'Fecha sin indicar';const p=v.split('-');return p.length===3?p[2]+'/'+p[1]+'/'+p[0]:v}
+function minsHist(sec){sec=Math.max(0,Number(sec)||0);return String(Math.floor(sec/60)).padStart(2,'0')+':'+String(sec%60).padStart(2,'0')}
+function showSeasonTab(tab){
+  ['history','stats','custom'].forEach(x=>{document.getElementById('season'+x.charAt(0).toUpperCase()+x.slice(1)+'Panel').style.display=x===tab?'block':'none';document.getElementById('tab'+x.charAt(0).toUpperCase()+x.slice(1)).classList.toggle('active',x===tab)});
+  if(tab==='history')renderHistory(); if(tab==='stats')renderSeasonStats(); if(tab==='custom')renderCustomStats();
+}
+function renderHistory(){
+  const box=document.getElementById('seasonHistoryPanel'),h=getHistory();
+  if(!h.length){box.innerHTML='<div class="seasonEmpty">Todavía no hay partidos archivados.<br><br>Al finalizar un partido, pulsa <b>ARCHIVAR PARTIDO ACTUAL</b>.</div>';return}
+  box.innerHTML=h.map((m,i)=>`<div class="historyCard"><div class="historyMain"><b>${escHist(m.homeName)}</b> <strong>${m.homeGoals}-${m.awayGoals}</strong> <b>${escHist(m.awayName)}</b><div class="historySub">${escHist(fmtDateHist(m.date))} · ${escHist(m.time||'--:--')} · ${escHist(m.venue||'Sin pabellón')} · ${escHist(m.season||'Sin temporada')}</div></div><div class="historyActions"><button onclick="viewArchivedMatch(${i})">👁️ VER</button><button onclick="copyArchivedMatch(${i})">📋 COPIAR</button><button class="danger" onclick="deleteArchivedMatch(${i})">🗑️</button></div></div>`).join('');
+}
+function deleteArchivedMatch(i){const h=getHistory();if(!h[i])return;if(confirm('¿Borrar este partido del historial?')){h.splice(i,1);setHistory(h);renderHistory();renderSeasonStats()}}
+function clearSeasonHistory(){if(!getHistory().length)return;if(confirm('¿Borrar TODOS los partidos archivados de esta temporada?')){setHistory([]);renderHistory();renderSeasonStats();renderCustomStats()}}
+function copyArchivedMatch(i){const h=getHistory();const m=h[i];if(!m)return;const txt=`⚽ FUTSAL CONTROL PRO\n🏁 ${m.homeName} ${m.homeGoals} - ${m.awayGoals} ${m.awayName}\n📅 ${fmtDateHist(m.date)} · ${m.time||'--:--'} · ${m.venue||''}\n\n${formatArchivedPlayers(m.homeName,m.homePlayers)}\n${formatArchivedPlayers(m.awayName,m.awayPlayers)}`;navigator.clipboard?.writeText(txt).then(()=>alert('📋 Resumen copiado.')).catch(()=>alert(txt))}
+function formatArchivedPlayers(team,arr){let s=team+'\n';(arr||[]).forEach(p=>{if((p.goals||0)||(p.yellow||0)||(p.red||0)||(p.seconds||0)||(p.fouls||0))s+=`#${p.number||''} ${p.name||''} · ${p.goals||0} gol(es) · ${p.yellow||0} amarillas · ${p.red||0} rojas · ${p.fouls||0} faltas · ${minsHist(p.seconds)}\n`});return s}
+function viewArchivedMatch(i){const h=getHistory();const m=h[i];if(!m)return;let text=`⚽ ${m.homeName} ${m.homeGoals} - ${m.awayGoals} ${m.awayName}\n📅 ${fmtDateHist(m.date)} · ${m.time||'--:--'}\n📍 ${m.venue||'Sin pabellón'}\n\n${formatArchivedPlayers(m.homeName,m.homePlayers)}\n${formatArchivedPlayers(m.awayName,m.awayPlayers)}`;alert(text)}
+function aggregateSeason(){
+  const h=getHistory(),map=new Map();
+  h.forEach(m=>{[[m.homeName,m.homePlayers||[]],[m.awayName,m.awayPlayers||[]]].forEach(([team,arr])=>{arr.forEach(p=>{
+    const key=team+'|'+(p.number??'')+'|'+(p.name||''); if(!map.has(key))map.set(key,{team,number:p.number||'',name:p.name||'',matches:0,starts:0,minutes:0,goals:0,fouls:0,yellow:0,red:0});
+    const a=map.get(key); a.matches++;a.starts+=p.starter?1:0;a.minutes+=Number(p.seconds)||0;a.goals+=Number(p.goals)||0;a.fouls+=Number(p.fouls)||0;a.yellow+=Number(p.yellow)||0;a.red+=Number(p.red)||0;
+  })})}); return [...map.values()].sort((a,b)=>a.team.localeCompare(b.team)||Number(a.number)-Number(b.number)||a.name.localeCompare(b.name));
+}
+function renderSeasonStats(){
+  const box=document.getElementById('seasonStatsPanel'),rows=aggregateSeason();
+  if(!rows.length){box.innerHTML='<div class="seasonEmpty">Guarda al menos un partido para generar las estadísticas de temporada.</div>';return}
+  const cols=[['Partidos','matches'],['Titularidades','starts'],['Minutos','minutes'],['Goles','goals'],['Faltas','fouls'],['Amarillas','yellow'],['Rojas','red']];
+  box.innerHTML='<div class="customTitle">Temporada: '+escHist(localStorage.getItem(SEASON_KEY)||'Temporada 2026/27')+'</div><div class="statWrap"><table class="statTable"><thead><tr><th>Equipo</th><th>Jugador</th>'+cols.map(c=>'<th>'+c[0]+'</th>').join('')+'</tr></thead><tbody>'+rows.map(r=>'<tr><td>'+escHist(r.team)+'</td><td>#'+escHist(r.number)+' '+escHist(r.name)+'</td>'+cols.map(c=>'<td>'+(c[1]==='minutes'?minsHist(r[c[1]]):r[c[1]])+'</td>').join('')+'</tr>').join('')+'</tbody></table></div>';
+}
+function renderCustomStats(){
+  const box=document.getElementById('seasonCustomPanel');
+  const metrics=[['matches','Partidos'],['starts','Titularidades'],['minutes','Minutos'],['goals','Goles'],['fouls','Faltas'],['yellow','Amarillas'],['red','Rojas']];
+  box.innerHTML='<div class="customTitle">Elige qué quieres ver</div><div class="customGrid">'+metrics.map(([k,l],i)=>`<label class="metric"><input type="checkbox" data-metric="${k}" ${['minutes','goals'].includes(k)?'checked':''}>${l}</label>`).join('')+'</div><button class="seasonBtn" onclick="buildCustomTable()">📊 GENERAR ESTADÍSTICA</button><div id="customResult" style="margin-top:16px"></div>';
+  buildCustomTable();
+}
+function buildCustomTable(){
+  const result=document.getElementById('customResult');if(!result)return;const rows=aggregateSeason();
+  if(!rows.length){result.innerHTML='<div class="seasonEmpty">No hay partidos archivados.</div>';return}
+  const selected=[...document.querySelectorAll('#seasonCustomPanel input[data-metric]:checked')].map(x=>x.dataset.metric);if(!selected.length){result.innerHTML='<div class="seasonEmpty">Selecciona al menos una estadística.</div>';return}
+  const labels={matches:'Partidos',starts:'Titularidades',minutes:'Minutos',goals:'Goles',fouls:'Faltas',yellow:'Amarillas',red:'Rojas'};
+  result.innerHTML='<div class="statWrap"><table class="statTable"><thead><tr><th>Equipo</th><th>Jugador</th>'+selected.map(k=>'<th>'+labels[k]+'</th>').join('')+'</tr></thead><tbody>'+rows.map(r=>'<tr><td>'+escHist(r.team)+'</td><td>#'+escHist(r.number)+' '+escHist(r.name)+'</td>'+selected.map(k=>'<td>'+(k==='minutes'?minsHist(r[k]):r[k])+'</td>').join('')+'</tr>').join('')+'</tbody></table></div>';
+}
+const seasonNameInput=document.getElementById('seasonNameInput');if(seasonNameInput)seasonNameInput.addEventListener('change',()=>{try{localStorage.setItem(SEASON_KEY,seasonNameInput.value||'Temporada 2026/27')}catch(e){}});
+const seasonModal=document.getElementById('seasonModal');if(seasonModal)seasonModal.addEventListener('click',e=>{if(e.target===seasonModal)closeHistory()});
+</script>
+
+</body>
+</html>
