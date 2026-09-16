@@ -1085,6 +1085,91 @@ header .small{color:#87909d;font-size:10px;text-transform:uppercase;letter-spaci
 .statWrap{overflow:auto}.statTable{width:100%;border-collapse:collapse;min-width:760px}.statTable th,.statTable td{padding:9px 8px;border-bottom:1px solid #39434e;text-align:center}.statTable th{background:#252e38;color:#f5c400;position:sticky;top:0}.statTable td:first-child,.statTable th:first-child{text-align:left}.statTable tr:hover td{background:#222b34}
 .customGrid{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:15px}.metric{background:#2b3540;border-radius:9px;padding:8px 10px}.metric input{margin-right:6px}.customTitle{font-size:18px;color:#f5c400;font-weight:900;margin:8px 0 12px}
 @media(max-width:800px){.seasonBox{width:98vw}.seasonHead h2{font-size:19px}.seasonBody{padding:12px}.historyCard{grid-template-columns:1fr}.seasonTools{padding:10px}}
+
+/* V18 ROW: una ficha por fila, con foto y controles desplegables */
+@media (min-width:0px){
+  .container>.card:nth-child(5)>div[id$="Players"],
+  .container>.card:nth-child(6)>div[id$="Players"]{
+    height:auto!important;
+    max-height:none!important;
+    overflow:visible!important;
+    display:grid!important;
+    grid-template-columns:minmax(0,1fr)!important;
+    gap:8px!important;
+    align-content:start!important;
+  }
+
+  .container>.card:nth-child(5) .player,
+  .container>.card:nth-child(6) .player{
+    width:100%!important;
+    min-height:76px!important;
+    margin:0!important;
+    padding:8px!important;
+    display:grid!important;
+    grid-template-columns:64px minmax(0,1fr)!important;
+    grid-template-areas:
+      "photo top"
+      "photo badges"
+      "photo quick"
+      "photo details"!important;
+    align-items:center!important;
+    gap:4px 9px!important;
+  }
+
+  .container>.card:nth-child(5) .playerPhoto,
+  .container>.card:nth-child(6) .playerPhoto{
+    width:58px!important;
+    height:58px!important;
+  }
+
+  .container>.card:nth-child(5) .playerTop,
+  .container>.card:nth-child(6) .playerTop{
+    display:flex!important;
+    align-items:center!important;
+    gap:6px!important;
+    min-width:0!important;
+  }
+
+  .container>.card:nth-child(5) .playerName,
+  .container>.card:nth-child(6) .playerName{
+    min-width:0!important;
+    font-size:14px!important;
+    padding:7px!important;
+  }
+
+  .container>.card:nth-child(5) .number,
+  .container>.card:nth-child(6) .number{
+    width:48px!important;
+    font-size:14px!important;
+    padding:7px 3px!important;
+  }
+
+  .container>.card:nth-child(5) .badges,
+  .container>.card:nth-child(6) .badges{
+    margin-top:0!important;
+    gap:4px!important;
+  }
+
+  .container>.card:nth-child(5) .playerActions,
+  .container>.card:nth-child(6) .playerActions{
+    display:none!important;
+  }
+
+  .container>.card:nth-child(5) .playerStats,
+  .container>.card:nth-child(6) .playerStats{
+    display:none!important;
+  }
+
+  .container>.card:nth-child(5) .photoPicker,
+  .container>.card:nth-child(6) .photoPicker{
+    left:auto!important;
+    top:0!important;
+    right:0!important;
+    width:24px!important;
+    height:24px!important;
+    z-index:4!important;
+  }
+}
 </style>
 
 </head>
