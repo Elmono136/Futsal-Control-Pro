@@ -709,6 +709,11 @@ header .small{font-size:10px}
     }
 }
 
+
+.playerPhotoWrap{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.playerPhoto{width:58px;height:58px;border-radius:50%;object-fit:cover;border:2px solid #e5b638;background:#333;flex-shrink:0}
+.photoPicker{font-size:11px;max-width:150px;color:#bbb}
+.photoPicker::file-selector-button{background:#e5b638;color:#111;border:0;border-radius:8px;padding:7px;margin-right:5px;font-weight:bold}
 </style>
 
 <style>
@@ -1655,6 +1660,7 @@ function player(i){
     return {
         number:i,
         name:"Jugador "+i,
+        photo:"",
 
         /*
            LOS 5 PRIMEROS SON TITULARES
@@ -3572,6 +3578,18 @@ function renderTeamPlayers(
 
         d.innerHTML=
 
+            '<div class="playerPhotoWrap">'
+            +
+            '<img class="playerPhoto" src="'
+            +
+            (p.photo || "data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%2758%27 height=%2758%27%3E%3Crect width=%27100%25%27 height=%27100%25%27 fill=%27%23333333%27/%3E%3Ctext x=%2750%25%27 y=%2758%27 text-anchor=%27middle%27 font-size=%2730%27 fill=%27%23e5b638%27%3E⚽%3C/text%3E%3C/svg%3E")
+            +
+            '" alt="Foto del jugador">'
+            +
+            '<input class="photoPicker" type="file" accept="image/*" title="Añadir foto">'
+            +
+            '</div>'
+            +
             '<div class="playerTop">'
             +
 
@@ -3716,6 +3734,30 @@ function renderTeamPlayers(
             +
 
             '</div>';
+
+
+        const photoPicker=d.querySelector(".photoPicker");
+        photoPicker.onchange=e=>{
+            const file=e.target.files && e.target.files[0];
+            if(!file) return;
+            const reader=new FileReader();
+            reader.onload=ev=>{
+                const img=new Image();
+                img.onload=()=>{
+                    const canvas=document.createElement("canvas");
+                    const max=180;
+                    const scale=Math.min(1,max/Math.max(img.width,img.height));
+                    canvas.width=Math.max(1,Math.round(img.width*scale));
+                    canvas.height=Math.max(1,Math.round(img.height*scale));
+                    canvas.getContext("2d").drawImage(img,0,0,canvas.width,canvas.height);
+                    p.photo=canvas.toDataURL("image/jpeg",0.78);
+                    saveProState();
+                    renderPlayers();
+                };
+                img.src=ev.target.result;
+            };
+            reader.readAsDataURL(file);
+        };
 
 
         /*
