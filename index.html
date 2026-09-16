@@ -790,7 +790,7 @@ header .small{font-size:10px}
   --away:#0879dc;
   --green:#19b95a;
 }
-html,body{background:var(--bg);min-height:100%;}
+html,body{background:var(--bg);min-height:100%;overflow-x:hidden;overflow-y:auto;}
 body{font-family:Arial,Helvetica,sans-serif;}
 header{
   position:sticky;top:0;z-index:50;
@@ -909,8 +909,20 @@ header .small{color:#87909d;font-size:10px;text-transform:uppercase;letter-spaci
   .container{display:block!important;padding:8px;}
   .container>.card{margin-bottom:8px;}
   .container>.card:nth-child(1){position:static;}
-  .container>.card:nth-child(5),.container>.card:nth-child(6){height:auto;max-height:none;}
-  .container>.card:nth-child(5)>div[id$="Players"],.container>.card:nth-child(6)>div[id$="Players"]{height:auto;max-height:520px;}
+  /* En móvil las listas deben crecer completas y permitir el scroll de la página.
+     Evita que la tarjeta corte la lista después de unos jugadores. */
+  .container>.card:nth-child(5),.container>.card:nth-child(6){
+    height:auto!important;
+    max-height:none!important;
+    overflow:visible!important;
+  }
+  .container>.card:nth-child(5)>div[id$="Players"],
+  .container>.card:nth-child(6)>div[id$="Players"]{
+    height:auto!important;
+    max-height:none!important;
+    overflow:visible!important;
+    -webkit-overflow-scrolling:auto;
+  }
   .clock{font-size:70px;}
   .crestConfigGrid{grid-template-columns:1fr 1fr;}
 }
