@@ -1143,6 +1143,10 @@ header .small{color:#87909d;font-size:10px;text-transform:uppercase;letter-spaci
 #modalContent .panelButtons{display:grid;grid-template-columns:repeat(2,1fr);gap:7px}
 #modalContent .panelButtons button{min-height:46px}
 #modalContent .panelButtons .wide{grid-column:1/-1}
+#modalContent .panelEditFields{align-items:center;margin:10px 0 12px}
+#modalContent .panelEditFields input{background:#202832!important;border:1px solid #4b5867!important;color:#fff!important;border-radius:8px;padding:10px 8px!important;min-width:0;font-size:13px!important}
+#modalContent .panelEditFields input:focus{outline:2px solid #21f56c}
+
 @media(max-width:700px){
   .playerTop{grid-template-columns:38px 1fr auto!important}
   .playerAvatar{width:34px;height:34px;font-size:19px}
@@ -3633,7 +3637,7 @@ function renderTeamPlayers(id, arr){
         const team = arr===homePlayers ? 1 : 0;
         const d = document.createElement("div");
         d.className = "player " + (p.onCourt ? "onCourt " : "") + (p.sentOff ? "sentOff " : "") + (p.starter ? "starter" : "");
-        d.title = "Pulsa para abrir las estadísticas y acciones";
+        d.title = "Pulsa para abrir el panel del jugador";
 
         const status = p.sentOff ? "🟥" : (p.onCourt ? "🟢" : "⚪");
         const starter = p.starter ? '<span class="badge badgeStarter">⭐ TITULAR</span>' : '';
@@ -3654,21 +3658,8 @@ function renderTeamPlayers(id, arr){
             </div>
             <div class="playerStatus" aria-label="${p.onCourt ? 'En pista' : 'Banquillo'}"></div>
           </div>
-          <div class="playerEditRow">
-            <input class="number" type="number" value="${esc(p.number)}" aria-label="Dorsal">
-            <input class="playerName" value="${esc(p.name)}" aria-label="Nombre">
-          </div>
-          <div class="playerQuickHint">Toca la tarjeta para ver estadísticas y acciones</div>
+          <div class="playerQuickHint">Toca la tarjeta para ver estadísticas, foto y edición</div>
         `;
-
-        const num = d.querySelector(".number");
-        const name = d.querySelector(".playerName");
-        [num,name].forEach(inp=>{
-            inp.addEventListener("click", e=>e.stopPropagation());
-            inp.addEventListener("pointerdown", e=>e.stopPropagation());
-        });
-        num.onchange = e => { p.number = e.target.value; updateSummary(); };
-        name.onchange = e => { p.name = e.target.value; updateSummary(); };
 
         d.addEventListener("click", ()=>showPlayerPanel(team,i));
         el.appendChild(d);
@@ -3701,6 +3692,11 @@ function showPlayerPanel(team,i){
         </div>
       </div>
       <div class="photoHint">Toca la foto para añadirla o cambiarla. La imagen se guarda al pulsar GUARDAR.</div>
+      <div class="playerEditRow panelEditFields">
+        <label style="flex:0 0 78px;color:#aeb7c2;font-size:12px;align-self:center">Dorsal</label>
+        <input id="ppNumber" type="number" min="0" max="99" value="${esc(p.number)}" aria-label="Cambiar dorsal">
+        <input id="ppName" type="text" value="${esc(p.name)}" aria-label="Cambiar nombre" placeholder="Nombre del jugador" style="flex:1;min-width:0">
+      </div>
       <div class="panelStats">
         <div class="panelStat"><strong>${p.goals||0}</strong>GOLES</div>
         <div class="panelStat"><strong>${p.yellow||0}</strong>🟨</div>
@@ -3709,6 +3705,7 @@ function showPlayerPanel(team,i){
         <div class="panelStat"><strong>${formatTime(p.seconds||0)}</strong>MIN</div>
       </div>
       <div class="panelButtons">
+        <button class="gold wide" id="ppSaveIdentity">💾 GUARDAR NOMBRE Y DORSAL</button>
         <button class="green" id="ppToggle" ${p.sentOff?'disabled':''}>${toggleText}</button>
         <button class="gold" id="ppStarter" ${matchStarted||p.sentOff?'disabled':''}>${starterText}</button>
         <button class="gold" id="ppGoal" ${p.sentOff?'disabled':''}>⚽ + GOL</button>
@@ -3718,6 +3715,16 @@ function showPlayerPanel(team,i){
       </div>
     `;
 
+    document.getElementById("ppSaveIdentity").onclick = ()=>{
+      const n = document.getElementById("ppNumber").value.trim();
+      const name = document.getElementById("ppName").value.trim();
+      if(!name){ alert("Escribe un nombre para el jugador."); return; }
+      p.number = n === "" ? p.number : n;
+      p.name = name;
+      updateSummary();
+      renderPlayers();
+      showPlayerPanel(team,i);
+    };
     document.getElementById("ppToggle").onclick = ()=>{ togglePlayer(arr,i); showPlayerPanel(team,i); };
     document.getElementById("ppStarter").onclick = ()=>{ toggleStarter(arr,i); showPlayerPanel(team,i); };
     document.getElementById("ppGoal").onclick = ()=>{ registerGoal(team,i); showPlayerPanel(team,i); };
