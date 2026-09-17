@@ -1233,6 +1233,15 @@ header .small{color:#87909d;font-size:10px;text-transform:uppercase;letter-spaci
 
 <br>
 
+<label>Mi equipo para el historial y estadísticas</label>
+<select id="myTeamSide">
+    <option value="home">🔴 Equipo local</option>
+    <option value="away">🔵 Equipo visitante</option>
+</select>
+<div style="font-size:12px;color:#aeb7c2;margin-top:6px">El acta conservará los dos equipos, pero el historial de temporada acumulará solo el equipo elegido.</div>
+
+<br>
+
 <label>Tipo de reloj</label>
 
 <select id="clockMode">
@@ -4486,6 +4495,7 @@ function saveProState(){
     const state={
       homeName:document.getElementById('homeName')?.value||'',
       awayName:document.getElementById('awayName')?.value||'',
+      myTeamSide:document.getElementById('myTeamSide')?.value||'home',
       clockMode:document.getElementById('clockMode')?.value||'stopped',
       periodDuration,period,seconds,running,matchStarted,matchFinished,homeGoals,awayGoals,homeFouls,awayFouls,periodFouls,homePlayers,awayPlayers,events,
       matchDate:document.getElementById('matchDate')?.value||'',matchTime:document.getElementById('matchTime')?.value||'',matchVenue:document.getElementById('matchVenue')?.value||''
@@ -4499,7 +4509,7 @@ function loadProState(){
     const raw=localStorage.getItem('futsalProMatchState');
     if(!raw){ alert('No hay ningún partido guardado en este dispositivo.'); return; }
     const s=JSON.parse(raw);
-    ['homeName','awayName','clockMode','matchDate','matchTime','matchVenue'].forEach(id=>{
+    ['homeName','awayName','myTeamSide','clockMode','matchDate','matchTime','matchVenue'].forEach(id=>{
       const el=document.getElementById(id); if(el && s[id]!=null) el.value=s[id];
     });
     if(Array.isArray(s.homePlayers)) homePlayers=s.homePlayers;
@@ -4632,7 +4642,7 @@ function currentMatchSnapshot(){
   return {id:Date.now().toString(36)+'-'+Math.random().toString(36).slice(2,7),savedAt:new Date().toISOString(),
     season:document.getElementById('seasonNameInput')?.value||localStorage.getItem(SEASON_KEY)||'Temporada 2026/27',
     date:document.getElementById('matchDate')?.value||'',time:document.getElementById('matchTime')?.value||'',venue:document.getElementById('matchVenue')?.value||'',
-    homeName:hn,awayName:an,homeGoals:Number(homeGoals)||0,awayGoals:Number(awayGoals)||0,
+    homeName:hn,awayName:an,myTeamSide:document.getElementById('myTeamSide')?.value||'home',homeGoals:Number(homeGoals)||0,awayGoals:Number(awayGoals)||0,
     homeFouls:Number(homeFouls)||0,awayFouls:Number(awayFouls)||0,periodFouls:JSON.parse(JSON.stringify(periodFouls||[])),
     homePlayers:JSON.parse(JSON.stringify(homePlayers||[])),awayPlayers:JSON.parse(JSON.stringify(awayPlayers||[])),events:JSON.parse(JSON.stringify(events||[]))};
 }
@@ -4669,7 +4679,12 @@ function formatArchivedPlayers(team,arr){let s=team+'\n';(arr||[]).forEach(p=>{i
 function viewArchivedMatch(i){const h=getHistory();const m=h[i];if(!m)return;let text=`⚽ ${m.homeName} ${m.homeGoals} - ${m.awayGoals} ${m.awayName}\n📅 ${fmtDateHist(m.date)} · ${m.time||'--:--'}\n📍 ${m.venue||'Sin pabellón'}\n\n${formatArchivedPlayers(m.homeName,m.homePlayers)}\n${formatArchivedPlayers(m.awayName,m.awayPlayers)}`;alert(text)}
 function aggregateSeason(){
   const h=getHistory(),map=new Map();
-  h.forEach(m=>{[[m.homeName,m.homePlayers||[]],[m.awayName,m.awayPlayers||[]]].forEach(([team,arr])=>{arr.forEach(p=>{
+  h.forEach(m=>{
+    // Solo acumula el equipo elegido como propio al archivar el partido.
+    // En partidos antiguos sin esta propiedad se mantiene el comportamiento anterior (local).
+    const side=m.myTeamSide==='away'?'away':'home';
+    const selected=side==='away'?[m.awayName,m.awayPlayers||[]]:[m.homeName,m.homePlayers||[]];
+    [selected].forEach(([team,arr])=>{arr.forEach(p=>{
     const key=team+'|'+(p.number??'')+'|'+(p.name||''); if(!map.has(key))map.set(key,{team,number:p.number||'',name:p.name||'',matches:0,starts:0,minutes:0,goals:0,fouls:0,yellow:0,red:0});
     const a=map.get(key); a.matches++;a.starts+=p.starter?1:0;a.minutes+=Number(p.seconds)||0;a.goals+=Number(p.goals)||0;a.fouls+=Number(p.fouls)||0;a.yellow+=Number(p.yellow)||0;a.red+=Number(p.red)||0;
   })})}); return [...map.values()].sort((a,b)=>a.team.localeCompare(b.team)||Number(a.number)-Number(b.number)||a.name.localeCompare(b.name));
@@ -4678,7 +4693,8 @@ function renderSeasonStats(){
   const box=document.getElementById('seasonStatsPanel'),rows=aggregateSeason();
   if(!rows.length){box.innerHTML='<div class="seasonEmpty">Guarda al menos un partido para generar las estadísticas de temporada.</div>';return}
   const cols=[['Partidos','matches'],['Titularidades','starts'],['Minutos','minutes'],['Goles','goals'],['Faltas','fouls'],['Amarillas','yellow'],['Rojas','red']];
-  box.innerHTML='<div class="customTitle">Temporada: '+escHist(localStorage.getItem(SEASON_KEY)||'Temporada 2026/27')+'</div><div class="statWrap"><table class="statTable"><thead><tr><th>Equipo</th><th>Jugador</th>'+cols.map(c=>'<th>'+c[0]+'</th>').join('')+'</tr></thead><tbody>'+rows.map(r=>'<tr><td>'+escHist(r.team)+'</td><td>#'+escHist(r.number)+' '+escHist(r.name)+'</td>'+cols.map(c=>'<td>'+(c[1]==='minutes'?minsHist(r[c[1]]):r[c[1]])+'</td>').join('')+'</tr>').join('')+'</tbody></table></div>';
+  const currentSide=document.getElementById('myTeamSide')?.value||'home';
+  box.innerHTML='<div class="customTitle">Temporada: '+escHist(localStorage.getItem(SEASON_KEY)||'Temporada 2026/27')+' · Equipo: '+(currentSide==='away'?'Visitante':'Local')+'</div><div class="statWrap"><table class="statTable"><thead><tr><th>Equipo</th><th>Jugador</th>'+cols.map(c=>'<th>'+c[0]+'</th>').join('')+'</tr></thead><tbody>'+rows.map(r=>'<tr><td>'+escHist(r.team)+'</td><td>#'+escHist(r.number)+' '+escHist(r.name)+'</td>'+cols.map(c=>'<td>'+(c[1]==='minutes'?minsHist(r[c[1]]):r[c[1]])+'</td>').join('')+'</tr>').join('')+'</tbody></table></div>';
 }
 function renderCustomStats(){
   const box=document.getElementById('seasonCustomPanel');
