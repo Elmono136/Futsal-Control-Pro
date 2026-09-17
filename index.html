@@ -709,47 +709,6 @@ header .small{font-size:10px}
     }
 }
 
-
-/* V18 - roster clean view */
-.player{display:flex;align-items:center;gap:10px;padding:8px 10px;margin:6px 0;border:1px solid #303944;border-radius:12px;background:#f7f7f7;color:#101010;cursor:default;transition:.15s;}
-.player.onCourt{background:linear-gradient(90deg,#d9ffe7,#f5fff8);border:2px solid #19d866;box-shadow:0 0 10px #19d86630;}
-.player.sentOff{background:#ffe4e7;border-color:#d71920;opacity:.7;}
-.player.starter{border-left:5px solid #e5b638;}
-.playerAvatar{width:48px;height:48px;min-width:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:#1c2732;color:#fff;font-size:24px;font-weight:900;border:2px solid #596575;overflow:hidden;}
-.playerAvatar img{width:100%;height:100%;object-fit:cover;}
-.playerMain{flex:1;min-width:0;display:flex;align-items:center;gap:9px;padding:5px 0;cursor:pointer;}
-.playerNumber{width:35px;height:35px;min-width:35px;display:flex;align-items:center;justify-content:center;border-radius:9px;background:#17212b;color:#fff;font-weight:900;font-size:16px;}
-.playerInfo{min-width:0;flex:1;}
-.playerInfo strong{display:block;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.playerInfo small{display:block;font-size:11px;color:#65707b;margin-top:3px;}
-.playerStatusDot{width:16px;height:16px;min-width:16px;border-radius:50%;background:#fff;border:1px solid #b8b8b8;}
-.player.onCourt .playerStatusDot{background:#18df68;border:2px solid #0b9b43;}
-.player.sentOff .playerStatusDot{background:#e51d35;border-color:#a20f20;}
-.playerQuick{display:flex;align-items:center;gap:4px;}
-.playerQuick button{padding:8px 10px!important;min-width:44px;font-size:12px!important;border-radius:9px!important;}
-.playerQuick .quickEnter{background:#16c957;color:#07170c;}
-.playerQuick .quickExit{background:#e52b38;color:white;}
-.playerQuick .quickOpen{background:#27323e;color:white;}
-.playerPanelBackdrop{position:fixed;inset:0;background:rgba(0,0,0,.78);z-index:100000;display:flex;align-items:center;justify-content:center;padding:14px;}
-.playerPanel{width:min(560px,100%);max-height:92vh;overflow:auto;background:#111820;border:1px solid #53606d;border-radius:20px;padding:18px;box-shadow:0 12px 50px #000; color:#fff;}
-.playerPanelHead{display:flex;align-items:center;gap:12px;}
-.playerPanelHead .playerAvatar{width:76px;height:76px;min-width:76px;font-size:34px;}
-.playerPanelTitle{flex:1;min-width:0;}
-.playerPanelTitle h3{margin:0 0 4px;font-size:22px;color:#fff;}
-.playerPanelTitle p{margin:0;color:#b8c2cc;font-size:13px;}
-.playerPanelClose{background:#343d47!important;color:#fff!important;width:40px!important;min-width:40px!important;padding:8px!important;}
-.playerEditGrid{display:grid;grid-template-columns:90px 1fr;gap:10px;margin-top:16px;}
-.playerEditGrid input{min-width:0;}
-.playerPanelStats{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin:16px 0;}
-.playerPanelStat{background:#202a34;border:1px solid #35414d;border-radius:10px;padding:10px 4px;text-align:center;}
-.playerPanelStat strong{display:block;font-size:20px;color:#ffd34e;}
-.playerPanelStat span{font-size:10px;color:#b9c2cc;}
-.playerPanelActions{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;}
-.playerPanelActions button{min-height:44px!important;}
-.playerPanelActions .full{grid-column:1/-1;}
-.playerPanelHint{font-size:12px;color:#aeb8c2;margin:12px 0 0;text-align:center;}
-@media(max-width:600px){.player{gap:6px;padding:7px}.playerAvatar{width:42px;height:42px;min-width:42px}.playerInfo strong{font-size:13px}.playerQuick button{padding:8px 7px!important;min-width:38px}.playerPanelStats{grid-template-columns:repeat(3,1fr)}.playerEditGrid{grid-template-columns:80px 1fr}}
-
 </style>
 
 <style>
@@ -1064,6 +1023,127 @@ header .small{color:#87909d;font-size:10px;text-transform:uppercase;letter-spaci
 .statWrap{overflow:auto}.statTable{width:100%;border-collapse:collapse;min-width:760px}.statTable th,.statTable td{padding:9px 8px;border-bottom:1px solid #39434e;text-align:center}.statTable th{background:#252e38;color:#f5c400;position:sticky;top:0}.statTable td:first-child,.statTable th:first-child{text-align:left}.statTable tr:hover td{background:#222b34}
 .customGrid{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:15px}.metric{background:#2b3540;border-radius:9px;padding:8px 10px}.metric input{margin-right:6px}.customTitle{font-size:18px;color:#f5c400;font-weight:900;margin:8px 0 12px}
 @media(max-width:800px){.seasonBox{width:98vw}.seasonHead h2{font-size:19px}.seasonBody{padding:12px}.historyCard{grid-template-columns:1fr}.seasonTools{padding:10px}}
+
+/* ===== V19 · TARJETAS COMPACTAS DE JUGADORES ===== */
+.player{
+  position:relative;
+  display:block;
+  padding:7px 9px;
+  margin:5px 0;
+  border:1px solid #39424e;
+  border-left:4px solid #68717d;
+  border-radius:12px;
+  background:#151b22;
+  cursor:pointer;
+  transition:transform .12s,border-color .12s,background .12s;
+}
+.player:hover{transform:translateY(-1px)}
+.player.onCourt{
+  background:linear-gradient(90deg,#102c20,#14231f);
+  border-color:#21f56c;
+  border-left-color:#21f56c;
+  box-shadow:0 0 9px #21f56c25;
+}
+.player.sentOff{opacity:.55;border-color:#b51f2d!important}
+.playerTop{
+  display:grid!important;
+  grid-template-columns:42px 1fr auto;
+  align-items:center;
+  gap:8px;
+}
+.playerAvatar{
+  width:38px;
+  height:38px;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:#27313d;
+  border:2px solid #657080;
+  font-size:22px;
+  overflow:hidden;
+}
+.player.onCourt .playerAvatar{border-color:#21f56c}
+.playerMain{min-width:0}
+.playerNumber{
+  display:inline-flex;
+  min-width:31px;
+  height:27px;
+  align-items:center;
+  justify-content:center;
+  margin-right:6px;
+  border-radius:7px;
+  background:#252e39;
+  border:1px solid #5d6875;
+  color:#fff;
+  font-weight:900;
+  font-size:13px;
+}
+.playerNameView{
+  color:#fff;
+  font-size:14px;
+  font-weight:800;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.playerStatus{
+  width:13px;
+  height:13px;
+  border-radius:50%;
+  background:#fff;
+  border:1px solid #aaa;
+  box-shadow:0 0 0 2px #ffffff12;
+}
+.player.onCourt .playerStatus{background:#21f56c;border-color:#21f56c;box-shadow:0 0 8px #21f56c99}
+.player.sentOff .playerStatus{background:#ef3340;border-color:#ef3340}
+.playerEditRow{
+  display:flex;
+  gap:6px;
+  margin-top:6px;
+}
+.playerEditRow input{
+  min-width:0;
+  padding:6px 7px!important;
+  font-size:12px!important;
+  background:#202832!important;
+}
+.playerEditRow .number{width:70px!important}
+.playerEditRow .playerName{flex:1}
+.playerBadgesCompact{display:flex;gap:4px;flex-wrap:wrap;margin-top:5px}
+.playerBadgesCompact .badge{font-size:9px;padding:3px 5px}
+.playerQuickHint{font-size:10px;color:#8d98a6;margin-top:4px}
+.playerHiddenDetails{display:none!important}
+#modalContent .playerPanelHead{
+  display:flex;align-items:center;gap:12px;margin-bottom:12px;
+}
+#modalContent .panelAvatar{
+  width:76px;height:76px;border-radius:16px;background:#26313d;
+  border:2px solid #21f56c;display:flex;align-items:center;
+  justify-content:center;font-size:42px;flex:0 0 auto;
+}
+#modalContent .panelIdentity{min-width:0}
+#modalContent .panelIdentity h3{margin:0 0 4px;font-size:23px;color:#fff}
+#modalContent .panelIdentity p{margin:0;color:#aaa;font-size:13px}
+#modalContent .panelStats{
+  display:grid;grid-template-columns:repeat(5,1fr);gap:5px;margin:12px 0;
+}
+#modalContent .panelStat{
+  background:#111820;border:1px solid #303b47;border-radius:10px;
+  text-align:center;padding:9px 2px;font-size:10px;color:#aeb7c2;
+}
+#modalContent .panelStat strong{display:block;font-size:20px;color:#fff;margin-bottom:2px}
+#modalContent .panelButtons{display:grid;grid-template-columns:repeat(2,1fr);gap:7px}
+#modalContent .panelButtons button{min-height:46px}
+#modalContent .panelButtons .wide{grid-column:1/-1}
+@media(max-width:700px){
+  .playerTop{grid-template-columns:38px 1fr auto!important}
+  .playerAvatar{width:34px;height:34px;font-size:19px}
+  .playerNameView{font-size:13px}
+  #modalContent .panelStats{grid-template-columns:repeat(5,1fr)}
+  #modalContent .panelStat strong{font-size:17px}
+}
+
 </style>
 
 </head>
@@ -1696,7 +1776,6 @@ function player(i){
     return {
         number:i,
         name:"Jugador "+i,
-        photo:"",
 
         /*
            LOS 5 PRIMEROS SON TITULARES
@@ -3504,103 +3583,109 @@ function renderPlayers(){
 }
 
 
-function closePlayerPanel(){
-    const old=document.getElementById("playerPanelBackdrop");
-    if(old) old.remove();
-}
+function renderTeamPlayers(id, arr){
+    const el = document.getElementById(id);
+    if(!el) return;
+    el.innerHTML = "";
 
-function openPlayerPanel(arr,i){
-    const p=arr[i];
-    if(!p) return;
-    closePlayerPanel();
-    const team=arr===homePlayers?1:0;
-    const backdrop=document.createElement('div');
-    backdrop.id='playerPanelBackdrop';
-    backdrop.className='playerPanelBackdrop';
-    backdrop.onclick=e=>{if(e.target===backdrop)closePlayerPanel();};
-    const panel=document.createElement('div');
-    panel.className='playerPanel';
-    const avatar=p.photo
-      ? '<img src="'+String(p.photo).replace(/"/g,'&quot;')+'" alt="Foto del jugador">'
-      : '⚽';
-    const status=p.sentOff?'EXPULSADO':p.onCourt?'EN PISTA':'BANQUILLO';
-    panel.innerHTML=`
-      <div class="playerPanelHead">
-        <div class="playerAvatar">${avatar}</div>
-        <div class="playerPanelTitle"><h3>#${esc(p.number)} · ${esc(p.name)}</h3><p>${status} · ${p.starter?'⭐ TITULAR':'SUPLENTE'}</p></div>
-        <button class="playerPanelClose">✕</button>
-      </div>
-      <div class="playerEditGrid">
-        <div><label>Dorsal</label><input id="panelNumber" type="number" value="${esc(p.number)}"></div>
-        <div><label>Nombre</label><input id="panelName" value="${esc(p.name)}"></div>
-      </div>
-      <div class="playerPanelStats">
-        <div class="playerPanelStat"><strong>${p.goals||0}</strong><span>GOLES</span></div>
-        <div class="playerPanelStat"><strong>${p.yellow||0}</strong><span>AMARILLAS</span></div>
-        <div class="playerPanelStat"><strong>${p.red||0}</strong><span>ROJAS</span></div>
-        <div class="playerPanelStat"><strong>${p.fouls||0}</strong><span>FALTAS</span></div>
-        <div class="playerPanelStat"><strong>${formatTime(p.seconds||0)}</strong><span>MINUTOS</span></div>
-      </div>
-      <div class="playerPanelActions">
-        <button id="panelEnter" class="green">▶ ENTRAR</button>
-        <button id="panelExit" class="red">↔ SALIR</button>
-        <button id="panelStarter" class="gold full">⭐ ${p.starter?'CAMBIAR A SUPLENTE':'HACER TITULAR'}</button>
-        <button id="panelGoal" class="gold">⚽ + GOL</button>
-        <button id="panelFoul" class="dark">🚨 + FALTA</button>
-        <button id="panelYellow" class="gold">🟨 + AMARILLA</button>
-        <button id="panelRed" class="red">🟥 + ROJA</button>
-      </div>
-      <p class="playerPanelHint">Toca fuera del panel o ✕ para cerrar. Los cambios de nombre y dorsal se guardan al salir.</p>`;
-    panel.querySelector('.playerPanelClose').onclick=closePlayerPanel;
-    panel.querySelector('#panelNumber').onchange=e=>{p.number=e.target.value;updateSummary();};
-    panel.querySelector('#panelName').onchange=e=>{p.name=e.target.value;updateSummary();};
-    panel.querySelector('#panelEnter').disabled=p.sentOff||p.onCourt;
-    panel.querySelector('#panelExit').disabled=p.sentOff||!p.onCourt;
-    panel.querySelector('#panelStarter').disabled=!!matchStarted||p.sentOff;
-    panel.querySelector('#panelGoal').onclick=()=>{if(!requireMatch())return;registerGoal(team,i);refreshPlayerPanel(arr,i);};
-    panel.querySelector('#panelFoul').onclick=()=>{if(!requireMatch())return;registerFoul(team,i);refreshPlayerPanel(arr,i);};
-    panel.querySelector('#panelYellow').onclick=()=>{if(!requireMatch())return;registerCard(team,i,'yellow');refreshPlayerPanel(arr,i);};
-    panel.querySelector('#panelRed').onclick=()=>{if(!requireMatch())return;registerCard(team,i,'red');refreshPlayerPanel(arr,i);};
-    panel.querySelector('#panelEnter').onclick=()=>{togglePlayer(arr,i);refreshPlayerPanel(arr,i);};
-    panel.querySelector('#panelExit').onclick=()=>{leavePlayer(arr,i);refreshPlayerPanel(arr,i);};
-    panel.querySelector('#panelStarter').onclick=()=>{toggleStarter(arr,i);refreshPlayerPanel(arr,i);};
-    backdrop.appendChild(panel);document.body.appendChild(backdrop);
-}
-
-function refreshPlayerPanel(arr,i){
-    const n=document.getElementById('playerPanelBackdrop');
-    if(n){n.remove();openPlayerPanel(arr,i);}
-}
-
-function renderPlayers(){
-    renderTeamPlayers("homePlayers",homePlayers);
-    renderTeamPlayers("awayPlayers",awayPlayers);
-}
-
-function renderTeamPlayers(id,arr){
-    const el=document.getElementById(id);
-    if(!el)return;
-    el.innerHTML='';
     arr.forEach((p,i)=>{
-        const d=document.createElement('div');
-        d.className='player '+(p.onCourt?'onCourt ':'')+(p.sentOff?'sentOff ':'')+(p.starter?'starter':'');
-        const avatar=p.photo?'<img src="'+String(p.photo).replace(/"/g,'&quot;')+'" alt="Foto">':'⚽';
-        const status=p.sentOff?'EXPULSADO':p.onCourt?'EN PISTA':'BANQUILLO';
-        d.innerHTML=`
-          <div class="playerAvatar">${avatar}</div>
-          <div class="playerMain" role="button" tabindex="0" aria-label="Abrir ficha de ${esc(p.name)}">
-            <div class="playerNumber">${esc(p.number)}</div>
-            <div class="playerInfo"><strong>${esc(p.name)}</strong><small>${p.starter?'⭐ TITULAR · ':''}${status} · ⚽ ${p.goals||0} · 🟨 ${p.yellow||0} · 🟥 ${p.red||0} · 🚨 ${p.fouls||0}</small></div>
-            <span class="playerStatusDot"></span>
+        const team = arr===homePlayers ? 1 : 0;
+        const d = document.createElement("div");
+        d.className = "player " + (p.onCourt ? "onCourt " : "") + (p.sentOff ? "sentOff " : "") + (p.starter ? "starter" : "");
+        d.title = "Pulsa para abrir las estadísticas y acciones";
+
+        const status = p.sentOff ? "🟥" : (p.onCourt ? "🟢" : "⚪");
+        const starter = p.starter ? '<span class="badge badgeStarter">⭐ TITULAR</span>' : '';
+        const sent = p.sentOff ? '<span class="badge badgeSent">EXPULSADO</span>' : '';
+
+        d.innerHTML = `
+          <div class="playerTop">
+            <div class="playerAvatar" aria-hidden="true">👤</div>
+            <div class="playerMain">
+              <div>
+                <span class="playerNumber">#${esc(p.number)}</span>
+                <span class="playerNameView">${esc(p.name)}</span>
+              </div>
+              <div class="playerBadgesCompact">
+                <span class="badge ${p.onCourt ? 'badgeCourt' : 'badgeBench'}">${status} ${p.onCourt ? 'EN PISTA' : 'BANQUILLO'}</span>
+                ${starter}${sent}
+              </div>
+            </div>
+            <div class="playerStatus" aria-label="${p.onCourt ? 'En pista' : 'Banquillo'}"></div>
           </div>
-          <div class="playerQuick"><button class="quickOpen">☰</button></div>`;
-        const open=()=>openPlayerPanel(arr,i);
-        const main=d.querySelector('.playerMain');
-        main.onclick=open;main.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();open();}};
-        d.querySelector('.quickOpen').onclick=open;
+          <div class="playerEditRow">
+            <input class="number" type="number" value="${esc(p.number)}" aria-label="Dorsal">
+            <input class="playerName" value="${esc(p.name)}" aria-label="Nombre">
+          </div>
+          <div class="playerQuickHint">Toca la tarjeta para ver estadísticas y acciones</div>
+        `;
+
+        const num = d.querySelector(".number");
+        const name = d.querySelector(".playerName");
+        [num,name].forEach(inp=>{
+            inp.addEventListener("click", e=>e.stopPropagation());
+            inp.addEventListener("pointerdown", e=>e.stopPropagation());
+        });
+        num.onchange = e => { p.number = e.target.value; updateSummary(); };
+        name.onchange = e => { p.name = e.target.value; updateSummary(); };
+
+        d.addEventListener("click", ()=>showPlayerPanel(team,i));
         el.appendChild(d);
     });
 }
+
+function showPlayerPanel(team,i){
+    const arr = team===1 ? homePlayers : awayPlayers;
+    const p = arr[i];
+    if(!p) return;
+
+    const content = document.getElementById("modalContent");
+    const title = document.getElementById("modalTitle");
+    const subtitle = document.getElementById("modalSubtitle");
+    if(!content || !title || !subtitle) return;
+
+    const status = p.sentOff ? "🟥 EXPULSADO" : (p.onCourt ? "🟢 EN PISTA" : "⚪ BANQUILLO");
+    title.textContent = "👤 PANEL DEL JUGADOR";
+    subtitle.textContent = (team===1 ? homeTitle() : awayTitle()) + " · " + status;
+
+    const toggleText = p.onCourt ? "🔄 SALIR DE PISTA" : "🟢 ENTRAR EN PISTA";
+    const starterText = p.starter ? "⭐ PASAR A SUPLENTE" : "⭐ HACER TITULAR";
+
+    content.innerHTML = `
+      <div class="playerPanelHead">
+        <div class="panelAvatar">👤</div>
+        <div class="panelIdentity">
+          <h3>#${esc(p.number)} · ${esc(p.name)}</h3>
+          <p>${status}${p.sentOff ? '' : (p.starter ? ' · ⭐ TITULAR' : '')}</p>
+        </div>
+      </div>
+      <div class="panelStats">
+        <div class="panelStat"><strong>${p.goals||0}</strong>GOLES</div>
+        <div class="panelStat"><strong>${p.yellow||0}</strong>🟨</div>
+        <div class="panelStat"><strong>${p.red||0}</strong>🟥</div>
+        <div class="panelStat"><strong>${p.fouls||0}</strong>FALTAS</div>
+        <div class="panelStat"><strong>${formatTime(p.seconds||0)}</strong>MIN</div>
+      </div>
+      <div class="panelButtons">
+        <button class="green" id="ppToggle" ${p.sentOff?'disabled':''}>${toggleText}</button>
+        <button class="gold" id="ppStarter" ${matchStarted||p.sentOff?'disabled':''}>${starterText}</button>
+        <button class="gold" id="ppGoal" ${p.sentOff?'disabled':''}>⚽ + GOL</button>
+        <button class="dark" id="ppFoul" ${p.sentOff?'disabled':''}>+ FALTA</button>
+        <button class="yellow wide" id="ppYellow" ${p.sentOff?'disabled':''}>🟨 + AMARILLA</button>
+        <button class="red wide" id="ppRed" ${p.sentOff?'disabled':''}>🟥 + ROJA</button>
+      </div>
+    `;
+
+    document.getElementById("ppToggle").onclick = ()=>{ togglePlayer(arr,i); showPlayerPanel(team,i); };
+    document.getElementById("ppStarter").onclick = ()=>{ toggleStarter(arr,i); showPlayerPanel(team,i); };
+    document.getElementById("ppGoal").onclick = ()=>{ registerGoal(team,i); showPlayerPanel(team,i); };
+    document.getElementById("ppFoul").onclick = ()=>{ registerFoul(team,i); showPlayerPanel(team,i); };
+    document.getElementById("ppYellow").onclick = ()=>{ registerCard(team,i,"yellow"); showPlayerPanel(team,i); };
+    document.getElementById("ppRed").onclick = ()=>{ registerCard(team,i,"red"); showPlayerPanel(team,i); };
+
+    document.getElementById("actionModal").style.display="flex";
+}
+
 
 /* =========================================================
    UTILIDADES
