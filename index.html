@@ -709,11 +709,6 @@ header .small{font-size:10px}
     }
 }
 
-
-.playerPhotoWrap{display:flex;align-items:center;gap:10px;margin-bottom:8px}
-.playerPhoto{width:58px;height:58px;border-radius:50%;object-fit:cover;border:2px solid #e5b638;background:#333;flex-shrink:0}
-.photoPicker{font-size:11px;max-width:150px;color:#bbb}
-.photoPicker::file-selector-button{background:#e5b638;color:#111;border:0;border-radius:8px;padding:7px;margin-right:5px;font-weight:bold}
 </style>
 
 <style>
@@ -1029,17 +1024,145 @@ header .small{color:#87909d;font-size:10px;text-transform:uppercase;letter-spaci
 .customGrid{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:15px}.metric{background:#2b3540;border-radius:9px;padding:8px 10px}.metric input{margin-right:6px}.customTitle{font-size:18px;color:#f5c400;font-weight:900;margin:8px 0 12px}
 @media(max-width:800px){.seasonBox{width:98vw}.seasonHead h2{font-size:19px}.seasonBody{padding:12px}.historyCard{grid-template-columns:1fr}.seasonTools{padding:10px}}
 
-.playerEditorOverlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.78);z-index:9999;align-items:center;justify-content:center;padding:12px}
-.playerEditorOverlay.show{display:flex}
-.playerEditorBox{position:relative;width:min(560px,96vw);max-height:92vh;overflow:auto;background:#11161d;border:2px solid #e5b638;border-radius:18px;padding:18px;color:#fff}
-.playerEditorClose{position:absolute;right:12px;top:10px;background:#3b4652;color:#fff;border:0;border-radius:8px;padding:8px 12px;font-size:18px}
-.playerEditGrid{display:grid;grid-template-columns:90px 1fr;gap:10px;align-items:center;margin-top:14px}
-.playerEditGrid input{width:100%;box-sizing:border-box;padding:12px;border-radius:9px;border:1px solid #55616e;background:#202832;color:#fff;font-size:17px}
-.playerEditPhoto{width:88px;height:88px;object-fit:cover;border-radius:50%;border:3px solid #e5b638;display:block;margin:auto}
-.playerEditButtons{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px}
-.playerEditButtons button{padding:12px;border-radius:10px;border:0;font-weight:800}
-.historyTeamLabel{display:block;color:#fff;font-weight:700;margin:8px 0}.historyTeamLabel select{margin-left:8px;padding:8px;border-radius:8px;background:#202832;color:#fff}
-.displayNumber,.displayName{pointer-events:none;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+/* ===== V19 · TARJETAS COMPACTAS DE JUGADORES ===== */
+.player{
+  position:relative;
+  display:block;
+  padding:7px 9px;
+  margin:5px 0;
+  border:1px solid #39424e;
+  border-left:4px solid #68717d;
+  border-radius:12px;
+  background:#151b22;
+  cursor:pointer;
+  transition:transform .12s,border-color .12s,background .12s;
+}
+.player:hover{transform:translateY(-1px)}
+.player.onCourt{
+  background:linear-gradient(90deg,#102c20,#14231f);
+  border-color:#21f56c;
+  border-left-color:#21f56c;
+  box-shadow:0 0 9px #21f56c25;
+}
+.player.sentOff{opacity:.55;border-color:#b51f2d!important}
+.playerTop{
+  display:grid!important;
+  grid-template-columns:42px 1fr auto;
+  align-items:center;
+  gap:8px;
+}
+.playerAvatar{
+  cursor:pointer;
+  position:relative;
+}
+.playerAvatar img{width:100%;height:100%;object-fit:cover;display:block}
+.photoUploadInput{display:none!important}
+.photoHint{font-size:11px;color:#aeb7c2;margin-top:5px}
+.playerAvatar{
+  width:38px;
+  height:38px;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:#27313d;
+  border:2px solid #657080;
+  font-size:22px;
+  overflow:hidden;
+}
+.player.onCourt .playerAvatar{border-color:#21f56c}
+.playerMain{min-width:0}
+.playerNumber{
+  display:inline-flex;
+  min-width:31px;
+  height:27px;
+  align-items:center;
+  justify-content:center;
+  margin-right:6px;
+  border-radius:7px;
+  background:#252e39;
+  border:1px solid #5d6875;
+  color:#fff;
+  font-weight:900;
+  font-size:13px;
+}
+.playerNameView{
+  color:#fff;
+  font-size:14px;
+  font-weight:800;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.playerStatus{
+  width:13px;
+  height:13px;
+  border-radius:50%;
+  background:#fff;
+  border:1px solid #aaa;
+  box-shadow:0 0 0 2px #ffffff12;
+}
+.player.onCourt .playerStatus{background:#21f56c;border-color:#21f56c;box-shadow:0 0 8px #21f56c99}
+.player.sentOff .playerStatus{background:#ef3340;border-color:#ef3340}
+.playerEditRow{
+  display:flex;
+  gap:6px;
+  margin-top:6px;
+}
+.playerEditRow input{
+  min-width:0;
+  padding:6px 7px!important;
+  font-size:12px!important;
+  background:#202832!important;
+}
+.playerEditRow .number{width:70px!important}
+.playerEditRow .playerName{flex:1}
+.playerBadgesCompact{display:flex;gap:4px;flex-wrap:wrap;margin-top:5px}
+.playerBadgesCompact .badge{font-size:9px;padding:3px 5px}
+.playerQuickHint{font-size:10px;color:#8d98a6;margin-top:4px}
+.playerHiddenDetails{display:none!important}
+#modalContent .playerPanelHead{
+  display:flex;align-items:center;gap:12px;margin-bottom:12px;
+}
+#modalContent .panelAvatar{
+  width:76px;height:76px;border-radius:16px;background:#26313d;
+  border:2px solid #21f56c;display:flex;align-items:center;
+  justify-content:center;font-size:42px;flex:0 0 auto;
+}
+#modalContent .panelIdentity{min-width:0}
+#modalContent .panelIdentity h3{margin:0 0 4px;font-size:23px;color:#fff}
+#modalContent .panelIdentity p{margin:0;color:#aaa;font-size:13px}
+#modalContent .panelStats{
+  display:grid;grid-template-columns:repeat(5,1fr);gap:5px;margin:12px 0;
+}
+#modalContent .panelStat{
+  background:#111820;border:1px solid #303b47;border-radius:10px;
+  text-align:center;padding:9px 2px;font-size:10px;color:#aeb7c2;
+}
+#modalContent .panelStat strong{display:block;font-size:20px;color:#fff;margin-bottom:2px}
+#modalContent .panelButtons{display:grid;grid-template-columns:repeat(2,1fr);gap:7px}
+#modalContent .panelButtons button{min-height:46px}
+#modalContent .panelButtons .wide{grid-column:1/-1}
+@media(max-width:700px){
+  .playerTop{grid-template-columns:38px 1fr auto!important}
+  .playerAvatar{width:34px;height:34px;font-size:19px}
+  .playerNameView{font-size:13px}
+  #modalContent .panelStats{grid-template-columns:repeat(5,1fr)}
+  #modalContent .panelStat strong{font-size:17px}
+}
+
+
+.playerQuickButton{width:100%;margin-top:6px;padding:9px 10px;border:0;border-radius:10px;font-weight:800;cursor:pointer}
+.playerStatsCompact{display:flex;justify-content:space-between;gap:6px;margin-top:7px;font-size:11px;color:#e8edf4}
+.playerIdentityLine{display:flex;align-items:center;gap:8px;min-width:0}
+.playerNameView{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+.panelEditFields{display:grid;grid-template-columns:90px 1fr;gap:10px;margin:12px 0}
+.panelEditFields label{display:flex;flex-direction:column;gap:5px;font-size:12px;font-weight:800;color:#f4d36b}
+.panelEditFields label:nth-child(2){grid-column:2}
+.panelEditFields input{width:100%;box-sizing:border-box;padding:11px;border-radius:9px;border:1px solid #65758a;background:#18212c;color:#fff;font-size:16px}
+.panelEditFields button{grid-column:1/-1}
+.photoUploadInput{position:absolute!important;width:1px!important;height:1px!important;opacity:0!important;pointer-events:auto!important}
+.playerAvatar,.panelAvatar{position:relative;cursor:pointer}
 </style>
 
 </head>
@@ -1672,7 +1795,6 @@ function player(i){
     return {
         number:i,
         name:"Jugador "+i,
-        photo:"",
 
         /*
            LOS 5 PRIMEROS SON TITULARES
@@ -3465,6 +3587,39 @@ function leavePlayer(
    RENDER JUGADORES
 ========================================================= */
 
+function playerPhotoMarkup(p, team, i, panel=false){
+    const photo = p.photo ? '<img src="'+esc(p.photo)+'" alt="Foto de '+esc(p.name)+'">' : '<span class="photoPlaceholder">👤</span>';
+    const id = (panel ? 'panelPhotoFile' : 'photoFile') + '_' + team + '_' + i;
+    return '<label class="'+(panel?'panelAvatar':'playerAvatar')+'" title="Añadir o cambiar foto">'+photo+'<input id="'+id+'" class="photoUploadInput" type="file" accept="image/*" onchange="loadPlayerPhoto('+team+','+i+',this)"></label>';
+}
+
+function loadPlayerPhoto(team,i,input){
+    const arr = team===1 ? homePlayers : awayPlayers;
+    const p = arr && arr[i];
+    const file = input && input.files && input.files[0];
+    if(!p || !file) return;
+    if(!file.type || !file.type.startsWith('image/')){ alert('Selecciona una imagen válida.'); return; }
+    if(file.size > 8*1024*1024){ alert('La foto es demasiado grande. Máximo 8 MB.'); return; }
+    const reader = new FileReader();
+    reader.onload = ()=>{
+      const img = new Image();
+      img.onload = ()=>{
+        const max = 420;
+        const scale = Math.min(1, max/Math.max(img.width,img.height));
+        const canvas = document.createElement('canvas');
+        canvas.width = Math.max(1,Math.round(img.width*scale));
+        canvas.height = Math.max(1,Math.round(img.height*scale));
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img,0,0,canvas.width,canvas.height);
+        p.photo = canvas.toDataURL('image/jpeg',0.82);
+        renderPlayers();
+        if(document.getElementById('actionModal').style.display==='flex') showPlayerPanel(team,i);
+      };
+      img.src = reader.result;
+    };
+    reader.readAsDataURL(file);
+}
+
 function renderPlayers(){
 
     renderTeamPlayers(
@@ -3480,253 +3635,127 @@ function renderPlayers(){
 }
 
 
-function renderTeamPlayers(
-    id,
-    arr
-){
-
-    let el=
-        document.getElementById(id);
-
-    el.innerHTML="";
-
+function renderTeamPlayers(id, arr){
+    const el = document.getElementById(id);
+    if(!el) return;
+    el.innerHTML = "";
 
     arr.forEach((p,i)=>{
+        const team = arr===homePlayers ? 1 : 0;
+        const d = document.createElement("div");
+        d.className = "player " + (p.onCourt ? "onCourt " : "") + (p.sentOff ? "sentOff " : "") + (p.starter ? "starter" : "");
+        d.title = "Pulsa para abrir las estadísticas y acciones";
 
-        let d=
-            document.createElement(
-                "div"
-            );
+        const status = p.sentOff ? "🟥 EXPULSADO" : (p.onCourt ? "🟢 EN PISTA" : "⚪ BANQUILLO");
+        const quickText = p.sentOff ? "🟥 EXPULSADO" : (p.onCourt ? "🔄 SALIR" : "🟢 ENTRAR");
+        const quickClass = p.sentOff ? "dark" : (p.onCourt ? "red" : "green");
+        const starter = p.starter ? '<span class="badge badgeStarter">⭐ TITULAR</span>' : '';
 
+        d.innerHTML = `
+          <div class="playerTop">
+            ${playerPhotoMarkup(p,team,i)}
+            <div class="playerMain">
+              <div class="playerIdentityLine">
+                <span class="playerNumber">#${esc(p.number)}</span>
+                <span class="playerNameView">${esc(p.name)}</span>
+              </div>
+              <div class="playerBadgesCompact">
+                <span class="badge ${p.onCourt ? 'badgeCourt' : 'badgeBench'}">${status}</span>
+                ${starter}
+              </div>
+            </div>
+            <div class="playerStatus" aria-label="${p.onCourt ? 'En pista' : 'Banquillo'}"></div>
+          </div>
+          <div class="playerStatsCompact">
+            <span>⚽ ${p.goals||0}</span><span>🟨 ${p.yellow||0}</span><span>🟥 ${p.red||0}</span><span>🚨 ${p.fouls||0}</span>
+          </div>
+          <button class="playerQuickButton ${quickClass}" ${p.sentOff?'disabled':''}>${quickText}</button>
+          <div class="playerQuickHint">Toca la tarjeta para estadísticas y edición</div>
+        `;
 
-        d.className=
-            "player "
-            +
-            (
-                p.onCourt
-                ? "onCourt "
-                : ""
-            )
-            +
-            (
-                p.sentOff
-                ? "sentOff "
-                : ""
-            )
-            +
-            (
-                p.starter
-                ? "starter"
-                : ""
-            );
-
-
-        let courtBadge=
-            p.onCourt
-            ? '<span class="badge badgeCourt">🟢 EN PISTA</span>'
-            : '<span class="badge badgeBench">⚪ BANQUILLO</span>';
-
-
-        let starterBadge=
-            p.starter
-            ? '<span class="badge badgeStarter">⭐ TITULAR</span>'
-            : '<span class="badge badgeSub">SUPLENTE</span>';
-
-
-        let sentBadge=
-            p.sentOff
-            ? '<span class="badge badgeSent">🟥 EXPULSADO</span>'
-            : "";
-
-
-        let actionButton;
-
-
-        if(p.sentOff){
-
-            actionButton=
-                '<button class="dark" disabled>'
-                +
-                '🟥 EXPULSADO'
-                +
-                '</button>';
-
-        }else if(p.onCourt){
-
-            actionButton=
-                '<button class="red">'
-                +
-                '🔄 SALIR'
-                +
-                '</button>';
-
-        }else{
-
-            actionButton=
-                '<button class="green">'
-                +
-                '🟢 ENTRAR'
-                +
-                '</button>';
-
+        const photo = d.querySelector('label.playerAvatar');
+        if(photo){
+            photo.addEventListener('click', e=>e.stopPropagation());
         }
-
-
-        d.innerHTML=
-
-            '<div class="playerPhotoWrap">'
-            +
-            '<img class="playerPhoto" src="'
-            +
-            (p.photo || "data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%2758%27 height=%2758%27%3E%3Crect width=%27100%25%27 height=%27100%25%27 fill=%27%23333333%27/%3E%3Ctext x=%2750%25%27 y=%2758%27 text-anchor=%27middle%27 font-size=%2730%27 fill=%27%23e5b638%27%3E⚽%3C/text%3E%3C/svg%3E")
-            +
-            '" alt="Foto del jugador">'
-            +
-            '</div>'
-            +
-            '<div class="playerTop">'
-            +
-
-            '<div class="number displayNumber">#' + esc(p.number) + '</div>'
-            +
-            '<div class="playerName displayName">' + esc(p.name) + '</div>'
-            +
-            '</div>'
-
-            +
-
-            '<div class="badges">'
-            +
-            starterBadge
-            +
-            courtBadge
-            +
-            sentBadge
-            +
-            '</div>'
-
-            +
-
-            +
-
-            '<div class="playerActions">'
-            +
-            actionButton
-            +
-            '</div>'
-
-            +
-
-            '<div class="playerStats">'
-
-            +
-
-            '<div class="miniStat">'
-            +
-            '<strong>'
-            +
-            p.goals
-            +
-            '</strong>'
-            +
-            'GOLES'
-            +
-            '</div>'
-
-            +
-
-            '<div class="miniStat">'
-            +
-            '<strong>'
-            +
-            p.yellow
-            +
-            '</strong>'
-            +
-            '🟨'
-            +
-            '</div>'
-
-            +
-
-            '<div class="miniStat">'
-            +
-            '<strong>'
-            +
-            p.red
-            +
-            '</strong>'
-            +
-            '🟥'
-            +
-            '</div>'
-
-            +
-
-            '<div class="miniStat">'
-            +
-            '<strong>'
-            +
-            p.fouls
-            +
-            '</strong>'
-            +
-            'FALTAS'
-            +
-            '</div>'
-
-            +
-
-            '<div class="miniStat">'
-            +
-            '<strong>'
-            +
-            formatTime(p.seconds)
-            +
-            '</strong>'
-            +
-            'MIN'
-            +
-            '</div>'
-
-            +
-
-            '</div>';
-
-
-        /*
-           BOTÓN ENTRAR/SALIR
-        */
-
-        let action=
-            d.querySelector(
-                ".playerActions button"
-            );
-
-
-        if(!p.sentOff){
-
-            action.onclick=()=>{
-
-                togglePlayer(
-                    arr,
-                    i
-                );
-
-            };
-
+        const quick = d.querySelector('.playerQuickButton');
+        if(quick && !p.sentOff){
+            quick.addEventListener('click', e=>{
+                e.stopPropagation();
+                togglePlayer(arr,i);
+            });
         }
-
-
-        d.addEventListener('click',function(e){
-            if(e.target.closest('button')) return;
-            openPlayerEditor(arr,i);
-        });
-
+        d.addEventListener('click', ()=>showPlayerPanel(team,i));
         el.appendChild(d);
-
     });
+}
 
+function showPlayerPanel(team,i){
+    const arr = team===1 ? homePlayers : awayPlayers;
+    const p = arr[i];
+    if(!p) return;
+
+    const content = document.getElementById("modalContent");
+    const title = document.getElementById("modalTitle");
+    const subtitle = document.getElementById("modalSubtitle");
+    if(!content || !title || !subtitle) return;
+
+    const status = p.sentOff ? "🟥 EXPULSADO" : (p.onCourt ? "🟢 EN PISTA" : "⚪ BANQUILLO");
+    title.textContent = "👤 PANEL DEL JUGADOR";
+    subtitle.textContent = (team===1 ? homeTitle() : awayTitle()) + " · " + status;
+
+    const toggleText = p.onCourt ? "🔄 SALIR DE PISTA" : "🟢 ENTRAR EN PISTA";
+    const starterText = p.starter ? "⭐ PASAR A SUPLENTE" : "⭐ HACER TITULAR";
+
+    content.innerHTML = `
+      <div class="playerPanelHead">
+        ${playerPhotoMarkup(p,team,i,true)}
+        <div class="panelIdentity">
+          <h3>#${esc(p.number)} · ${esc(p.name)}</h3>
+          <p>${status}${p.sentOff ? '' : (p.starter ? ' · ⭐ TITULAR' : '')}</p>
+        </div>
+      </div>
+      <div class="photoHint">Toca la foto para añadirla o cambiarla. La imagen se guarda al pulsar GUARDAR.</div>
+      <div class="panelEditFields">
+        <label>Dorsal<input id="ppNumber" type="number" value="${esc(p.number)}"></label>
+        <label>Nombre completo<input id="ppName" type="text" value="${esc(p.name)}"></label>
+        <button class="gold wide" id="ppSaveIdentity">💾 GUARDAR NOMBRE Y DORSAL</button>
+      </div>
+      <div class="panelStats">
+        <div class="panelStat"><strong>${p.goals||0}</strong>GOLES</div>
+        <div class="panelStat"><strong>${p.yellow||0}</strong>🟨</div>
+        <div class="panelStat"><strong>${p.red||0}</strong>🟥</div>
+        <div class="panelStat"><strong>${p.fouls||0}</strong>FALTAS</div>
+        <div class="panelStat"><strong>${formatTime(p.seconds||0)}</strong>MIN</div>
+      </div>
+      <div class="panelButtons">
+        <button class="green" id="ppToggle" ${p.sentOff?'disabled':''}>${toggleText}</button>
+        <button class="gold" id="ppStarter" ${matchStarted||p.sentOff?'disabled':''}>${starterText}</button>
+        <button class="gold" id="ppGoal" ${p.sentOff?'disabled':''}>⚽ + GOL</button>
+        <button class="dark" id="ppFoul" ${p.sentOff?'disabled':''}>+ FALTA</button>
+        <button class="yellow wide" id="ppYellow" ${p.sentOff?'disabled':''}>🟨 + AMARILLA</button>
+        <button class="red wide" id="ppRed" ${p.sentOff?'disabled':''}>🟥 + ROJA</button>
+      </div>
+    `;
+
+    document.getElementById("ppSaveIdentity").onclick = ()=>{
+        const number = document.getElementById("ppNumber").value.trim();
+        const name = document.getElementById("ppName").value.trim();
+        if(!name){ alert("Introduce el nombre del jugador."); return; }
+        p.number = number || p.number;
+        p.name = name;
+        updateSummary();
+        renderPlayers();
+        showPlayerPanel(team,i);
+    };
+
+    document.getElementById("ppToggle").onclick = ()=>{ togglePlayer(arr,i); showPlayerPanel(team,i); };
+    document.getElementById("ppStarter").onclick = ()=>{ toggleStarter(arr,i); showPlayerPanel(team,i); };
+    document.getElementById("ppGoal").onclick = ()=>{ registerGoal(team,i); showPlayerPanel(team,i); };
+    document.getElementById("ppFoul").onclick = ()=>{ registerFoul(team,i); showPlayerPanel(team,i); };
+    document.getElementById("ppYellow").onclick = ()=>{ registerCard(team,i,"yellow"); showPlayerPanel(team,i); };
+    document.getElementById("ppRed").onclick = ()=>{ registerCard(team,i,"red"); showPlayerPanel(team,i); };
+
+    document.getElementById("actionModal").style.display="flex";
 }
 
 
@@ -4567,9 +4596,6 @@ document.addEventListener('keydown',function(e){ if(e.key==='Escape') closeQuick
     <div class="seasonHead"><h2>📊 HISTORIAL Y ESTADÍSTICAS</h2><button class="seasonClose" onclick="closeHistory()">✕</button></div>
     <div class="seasonTools">
       <input id="seasonNameInput" value="Temporada 2026/27" placeholder="Nombre de temporada">
-      <label class="historyTeamLabel">Equipo para estadísticas históricas
-        <select id="historyTrackedTeam"><option value="home">Equipo local</option><option value="away">Equipo visitante</option></select>
-      </label>
       <button class="seasonBtn" onclick="archiveCurrentMatch()">💾 ARCHIVAR PARTIDO ACTUAL</button>
       <button class="seasonBtn alt" onclick="renderSeasonStats()">🔄 ACTUALIZAR</button>
       <button class="seasonBtn red" onclick="clearSeasonHistory()">🗑️ BORRAR HISTORIAL</button>
@@ -4588,13 +4614,6 @@ document.addEventListener('keydown',function(e){ if(e.key==='Escape') closeQuick
 </div>
 
 
-<div id="playerEditorModal" class="playerEditorOverlay" aria-hidden="true">
-  <div class="playerEditorBox">
-    <button class="playerEditorClose" onclick="closePlayerEditor()">✕</button>
-    <div id="playerEditorContent"></div>
-  </div>
-</div>
-
 <script>
 /* =========================================================
    V16 — HISTORIAL DE PARTIDOS + ESTADÍSTICAS DE TEMPORADA
@@ -4612,7 +4631,7 @@ function currentMatchSnapshot(){
     date:document.getElementById('matchDate')?.value||'',time:document.getElementById('matchTime')?.value||'',venue:document.getElementById('matchVenue')?.value||'',
     homeName:hn,awayName:an,homeGoals:Number(homeGoals)||0,awayGoals:Number(awayGoals)||0,
     homeFouls:Number(homeFouls)||0,awayFouls:Number(awayFouls)||0,periodFouls:JSON.parse(JSON.stringify(periodFouls||[])),
-    trackedTeam:document.getElementById('historyTrackedTeam')?.value||'home',homePlayers:JSON.parse(JSON.stringify(homePlayers||[])),awayPlayers:JSON.parse(JSON.stringify(awayPlayers||[])),events:JSON.parse(JSON.stringify(events||[]))};
+    homePlayers:JSON.parse(JSON.stringify(homePlayers||[])),awayPlayers:JSON.parse(JSON.stringify(awayPlayers||[])),events:JSON.parse(JSON.stringify(events||[]))};
 }
 function archiveCurrentMatch(){
   if(!matchStarted && events.length===0){alert('Inicia o registra el partido antes de archivarlo.');return}
@@ -4625,7 +4644,6 @@ function archiveCurrentMatch(){
 function openHistory(){
   const m=document.getElementById('seasonModal'); if(!m)return; m.classList.add('show');m.setAttribute('aria-hidden','false');
   const inp=document.getElementById('seasonNameInput'); if(inp) inp.value=localStorage.getItem(SEASON_KEY)||'Temporada 2026/27';
-  const ht=document.getElementById('historyTrackedTeam');if(ht)ht.value=localStorage.getItem('futsalTrackedTeam')||'home';
   showSeasonTab('history');
 }
 function closeHistory(){const m=document.getElementById('seasonModal');if(m){m.classList.remove('show');m.setAttribute('aria-hidden','true')}}
@@ -4648,7 +4666,7 @@ function formatArchivedPlayers(team,arr){let s=team+'\n';(arr||[]).forEach(p=>{i
 function viewArchivedMatch(i){const h=getHistory();const m=h[i];if(!m)return;let text=`⚽ ${m.homeName} ${m.homeGoals} - ${m.awayGoals} ${m.awayName}\n📅 ${fmtDateHist(m.date)} · ${m.time||'--:--'}\n📍 ${m.venue||'Sin pabellón'}\n\n${formatArchivedPlayers(m.homeName,m.homePlayers)}\n${formatArchivedPlayers(m.awayName,m.awayPlayers)}`;alert(text)}
 function aggregateSeason(){
   const h=getHistory(),map=new Map();
-  h.forEach(m=>{const sides=m.trackedTeam==='away'?[[m.awayName,m.awayPlayers||[]]]:m.trackedTeam==='home'?[[m.homeName,m.homePlayers||[]]]:[[m.homeName,m.homePlayers||[]],[m.awayName,m.awayPlayers||[]]];sides.forEach(([team,arr])=>{arr.forEach(p=>{
+  h.forEach(m=>{[[m.homeName,m.homePlayers||[]],[m.awayName,m.awayPlayers||[]]].forEach(([team,arr])=>{arr.forEach(p=>{
     const key=team+'|'+(p.number??'')+'|'+(p.name||''); if(!map.has(key))map.set(key,{team,number:p.number||'',name:p.name||'',matches:0,starts:0,minutes:0,goals:0,fouls:0,yellow:0,red:0});
     const a=map.get(key); a.matches++;a.starts+=p.starter?1:0;a.minutes+=Number(p.seconds)||0;a.goals+=Number(p.goals)||0;a.fouls+=Number(p.fouls)||0;a.yellow+=Number(p.yellow)||0;a.red+=Number(p.red)||0;
   })})}); return [...map.values()].sort((a,b)=>a.team.localeCompare(b.team)||Number(a.number)-Number(b.number)||a.name.localeCompare(b.name));
@@ -4672,37 +4690,7 @@ function buildCustomTable(){
   const labels={matches:'Partidos',starts:'Titularidades',minutes:'Minutos',goals:'Goles',fouls:'Faltas',yellow:'Amarillas',red:'Rojas'};
   result.innerHTML='<div class="statWrap"><table class="statTable"><thead><tr><th>Equipo</th><th>Jugador</th>'+selected.map(k=>'<th>'+labels[k]+'</th>').join('')+'</tr></thead><tbody>'+rows.map(r=>'<tr><td>'+escHist(r.team)+'</td><td>#'+escHist(r.number)+' '+escHist(r.name)+'</td>'+selected.map(k=>'<td>'+(k==='minutes'?minsHist(r[k]):r[k])+'</td>').join('')+'</tr>').join('')+'</tbody></table></div>';
 }
-
-let _editingPlayer=null;
-function openPlayerEditor(arr,i){
-  const p=arr[i]; if(!p)return;
-  _editingPlayer={arr,i,p};
-  const modal=document.getElementById('playerEditorModal');
-  const content=document.getElementById('playerEditorContent');
-  const photo=p.photo||'data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%2790%27 height=%2790%27%3E%3Crect width=%27100%25%27 height=%27100%25%27 fill=%27%23333333%27/%3E%3Ctext x=%2750%25%27 y=%2758%27 text-anchor=%27middle%27 font-size=%2730%27 fill=%27%23e5b638%27%3E⚽%3C/text%3E%3C/svg%3E';
-  content.innerHTML=`<h2>⚽ #${esc(p.number)} · ${esc(p.name)}</h2>
-  <img id="playerEditPhoto" class="playerEditPhoto" src="${photo}" alt="Foto del jugador">
-  <label style="display:block;margin-top:10px">📸 Añadir o cambiar fotografía<input id="playerEditPhotoFile" type="file" accept="image/*" style="display:block;margin-top:6px;width:100%"></label>
-  <div class="playerEditGrid"><label>Dorsal</label><input id="playerEditNumber" type="number" value="${esc(p.number)}"><label>Nombre</label><input id="playerEditName" value="${esc(p.name)}"></div>
-  <div class="playerStats" style="margin-top:14px"><div class="miniStat"><strong>${p.goals||0}</strong>GOLES</div><div class="miniStat"><strong>${p.yellow||0}</strong>🟨</div><div class="miniStat"><strong>${p.red||0}</strong>🟥</div><div class="miniStat"><strong>${p.fouls||0}</strong>FALTAS</div><div class="miniStat"><strong>${formatTime(p.seconds||0)}</strong>MIN</div></div>
-  <div class="playerEditButtons"><button class="green" onclick="editPlayerToggleCourt()">${p.onCourt?'🔄 SALIR':'🟢 ENTRAR'}</button><button class="gold" onclick="editPlayerToggleStarter()">${p.starter?'⭐ SUPLENTE':'⭐ TITULAR'}</button></div>
-  <div class="playerEditButtons"><button class="gold" onclick="editPlayerGoal()">⚽ + GOL</button><button class="dark" onclick="editPlayerFoul()">🚨 + FALTA</button><button class="gold" onclick="editPlayerYellow()">🟨 + AMARILLA</button><button class="red" onclick="editPlayerRed()">🟥 + ROJA</button></div>
-  <button class="seasonBtn" style="width:100%;margin-top:12px" onclick="savePlayerEditor()">💾 GUARDAR NOMBRE Y DORSAL</button>`;
-  document.getElementById('playerEditPhotoFile').onchange=e=>{const file=e.target.files&&e.target.files[0];if(!file)return;const r=new FileReader();r.onload=ev=>{const img=new Image();img.onload=()=>{const c=document.createElement('canvas'),max=180,scale=Math.min(1,max/Math.max(img.width,img.height));c.width=Math.max(1,Math.round(img.width*scale));c.height=Math.max(1,Math.round(img.height*scale));c.getContext('2d').drawImage(img,0,0,c.width,c.height);p.photo=c.toDataURL('image/jpeg',.78);document.getElementById('playerEditPhoto').src=p.photo;saveProState();};img.src=ev.target.result;};r.readAsDataURL(file)};
-  modal.classList.add('show');modal.setAttribute('aria-hidden','false');
-}
-function closePlayerEditor(){const m=document.getElementById('playerEditorModal');if(m){m.classList.remove('show');m.setAttribute('aria-hidden','true')}_editingPlayer=null}
-function savePlayerEditor(){if(!_editingPlayer)return;const p=_editingPlayer.p;p.number=document.getElementById('playerEditNumber').value;p.name=document.getElementById('playerEditName').value.trim()||('Jugador '+p.number);saveProState();renderPlayers();updateSummary();openPlayerEditor(_editingPlayer.arr,_editingPlayer.i)}
-function editPlayerToggleCourt(){if(!_editingPlayer)return;togglePlayer(_editingPlayer.arr,_editingPlayer.i);openPlayerEditor(_editingPlayer.arr,_editingPlayer.i)}
-function editPlayerToggleStarter(){if(!_editingPlayer)return;toggleStarter(_editingPlayer.arr,_editingPlayer.i);openPlayerEditor(_editingPlayer.arr,_editingPlayer.i)}
-function editPlayerGoal(){if(!_editingPlayer)return;_editingPlayer.p.goals=(_editingPlayer.p.goals||0)+1;updateSummary();saveProState();openPlayerEditor(_editingPlayer.arr,_editingPlayer.i)}
-function editPlayerFoul(){if(!_editingPlayer)return;_editingPlayer.p.fouls=(_editingPlayer.p.fouls||0)+1;updateSummary();saveProState();openPlayerEditor(_editingPlayer.arr,_editingPlayer.i)}
-function editPlayerYellow(){if(!_editingPlayer)return;_editingPlayer.p.yellow=(_editingPlayer.p.yellow||0)+1;updateSummary();saveProState();openPlayerEditor(_editingPlayer.arr,_editingPlayer.i)}
-function editPlayerRed(){if(!_editingPlayer)return;_editingPlayer.p.red=(_editingPlayer.p.red||0)+1;_editingPlayer.p.sentOff=true;_editingPlayer.p.onCourt=false;updateSummary();saveProState();renderPlayers();openPlayerEditor(_editingPlayer.arr,_editingPlayer.i)}
-
-const trackedTeamInput=document.getElementById('historyTrackedTeam');if(trackedTeamInput)trackedTeamInput.addEventListener('change',()=>{try{localStorage.setItem('futsalTrackedTeam',trackedTeamInput.value)}catch(e){}});
 const seasonNameInput=document.getElementById('seasonNameInput');if(seasonNameInput)seasonNameInput.addEventListener('change',()=>{try{localStorage.setItem(SEASON_KEY,seasonNameInput.value||'Temporada 2026/27')}catch(e){}});
-const playerEditorModal=document.getElementById('playerEditorModal');if(playerEditorModal)playerEditorModal.addEventListener('click',e=>{if(e.target===playerEditorModal)closePlayerEditor()});
 const seasonModal=document.getElementById('seasonModal');if(seasonModal)seasonModal.addEventListener('click',e=>{if(e.target===seasonModal)closeHistory()});
 </script>
 
