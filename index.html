@@ -709,68 +709,6 @@ header .small{font-size:10px}
     }
 }
 
-
-.playerPhotoWrap{display:flex;align-items:center;gap:10px;margin-bottom:8px}
-.playerPhoto{width:58px;height:58px;border-radius:50%;object-fit:cover;border:2px solid #e5b638;background:#333;flex-shrink:0}
-.photoPicker{font-size:11px;max-width:150px;color:#bbb}
-.photoPicker::file-selector-button{background:#e5b638;color:#111;border:0;border-radius:8px;padding:7px;margin-right:5px;font-weight:bold}
-
-/* V18.1 - plantilla compacta con menú al tocar */
-.player{
-  position:relative;
-  display:grid;
-  grid-template-columns:52px 1fr;
-  grid-template-areas:
-    "photo top"
-    "photo badges"
-    "photo quick";
-  align-items:center;
-  gap:4px 9px;
-  padding:7px;
-  margin:4px 0;
-  min-height:64px;
-  cursor:pointer;
-}
-.playerPhotoWrap{grid-area:photo;display:flex;align-items:center;justify-content:center;position:relative}
-.playerPhoto{width:48px;height:48px;border-radius:50%;object-fit:cover;border:2px solid #555}
-.playerTop{grid-area:top;display:flex;align-items:center;gap:6px;min-width:0}
-.playerTop .number{width:42px!important;font-weight:800}
-.playerTop .playerName{min-width:0;width:100%;font-weight:700}
-.badges{grid-area:badges;display:flex;gap:3px;flex-wrap:wrap}
-.playerActions{grid-area:quick;display:none}
-.playerStats{display:none}
-.starterButton{display:none}
-/* El selector de foto solo ocupa un pequeño botón sobre la esquina de la foto.
-   El resto de la ficha queda libre para abrir el menú del jugador. */
-.player .photoPicker{
-  position:absolute;
-  left:34px;
-  top:34px;
-  width:18px;
-  height:18px;
-  opacity:0;
-  cursor:pointer;
-  z-index:3;
-}
-.player.isExpanded{
-  grid-template-areas:
-    "photo top"
-    "photo badges"
-    "photo quick"
-    "photo details";
-}
-.player.isExpanded .playerActions,
-.player.isExpanded .starterButton,
-.player.isExpanded .playerStats{display:flex}
-.player.isExpanded .playerActions{grid-area:quick}
-.player.isExpanded .playerStats{grid-area:details;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:3px}
-.player.isExpanded .starterButton{grid-column:2;display:block}
-.player.isExpanded .playerActions button{width:100%}
-@media(min-width:700px){
-  #homePlayers,#awayPlayers{display:grid;grid-template-columns:1fr 1fr;gap:5px}
-  .player{margin:0}
-}
-
 </style>
 
 <style>
@@ -790,7 +728,7 @@ header .small{font-size:10px}
   --away:#0879dc;
   --green:#19b95a;
 }
-html,body{background:var(--bg);min-height:100%;overflow-x:hidden;overflow-y:auto;}
+html,body{background:var(--bg);min-height:100%;}
 body{font-family:Arial,Helvetica,sans-serif;}
 header{
   position:sticky;top:0;z-index:50;
@@ -909,20 +847,8 @@ header .small{color:#87909d;font-size:10px;text-transform:uppercase;letter-spaci
   .container{display:block!important;padding:8px;}
   .container>.card{margin-bottom:8px;}
   .container>.card:nth-child(1){position:static;}
-  /* En móvil las listas deben crecer completas y permitir el scroll de la página.
-     Evita que la tarjeta corte la lista después de unos jugadores. */
-  .container>.card:nth-child(5),.container>.card:nth-child(6){
-    height:auto!important;
-    max-height:none!important;
-    overflow:visible!important;
-  }
-  .container>.card:nth-child(5)>div[id$="Players"],
-  .container>.card:nth-child(6)>div[id$="Players"]{
-    height:auto!important;
-    max-height:none!important;
-    overflow:visible!important;
-    -webkit-overflow-scrolling:auto;
-  }
+  .container>.card:nth-child(5),.container>.card:nth-child(6){height:auto;max-height:none;}
+  .container>.card:nth-child(5)>div[id$="Players"],.container>.card:nth-child(6)>div[id$="Players"]{height:auto;max-height:520px;}
   .clock{font-size:70px;}
   .crestConfigGrid{grid-template-columns:1fr 1fr;}
 }
@@ -1097,91 +1023,6 @@ header .small{color:#87909d;font-size:10px;text-transform:uppercase;letter-spaci
 .statWrap{overflow:auto}.statTable{width:100%;border-collapse:collapse;min-width:760px}.statTable th,.statTable td{padding:9px 8px;border-bottom:1px solid #39434e;text-align:center}.statTable th{background:#252e38;color:#f5c400;position:sticky;top:0}.statTable td:first-child,.statTable th:first-child{text-align:left}.statTable tr:hover td{background:#222b34}
 .customGrid{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:15px}.metric{background:#2b3540;border-radius:9px;padding:8px 10px}.metric input{margin-right:6px}.customTitle{font-size:18px;color:#f5c400;font-weight:900;margin:8px 0 12px}
 @media(max-width:800px){.seasonBox{width:98vw}.seasonHead h2{font-size:19px}.seasonBody{padding:12px}.historyCard{grid-template-columns:1fr}.seasonTools{padding:10px}}
-
-/* V18 ROW: una ficha por fila, con foto y controles desplegables */
-@media (min-width:0px){
-  .container>.card:nth-child(5)>div[id$="Players"],
-  .container>.card:nth-child(6)>div[id$="Players"]{
-    height:auto!important;
-    max-height:none!important;
-    overflow:visible!important;
-    display:grid!important;
-    grid-template-columns:minmax(0,1fr)!important;
-    gap:8px!important;
-    align-content:start!important;
-  }
-
-  .container>.card:nth-child(5) .player,
-  .container>.card:nth-child(6) .player{
-    width:100%!important;
-    min-height:76px!important;
-    margin:0!important;
-    padding:8px!important;
-    display:grid!important;
-    grid-template-columns:64px minmax(0,1fr)!important;
-    grid-template-areas:
-      "photo top"
-      "photo badges"
-      "photo quick"
-      "photo details"!important;
-    align-items:center!important;
-    gap:4px 9px!important;
-  }
-
-  .container>.card:nth-child(5) .playerPhoto,
-  .container>.card:nth-child(6) .playerPhoto{
-    width:58px!important;
-    height:58px!important;
-  }
-
-  .container>.card:nth-child(5) .playerTop,
-  .container>.card:nth-child(6) .playerTop{
-    display:flex!important;
-    align-items:center!important;
-    gap:6px!important;
-    min-width:0!important;
-  }
-
-  .container>.card:nth-child(5) .playerName,
-  .container>.card:nth-child(6) .playerName{
-    min-width:0!important;
-    font-size:14px!important;
-    padding:7px!important;
-  }
-
-  .container>.card:nth-child(5) .number,
-  .container>.card:nth-child(6) .number{
-    width:48px!important;
-    font-size:14px!important;
-    padding:7px 3px!important;
-  }
-
-  .container>.card:nth-child(5) .badges,
-  .container>.card:nth-child(6) .badges{
-    margin-top:0!important;
-    gap:4px!important;
-  }
-
-  .container>.card:nth-child(5) .playerActions,
-  .container>.card:nth-child(6) .playerActions{
-    display:none!important;
-  }
-
-  .container>.card:nth-child(5) .playerStats,
-  .container>.card:nth-child(6) .playerStats{
-    display:none!important;
-  }
-
-  .container>.card:nth-child(5) .photoPicker,
-  .container>.card:nth-child(6) .photoPicker{
-    left:auto!important;
-    top:0!important;
-    right:0!important;
-    width:24px!important;
-    height:24px!important;
-    z-index:4!important;
-  }
-}
 </style>
 
 </head>
@@ -1814,7 +1655,6 @@ function player(i){
     return {
         number:i,
         name:"Jugador "+i,
-        photo:"",
 
         /*
            LOS 5 PRIMEROS SON TITULARES
@@ -3732,18 +3572,6 @@ function renderTeamPlayers(
 
         d.innerHTML=
 
-            '<div class="playerPhotoWrap">'
-            +
-            '<img class="playerPhoto" src="'
-            +
-            (p.photo || "data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%2758%27 height=%2758%27%3E%3Crect width=%27100%25%27 height=%27100%25%27 fill=%27%23333333%27/%3E%3Ctext x=%2750%25%27 y=%2758%27 text-anchor=%27middle%27 font-size=%2730%27 fill=%27%23e5b638%27%3E⚽%3C/text%3E%3C/svg%3E")
-            +
-            '" alt="Foto del jugador">'
-            +
-            '<input class="photoPicker" type="file" accept="image/*" title="Añadir foto">'
-            +
-            '</div>'
-            +
             '<div class="playerTop">'
             +
 
@@ -3759,7 +3587,7 @@ function renderTeamPlayers(
 
             +
 
-            '<input class="playerName" autocomplete="off" spellcheck="false" '
+            '<input class="playerName" '
             +
             'value="'
             +
@@ -3890,77 +3718,34 @@ function renderTeamPlayers(
             '</div>';
 
 
-        d.onclick=(ev)=>{
-            if(ev.target.closest("input,button,.photoPicker")) return;
-            d.classList.toggle("isExpanded");
-        };
-
-        const photoPicker=d.querySelector(".photoPicker");
-        photoPicker.onchange=e=>{
-            const file=e.target.files && e.target.files[0];
-            if(!file) return;
-            const reader=new FileReader();
-            reader.onload=ev=>{
-                const img=new Image();
-                img.onload=()=>{
-                    const canvas=document.createElement("canvas");
-                    const max=180;
-                    const scale=Math.min(1,max/Math.max(img.width,img.height));
-                    canvas.width=Math.max(1,Math.round(img.width*scale));
-                    canvas.height=Math.max(1,Math.round(img.height*scale));
-                    canvas.getContext("2d").drawImage(img,0,0,canvas.width,canvas.height);
-                    p.photo=canvas.toDataURL("image/jpeg",0.78);
-                    saveProState(true);
-                    renderPlayers();
-                };
-                img.src=ev.target.result;
-            };
-            reader.readAsDataURL(file);
-        };
-
-
         /*
            CAMBIO DE DORSAL
         */
 
-        const numberInput=d.querySelector(".number");
-        const nameInput=d.querySelector(".playerName");
+        d
+        .querySelector(".number")
+        .onchange=e=>{
 
-        [numberInput,nameInput].forEach(input=>{
-            if(!input) return;
-            ["click","pointerdown","touchstart"].forEach(type=>{
-                input.addEventListener(type,ev=>ev.stopPropagation(),{passive:true});
-            });
-            input.addEventListener("focus",()=>d.classList.add("editing"));
-        });
+            p.number=e.target.value;
 
-        const savePlayerIdentity=()=>{
-            p.number=numberInput.value.trim();
-            p.name=nameInput.value.trim() || ("Jugador " + p.number);
-            saveProState(true);
             updateSummary();
-        };
 
-        numberInput.oninput=()=>{
-            p.number=numberInput.value;
-            updateSummary();
         };
-
-        numberInput.onchange=savePlayerIdentity;
-        numberInput.onblur=savePlayerIdentity;
 
 
         /*
            CAMBIO DE NOMBRE
         */
 
-        nameInput.oninput=()=>{
-            p.name=nameInput.value;
-            updateSummary();
-        };
+        d
+        .querySelector(".playerName")
+        .onchange=e=>{
 
-        nameInput.onchange=savePlayerIdentity;
-        nameInput.onblur=savePlayerIdentity;
+            p.name=e.target.value;
+
+            updateSummary();
+
+        };
 
 
         /*
@@ -4733,7 +4518,7 @@ function updateMetaView(){
   if(tv && t) tv.textContent=t.value||'--:--';
   if(vv && v) vv.textContent=(v.value.trim()||'PABELLÓN').toUpperCase();
 }
-function saveProState(silent=false){
+function saveProState(){
   try{
     const state={
       homeName:document.getElementById('homeName')?.value||'',
@@ -4743,7 +4528,7 @@ function saveProState(silent=false){
       matchDate:document.getElementById('matchDate')?.value||'',matchTime:document.getElementById('matchTime')?.value||'',matchVenue:document.getElementById('matchVenue')?.value||''
     };
     localStorage.setItem('futsalProMatchState',JSON.stringify(state));
-    if(!silent) alert('💾 Partido guardado en este dispositivo.');
+    alert('💾 Partido guardado en este dispositivo.');
   }catch(e){ alert('No se ha podido guardar el partido.'); }
 }
 function loadProState(){
