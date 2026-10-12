@@ -1168,6 +1168,13 @@ header .small{color:#87909d;font-size:10px;text-transform:uppercase;letter-spaci
 .playerAvatar,.panelAvatar{position:relative;cursor:pointer}
 </style>
 
+
+<style id="v26-finish-save-style">
+#saveFinalMatchBtn{display:none;width:100%;margin-top:10px;min-height:62px;font-size:17px;font-weight:900;background:linear-gradient(180deg,#f5c400,#dca900);color:#111;border:2px solid #ffe37a;border-radius:12px;}
+#saveFinalMatchBtn.saved{background:linear-gradient(180deg,#20b65a,#13843d);border-color:#61e18e;color:#fff;}
+#saveFinalMatchStatus{display:none;text-align:center;margin-top:7px;padding:9px;border-radius:9px;background:#102d1c;color:#8ff0b0;font-size:13px;font-weight:bold;}
+</style>
+
 </head>
 
 <body>
@@ -1359,6 +1366,9 @@ header .small{color:#87909d;font-size:10px;text-transform:uppercase;letter-spaci
         onclick="toggleClock()">
     ▶ INICIAR
 </button>
+
+<button id="saveFinalMatchBtn" type="button" onclick="archiveCurrentMatch()">💾 GUARDAR PARTIDO Y ESTADÍSTICAS</button>
+<div id="saveFinalMatchStatus" role="status" aria-live="polite"></div>
 
 <br><br>
 
@@ -1668,6 +1678,7 @@ let matchStarted = false;
 let lineupLocked = false;
 
 let matchFinished = false;
+let matchArchiveId = null; // Identificador estable para evitar archivar dos veces el mismo partido
 
 let homeGoals = 0;
 
@@ -2046,6 +2057,12 @@ function editPeriodTime(){
 ========================================================= */
 
 function startNewMatch(){
+
+    matchArchiveId = Date.now().toString(36)+'-'+Math.random().toString(36).slice(2,9);
+    const saveBtn=document.getElementById('saveFinalMatchBtn');
+    const saveStatus=document.getElementById('saveFinalMatchStatus');
+    if(saveBtn){saveBtn.style.display='none';saveBtn.disabled=false;saveBtn.classList.remove('saved');saveBtn.textContent='💾 GUARDAR PARTIDO Y ESTADÍSTICAS';}
+    if(saveStatus){saveStatus.style.display='none';saveStatus.textContent='';}
 
     unlockAudio();
 
@@ -2494,6 +2511,10 @@ function finishPeriod(){
         .className=
             "dark bigClock";
 
+        const saveBtn=document.getElementById('saveFinalMatchBtn');
+        if(saveBtn){saveBtn.style.display='block';saveBtn.disabled=false;saveBtn.classList.remove('saved');saveBtn.textContent='💾 GUARDAR PARTIDO Y ESTADÍSTICAS';}
+        const saveStatus=document.getElementById('saveFinalMatchStatus');
+        if(saveStatus){saveStatus.style.display='none';saveStatus.textContent='';}
         updateSummary();
 
     }
@@ -4497,7 +4518,7 @@ function saveProState(){
       awayName:document.getElementById('awayName')?.value||'',
       myTeamSide:document.getElementById('myTeamSide')?.value||'home',
       clockMode:document.getElementById('clockMode')?.value||'stopped',
-      periodDuration,period,seconds,running,matchStarted,matchFinished,homeGoals,awayGoals,homeFouls,awayFouls,periodFouls,homePlayers,awayPlayers,events,
+      periodDuration,period,seconds,running,matchStarted,matchFinished,matchArchiveId,homeGoals,awayGoals,homeFouls,awayFouls,periodFouls,homePlayers,awayPlayers,events,
       matchDate:document.getElementById('matchDate')?.value||'',matchTime:document.getElementById('matchTime')?.value||'',matchVenue:document.getElementById('matchVenue')?.value||''
     };
     localStorage.setItem('futsalProMatchState',JSON.stringify(state));
@@ -4518,7 +4539,11 @@ function loadProState(){
     if(Array.isArray(s.periodFouls)) periodFouls=s.periodFouls;
     periodDuration=Number(s.periodDuration)||20*60;
     period=Number(s.period)||1; seconds=Number(s.seconds); running=false;
-    matchStarted=!!s.matchStarted; matchFinished=!!s.matchFinished;
+    matchStarted=!!s.matchStarted; matchFinished=!!s.matchFinished; matchArchiveId=s.matchArchiveId||null;
+    const saveBtn=document.getElementById('saveFinalMatchBtn');
+    const saveStatus=document.getElementById('saveFinalMatchStatus');
+    if(saveBtn){saveBtn.style.display=matchFinished?'block':'none';saveBtn.disabled=false;saveBtn.classList.remove('saved');saveBtn.textContent='💾 GUARDAR PARTIDO Y ESTADÍSTICAS';}
+    if(saveStatus){saveStatus.style.display='none';saveStatus.textContent='';}
     homeGoals=Number(s.homeGoals)||0; awayGoals=Number(s.awayGoals)||0; homeFouls=Number(s.homeFouls)||0; awayFouls=Number(s.awayFouls)||0;
     document.getElementById('clockMode').dispatchEvent(new Event('change'));
     ['homeTitle','homeFoulName','homePlayersTitle'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=getTeamName('home');});
@@ -4639,7 +4664,7 @@ function setHistory(a){try{localStorage.setItem(HISTORY_KEY,JSON.stringify(a));r
 function currentMatchSnapshot(){
   const hn=(document.getElementById('homeName')?.value||'EQUIPO LOCAL').trim();
   const an=(document.getElementById('awayName')?.value||'EQUIPO VISITANTE').trim();
-  return {id:Date.now().toString(36)+'-'+Math.random().toString(36).slice(2,7),savedAt:new Date().toISOString(),
+  return {id:matchArchiveId||('match-'+Date.now().toString(36)+'-'+Math.random().toString(36).slice(2,7)),savedAt:new Date().toISOString(),
     season:document.getElementById('seasonNameInput')?.value||localStorage.getItem(SEASON_KEY)||'Temporada 2026/27',
     date:document.getElementById('matchDate')?.value||'',time:document.getElementById('matchTime')?.value||'',venue:document.getElementById('matchVenue')?.value||'',
     homeName:hn,awayName:an,myTeamSide:document.getElementById('myTeamSide')?.value||'home',homeGoals:Number(homeGoals)||0,awayGoals:Number(awayGoals)||0,
@@ -4647,12 +4672,33 @@ function currentMatchSnapshot(){
     homePlayers:JSON.parse(JSON.stringify(homePlayers||[])),awayPlayers:JSON.parse(JSON.stringify(awayPlayers||[])),events:JSON.parse(JSON.stringify(events||[]))};
 }
 function archiveCurrentMatch(){
-  if(!matchStarted && events.length===0){alert('Inicia o registra el partido antes de archivarlo.');return}
-  const season=document.getElementById('seasonNameInput')?.value||'Temporada 2026/27';
-  try{localStorage.setItem(SEASON_KEY,season)}catch(e){}
-  const h=getHistory(); const snap=currentMatchSnapshot(); snap.season=season;
-  h.unshift(snap); if(!setHistory(h))return;
-  renderHistory(); renderSeasonStats(); alert('📊 Partido archivado en el historial.');
+  if(!matchStarted && events.length===0){alert('Inicia o registra el partido antes de guardarlo.');return}
+  if(!matchFinished){
+    if(!confirm('El partido todavía no figura como finalizado. ¿Quieres guardar una copia del estado actual en el historial?'))return;
+  }
+  if(!matchArchiveId) matchArchiveId='match-'+Date.now().toString(36)+'-'+Math.random().toString(36).slice(2,7);
+  const saveBtn=document.getElementById('saveFinalMatchBtn');
+  const saveStatus=document.getElementById('saveFinalMatchStatus');
+  try{
+    const season=(document.getElementById('seasonNameInput')?.value||localStorage.getItem(SEASON_KEY)||'Temporada 2026/27').trim();
+    localStorage.setItem(SEASON_KEY,season);
+    const h=getHistory();
+    const existingIndex=h.findIndex(m=>m.id===matchArchiveId);
+    const snap=currentMatchSnapshot(); snap.id=matchArchiveId; snap.season=season; snap.savedAt=new Date().toISOString();
+    // Reintentar/guardar de nuevo actualiza el mismo registro; nunca crea un duplicado.
+    if(existingIndex>=0) h[existingIndex]=snap; else h.unshift(snap);
+    if(!setHistory(h)){
+      if(saveStatus){saveStatus.style.display='block';saveStatus.textContent='⚠️ No se pudo guardar. Tus datos siguen en pantalla; vuelve a intentarlo.';saveStatus.style.background='#4a1d1d';saveStatus.style.color='#ffd0d0';}
+      if(saveBtn){saveBtn.disabled=false;}
+      return;
+    }
+    renderHistory(); renderSeasonStats(); renderCustomStats();
+    if(saveBtn){saveBtn.style.display='block';saveBtn.disabled=false;saveBtn.classList.add('saved');saveBtn.textContent='✅ PARTIDO GUARDADO · ACTUALIZAR';}
+    if(saveStatus){saveStatus.style.display='block';saveStatus.style.background='#102d1c';saveStatus.style.color='#8ff0b0';saveStatus.textContent=existingIndex>=0?'✅ Partido actualizado en el historial y estadísticas.':'✅ Partido guardado en el historial y estadísticas.';}
+  }catch(e){
+    if(saveStatus){saveStatus.style.display='block';saveStatus.textContent='⚠️ No se pudo completar el guardado. Los datos siguen en pantalla; vuelve a intentarlo.';saveStatus.style.background='#4a1d1d';saveStatus.style.color='#ffd0d0';}
+    if(saveBtn){saveBtn.disabled=false;}
+  }
 }
 function openHistory(){
   const m=document.getElementById('seasonModal'); if(!m)return; m.classList.add('show');m.setAttribute('aria-hidden','false');
@@ -4669,7 +4715,7 @@ function showSeasonTab(tab){
 }
 function renderHistory(){
   const box=document.getElementById('seasonHistoryPanel'),h=getHistory();
-  if(!h.length){box.innerHTML='<div class="seasonEmpty">Todavía no hay partidos archivados.<br><br>Al finalizar un partido, pulsa <b>ARCHIVAR PARTIDO ACTUAL</b>.</div>';return}
+  if(!h.length){box.innerHTML='<div class="seasonEmpty">Todavía no hay partidos archivados.<br><br>Al llegar el reloj a 00:00, pulsa <b>GUARDAR PARTIDO Y ESTADÍSTICAS</b> debajo del reloj.</div>';return}
   box.innerHTML=h.map((m,i)=>`<div class="historyCard"><div class="historyMain"><b>${escHist(m.homeName)}</b> <strong>${m.homeGoals}-${m.awayGoals}</strong> <b>${escHist(m.awayName)}</b><div class="historySub">${escHist(fmtDateHist(m.date))} · ${escHist(m.time||'--:--')} · ${escHist(m.venue||'Sin pabellón')} · ${escHist(m.season||'Sin temporada')}</div></div><div class="historyActions"><button onclick="viewArchivedMatch(${i})">👁️ VER</button><button onclick="copyArchivedMatch(${i})">📋 COPIAR</button><button class="danger" onclick="deleteArchivedMatch(${i})">🗑️</button></div></div>`).join('');
 }
 function deleteArchivedMatch(i){const h=getHistory();if(!h[i])return;if(confirm('¿Borrar este partido del historial?')){h.splice(i,1);setHistory(h);renderHistory();renderSeasonStats()}}
