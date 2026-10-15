@@ -1315,6 +1315,63 @@ header .small{color:#87909d;font-size:10px;text-transform:uppercase;letter-spaci
 }
 </style>
 
+
+<style id="v30-layout-hotfix">
+/* V30.1: impedir que la tarjeta colapse y oculte estadísticas, identidad y acción */
+.player.playerPhotoCard{
+  box-sizing:border-box!important;
+  display:flex!important;
+  flex-direction:column!important;
+  justify-content:flex-start!important;
+  align-items:stretch!important;
+  height:auto!important;
+  max-height:none!important;
+  min-height:0!important;
+  padding:0!important;
+  overflow:hidden!important;
+  flex-shrink:0!important;
+  gap:0!important;
+  background-image:none!important;
+}
+.player.playerPhotoCard .playerPhotoArea{
+  display:block!important;
+  position:relative!important;
+  flex:0 0 116px!important;
+  height:116px!important;
+  min-height:116px!important;
+  max-height:116px!important;
+  width:100%!important;
+  overflow:hidden!important;
+  background-position:center 22%!important;
+  background-size:cover!important;
+  background-repeat:no-repeat!important;
+}
+.player.playerPhotoCard .playerPhotoFlags{display:flex!important;position:absolute!important}
+.player.playerPhotoCard .playerStatsCompact{
+  display:flex!important;position:relative!important;flex:0 0 auto!important;
+  width:100%!important;box-sizing:border-box!important;min-height:29px!important;
+  visibility:visible!important;opacity:1!important;
+}
+.player.playerPhotoCard .playerIdentityBelow{
+  display:flex!important;position:relative!important;flex:0 0 auto!important;
+  width:100%!important;box-sizing:border-box!important;min-height:30px!important;
+  visibility:visible!important;opacity:1!important;
+}
+.player.playerPhotoCard .playerQuickButton{
+  display:block!important;position:relative!important;flex:0 0 auto!important;
+  width:100%!important;box-sizing:border-box!important;min-height:34px!important;
+  visibility:visible!important;opacity:1!important;
+}
+@media(max-width:700px){
+ .player.playerPhotoCard .playerPhotoArea{
+   flex-basis:104px!important;height:104px!important;min-height:104px!important;max-height:104px!important;
+ }
+ .player.playerPhotoCard .playerStatsCompact{min-height:27px!important;font-size:9px!important;padding:4px 1px!important}
+ .player.playerPhotoCard .playerIdentityBelow{min-height:28px!important}
+ .player.playerPhotoCard .playerQuickButton{min-height:32px!important;font-size:11px!important}
+}
+</style>
+
 </head>
 
 <body>
@@ -3830,9 +3887,8 @@ function renderTeamPlayers(id, arr){
         const d = document.createElement("div");
         d.className = "player playerPhotoCard " + (p.onCourt ? "onCourt " : "") + (p.sentOff ? "sentOff " : "") + (p.starter ? "starter" : "");
         d.title = "Pulsa para abrir las estadísticas y acciones";
-        if(p.photo){
-            d.style.backgroundImage = 'url("' + p.photo + '")';
-        }
+        // La foto se aplica únicamente al área fotográfica, no a toda la tarjeta.
+        d.style.backgroundImage = 'none';
 
         const status = p.sentOff ? "🟥 EXPULSADO" : (p.onCourt ? "🟢 EN PISTA" : "⚪ BANQUILLO");
         const quickText = p.sentOff ? "🟥 EXPULSADO" : (p.onCourt ? "🔄 SALIR" : "🟢 ENTRAR");
