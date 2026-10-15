@@ -1171,7 +1171,7 @@ header .small{color:#87909d;font-size:10px;text-transform:uppercase;letter-spaci
 
 
 <style id="v28-player-photo-cards">
-/* V28: foto grande de fondo y estadísticas en franja clara */
+/* V29: rostro protagonista y estadísticas transparentes */
 .player.playerPhotoCard{
   min-height:178px;
   padding:10px;
@@ -1181,7 +1181,7 @@ header .small{color:#87909d;font-size:10px;text-transform:uppercase;letter-spaci
   gap:0;
   overflow:hidden;
   background-color:#202832;
-  background-position:center 28%;
+  background-position:center 18%;
   background-size:cover;
   background-repeat:no-repeat;
   border:2px solid #56616d;
@@ -1190,7 +1190,7 @@ header .small{color:#87909d;font-size:10px;text-transform:uppercase;letter-spaci
 }
 .player.playerPhotoCard::before{
   content:"";position:absolute;inset:0;z-index:-1;
-  background:linear-gradient(180deg,rgba(4,8,12,.10) 0%,rgba(4,8,12,.16) 38%,rgba(4,8,12,.78) 66%,rgba(4,8,12,.97) 100%);
+  background:linear-gradient(180deg,rgba(4,8,12,.02) 0%,rgba(4,8,12,.02) 48%,rgba(4,8,12,.42) 70%,rgba(4,8,12,.78) 100%);
   pointer-events:none;
 }
 .player.playerPhotoCard .playerTop{
@@ -1214,8 +1214,8 @@ header .small{color:#87909d;font-size:10px;text-transform:uppercase;letter-spaci
 .player.playerPhotoCard .playerBadgesCompact{margin-top:5px}
 .player.playerPhotoCard .playerStatsCompact{
   display:flex;justify-content:space-around;align-items:center;gap:3px;
-  margin:0;padding:8px 5px;background:rgba(255,255,255,.96);color:#15191f;
-  border-radius:9px 9px 0 0;font-size:13px;font-weight:900;
+  margin:0;padding:8px 5px;background:rgba(12,17,23,.48);color:#fff;
+  border-top:1px solid rgba(255,255,255,.25);border-radius:0;font-size:13px;font-weight:900;text-shadow:0 1px 3px #000;backdrop-filter:blur(2px);
 }
 .player.playerPhotoCard .playerStatsCompact span{flex:1;text-align:center;white-space:nowrap}
 .player.playerPhotoCard .playerQuickButton{
@@ -3764,7 +3764,7 @@ function renderTeamPlayers(id, arr){
         d.className = "player playerPhotoCard " + (p.onCourt ? "onCourt " : "") + (p.sentOff ? "sentOff " : "") + (p.starter ? "starter" : "");
         d.title = "Pulsa para abrir las estadísticas y acciones";
         if(p.photo){
-            d.style.backgroundImage = 'linear-gradient(180deg, rgba(5,9,14,.20) 0%, rgba(5,9,14,.35) 42%, rgba(5,9,14,.94) 72%, rgba(5,9,14,.98) 100%), url("' + p.photo + '")';
+            d.style.backgroundImage = 'url("' + p.photo + '")';
         }
 
         const status = p.sentOff ? "🟥 EXPULSADO" : (p.onCourt ? "🟢 EN PISTA" : "⚪ BANQUILLO");
