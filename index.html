@@ -1678,7 +1678,8 @@ let matchStarted = false;
 let lineupLocked = false;
 
 let matchFinished = false;
-let matchArchiveId = null; // Identificador estable para evitar archivar dos veces el mismo partido
+let matchArchiveId = null; // Identificador estable del partido actual
+let matchArchiveIsSaved = false; // Solo permite actualizar un registro si este partido ya se archivó explícitamente
 
 let homeGoals = 0;
 
@@ -2058,7 +2059,8 @@ function editPeriodTime(){
 
 function startNewMatch(){
 
-    matchArchiveId = Date.now().toString(36)+'-'+Math.random().toString(36).slice(2,9);
+    matchArchiveId = createUniqueMatchArchiveId();
+    matchArchiveIsSaved = false;
     const saveBtn=document.getElementById('saveFinalMatchBtn');
     const saveStatus=document.getElementById('saveFinalMatchStatus');
     if(saveBtn){saveBtn.style.display='none';saveBtn.disabled=false;saveBtn.classList.remove('saved');saveBtn.textContent='💾 GUARDAR PARTIDO Y ESTADÍSTICAS';}
@@ -4518,7 +4520,7 @@ function saveProState(){
       awayName:document.getElementById('awayName')?.value||'',
       myTeamSide:document.getElementById('myTeamSide')?.value||'home',
       clockMode:document.getElementById('clockMode')?.value||'stopped',
-      periodDuration,period,seconds,running,matchStarted,matchFinished,matchArchiveId,homeGoals,awayGoals,homeFouls,awayFouls,periodFouls,homePlayers,awayPlayers,events,
+      periodDuration,period,seconds,running,matchStarted,matchFinished,matchArchiveId,matchArchiveIsSaved,homeGoals,awayGoals,homeFouls,awayFouls,periodFouls,homePlayers,awayPlayers,events,
       matchDate:document.getElementById('matchDate')?.value||'',matchTime:document.getElementById('matchTime')?.value||'',matchVenue:document.getElementById('matchVenue')?.value||''
     };
     localStorage.setItem('futsalProMatchState',JSON.stringify(state));
@@ -4539,7 +4541,7 @@ function loadProState(){
     if(Array.isArray(s.periodFouls)) periodFouls=s.periodFouls;
     periodDuration=Number(s.periodDuration)||20*60;
     period=Number(s.period)||1; seconds=Number(s.seconds); running=false;
-    matchStarted=!!s.matchStarted; matchFinished=!!s.matchFinished; matchArchiveId=s.matchArchiveId||null;
+    matchStarted=!!s.matchStarted; matchFinished=!!s.matchFinished; matchArchiveId=s.matchArchiveId||null; matchArchiveIsSaved=s.matchArchiveIsSaved===true;
     const saveBtn=document.getElementById('saveFinalMatchBtn');
     const saveStatus=document.getElementById('saveFinalMatchStatus');
     if(saveBtn){saveBtn.style.display=matchFinished?'block':'none';saveBtn.disabled=false;saveBtn.classList.remove('saved');saveBtn.textContent='💾 GUARDAR PARTIDO Y ESTADÍSTICAS';}
@@ -4661,6 +4663,11 @@ const HISTORY_KEY='futsalProMatchHistoryV1';
 const SEASON_KEY='futsalProSeasonNameV1';
 function getHistory(){try{return JSON.parse(localStorage.getItem(HISTORY_KEY)||'[]')}catch(e){return[]}}
 function setHistory(a){try{localStorage.setItem(HISTORY_KEY,JSON.stringify(a));return true}catch(e){alert('No se ha podido guardar el historial en este dispositivo.');return false}}
+function createUniqueMatchArchiveId(){
+  const used=new Set(getHistory().map(m=>m&&m.id).filter(Boolean));
+  let id; do{id='match-'+Date.now().toString(36)+'-'+Math.random().toString(36).slice(2,10)}while(used.has(id));
+  return id;
+}
 function currentMatchSnapshot(){
   const hn=(document.getElementById('homeName')?.value||'EQUIPO LOCAL').trim();
   const an=(document.getElementById('awayName')?.value||'EQUIPO VISITANTE').trim();
@@ -4676,14 +4683,17 @@ function archiveCurrentMatch(){
   if(!matchFinished){
     if(!confirm('El partido todavía no figura como finalizado. ¿Quieres guardar una copia del estado actual en el historial?'))return;
   }
-  if(!matchArchiveId) matchArchiveId='match-'+Date.now().toString(36)+'-'+Math.random().toString(36).slice(2,7);
+  if(!matchArchiveId || !matchArchiveIsSaved) matchArchiveId=createUniqueMatchArchiveId();
   const saveBtn=document.getElementById('saveFinalMatchBtn');
   const saveStatus=document.getElementById('saveFinalMatchStatus');
   try{
     const season=(document.getElementById('seasonNameInput')?.value||localStorage.getItem(SEASON_KEY)||'Temporada 2026/27').trim();
     localStorage.setItem(SEASON_KEY,season);
     const h=getHistory();
-    const existingIndex=h.findIndex(m=>m.id===matchArchiveId);
+    // Solo actualizar un registro si este partido ya fue archivado explícitamente.
+    // Estados antiguos o recuperados sin esta marca siempre crean una entrada nueva.
+    const existingIndex=matchArchiveIsSaved?h.findIndex(m=>m.id===matchArchiveId):-1;
+    if(existingIndex<0 && h.some(m=>m.id===matchArchiveId)) matchArchiveId=createUniqueMatchArchiveId();
     const snap=currentMatchSnapshot(); snap.id=matchArchiveId; snap.season=season; snap.savedAt=new Date().toISOString();
     // Reintentar/guardar de nuevo actualiza el mismo registro; nunca crea un duplicado.
     if(existingIndex>=0) h[existingIndex]=snap; else h.unshift(snap);
@@ -4692,6 +4702,7 @@ function archiveCurrentMatch(){
       if(saveBtn){saveBtn.disabled=false;}
       return;
     }
+    matchArchiveIsSaved=true;
     renderHistory(); renderSeasonStats(); renderCustomStats();
     if(saveBtn){saveBtn.style.display='block';saveBtn.disabled=false;saveBtn.classList.add('saved');saveBtn.textContent='✅ PARTIDO GUARDADO · ACTUALIZAR';}
     if(saveStatus){saveStatus.style.display='block';saveStatus.style.background='#102d1c';saveStatus.style.color='#8ff0b0';saveStatus.textContent=existingIndex>=0?'✅ Partido actualizado en el historial y estadísticas.':'✅ Partido guardado en el historial y estadísticas.';}
