@@ -1170,67 +1170,83 @@ header .small{color:#87909d;font-size:10px;text-transform:uppercase;letter-spaci
 
 
 
-<style id="v28-player-photo-cards">
-/* V29: rostro protagonista y estadísticas transparentes */
+<style id="v30-2-separated-player-cards">
+/* V30.2: fotografía independiente; el resto de la tarjeta nunca queda recortado */
 .player.playerPhotoCard{
-  min-height:178px;
-  padding:10px;
-  display:flex;
-  flex-direction:column;
-  justify-content:flex-end;
-  gap:0;
-  overflow:hidden;
-  background-color:#202832;
-  background-position:center 18%;
-  background-size:cover;
-  background-repeat:no-repeat;
-  border:2px solid #56616d;
-  border-left:4px solid #68717d;
+  position:relative!important; display:flex!important; flex-direction:column!important;
+  justify-content:flex-start!important; align-items:stretch!important; gap:0!important;
+  height:auto!important; min-height:0!important; max-height:none!important; overflow:hidden!important;
+  padding:0!important; margin:5px 0!important; box-sizing:border-box!important;
+  background:#202832!important; background-image:none!important;
+  border:2px solid #68717d; border-left:4px solid #68717d; border-radius:12px;
   isolation:isolate;
 }
-.player.playerPhotoCard::before{
-  content:"";position:absolute;inset:0;z-index:-1;
-  background:linear-gradient(180deg,rgba(4,8,12,.02) 0%,rgba(4,8,12,.02) 48%,rgba(4,8,12,.42) 70%,rgba(4,8,12,.78) 100%);
-  pointer-events:none;
+.player.playerPhotoCard::before{content:none!important;display:none!important}
+.player.playerPhotoCard .playerPhotoArea{
+  position:relative; display:block; width:100%; height:112px; min-height:112px; max-height:112px;
+  overflow:hidden; background:#303b49; flex:0 0 112px;
 }
-.player.playerPhotoCard .playerTop{
-  display:flex!important;align-items:flex-end;gap:7px;min-width:0;
-  margin-top:auto;padding:42px 0 8px;
+.player.playerPhotoCard .playerAvatar{
+  position:absolute!important; inset:0!important; display:block!important; width:100%!important; height:100%!important;
+  margin:0!important; padding:0!important; border:0!important; border-radius:0!important;
+  overflow:hidden!important; background:transparent!important; cursor:pointer;
 }
-.player.playerPhotoCard .playerAvatar{display:none!important}
-.player.playerPhotoCard .playerMain{min-width:0;flex:1}
-.player.playerPhotoCard .playerIdentityLine{align-items:flex-end;gap:6px;flex-wrap:wrap}
-.player.playerPhotoCard .playerNumber{
-  min-width:40px;height:38px;font-size:21px;border-radius:8px;
-  background:rgba(8,13,20,.88);border:1px solid rgba(255,255,255,.65);
-  text-shadow:0 1px 3px #000;
+.player.playerPhotoCard .playerAvatar img{
+  display:block!important; width:100%!important; height:100%!important; object-fit:cover!important;
+  object-position:center 25%!important; border:0!important; border-radius:0!important;
 }
-.player.playerPhotoCard .playerNameView{
-  display:inline-block;max-width:100%;white-space:normal;overflow-wrap:anywhere;
-  color:#fff;font-size:15px;font-weight:900;line-height:1.15;
-  text-shadow:0 2px 5px #000,0 0 3px #000;
+.player.playerPhotoCard .playerAvatar .photoPlaceholder{
+  display:flex!important; align-items:center; justify-content:center; width:100%; height:100%;
+  font-size:34px; color:#d4e1ee; background:linear-gradient(135deg,#394655,#202832);
 }
-.player.playerPhotoCard .playerStatus{flex:0 0 auto;margin-bottom:7px}
-.player.playerPhotoCard .playerBadgesCompact{margin-top:5px}
+.player.playerPhotoCard .playerPhotoBadges{
+  position:absolute; z-index:2; top:6px; left:6px; right:6px; display:flex!important;
+  justify-content:space-between; align-items:flex-start; gap:4px; pointer-events:none;
+}
+.player.playerPhotoCard .playerPhotoBadges .badge{
+  max-width:49%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+  padding:4px 6px!important; font-size:9px!important; line-height:1.1; border-radius:7px;
+}
 .player.playerPhotoCard .playerStatsCompact{
-  display:flex;justify-content:space-around;align-items:center;gap:3px;
-  margin:0;padding:8px 5px;background:rgba(12,17,23,.48);color:#fff;
-  border-top:1px solid rgba(255,255,255,.25);border-radius:0;font-size:13px;font-weight:900;text-shadow:0 1px 3px #000;backdrop-filter:blur(2px);
+  position:relative!important; display:flex!important; flex:0 0 auto!important; min-height:28px;
+  justify-content:space-around; align-items:center; gap:2px; margin:0!important; padding:5px 3px!important;
+  background:rgba(18,24,32,.72)!important; color:#fff!important; border:0!important;
+  border-radius:0!important; font-size:10px!important; line-height:1.15; font-weight:900;
+  text-shadow:0 1px 2px #000; backdrop-filter:blur(3px);
 }
-.player.playerPhotoCard .playerStatsCompact span{flex:1;text-align:center;white-space:nowrap}
+.player.playerPhotoCard .playerStatsCompact span{flex:1 1 0; min-width:0; text-align:center; white-space:nowrap; overflow:hidden}
+.player.playerPhotoCard .playerIdentityBelow{
+  display:flex!important; flex:0 0 auto!important; align-items:center!important; gap:6px!important;
+  min-width:0; margin:0!important; padding:5px 6px!important; background:#202832!important;
+}
+.player.playerPhotoCard .playerIdentityBelow .playerNumber{
+  display:inline-flex; align-items:center; justify-content:center; flex:0 0 auto; min-width:27px!important;
+  width:auto!important; height:25px!important; padding:2px 4px!important; box-sizing:border-box;
+  background:rgba(255,255,255,.12)!important; color:#fff!important; border:1px solid #7e8b9b!important;
+  border-radius:6px!important; font-size:11px!important; font-weight:900;
+}
+.player.playerPhotoCard .playerIdentityBelow .playerNameView{
+  display:block!important; min-width:0; flex:1 1 auto; max-width:100%; overflow:hidden!important;
+  white-space:nowrap!important; text-overflow:ellipsis!important; overflow-wrap:normal!important;
+  color:#fff!important; font-size:12px!important; font-weight:900; line-height:1.15;
+  text-shadow:none!important;
+}
 .player.playerPhotoCard .playerQuickButton{
-  margin:0;border-radius:0 0 9px 9px;min-height:39px;padding:8px 6px;font-size:14px;
+  position:relative!important; display:block!important; visibility:visible!important; opacity:1!important;
+  flex:0 0 auto!important; width:100%!important; min-height:31px!important; height:auto!important;
+  margin:0!important; padding:6px 4px!important; box-sizing:border-box!important;
+  border:0!important; border-radius:0 0 8px 8px!important; font-size:11px!important; line-height:1.1;
 }
-.player.playerPhotoCard.onCourt{border-color:#21f56c;border-left-color:#21f56c;box-shadow:0 0 9px #21f56c35}
-.player.playerPhotoCard.starter{border-top:3px solid #e5b638}
-.player.playerPhotoCard.sentOff{filter:grayscale(.65)}
+.player.playerPhotoCard.onCourt{border-color:#21f56c!important;border-left-color:#21f56c!important;box-shadow:0 0 8px #21f56c30}
+.player.playerPhotoCard.starter{border-top:3px solid #e5b638!important}
+.player.playerPhotoCard.sentOff{filter:grayscale(.55)}
 @media(max-width:700px){
-  .player.playerPhotoCard{min-height:164px;padding:7px}
-  .player.playerPhotoCard .playerTop{padding-top:35px}
-  .player.playerPhotoCard .playerNumber{min-width:34px;height:33px;font-size:18px}
-  .player.playerPhotoCard .playerNameView{font-size:13px}
-  .player.playerPhotoCard .playerStatsCompact{font-size:11px;padding:7px 2px}
-  .player.playerPhotoCard .playerQuickButton{font-size:12px;min-height:36px}
+  .player.playerPhotoCard .playerPhotoArea{height:96px;min-height:96px;max-height:96px;flex-basis:96px}
+  .player.playerPhotoCard .playerPhotoBadges .badge{font-size:8px!important;padding:4px!important}
+  .player.playerPhotoCard .playerStatsCompact{font-size:9px!important;padding:4px 2px!important}
+  .player.playerPhotoCard .playerIdentityBelow{padding:4px!important}
+  .player.playerPhotoCard .playerIdentityBelow .playerNameView{font-size:11px!important}
+  .player.playerPhotoCard .playerQuickButton{min-height:29px!important;font-size:10px!important}
 }
 </style>
 
@@ -1246,130 +1262,6 @@ header .small{color:#87909d;font-size:10px;text-transform:uppercase;letter-spaci
 .rosterTemplateTools button{border:1px solid #536273;border-radius:9px;padding:9px 6px;background:#263442;color:#fff;font-size:11px;font-weight:900;line-height:1.25;min-height:39px}
 .rosterTemplateTools button:first-child{background:#dca900;color:#111;border-color:#f5d65c}
 @media(max-width:420px){.rosterTemplateTools button{font-size:10px;padding:8px 4px}}
-</style>
-
-
-<style id="v30-split-player-cards">
-/* V30: fotografía independiente y zona inferior compacta */
-.player.playerPhotoCard{
-  position:relative;min-height:0;padding:0;display:flex;flex-direction:column;
-  justify-content:flex-start;gap:0;overflow:hidden;background:#202832;
-  background-image:none!important;border:2px solid #56616d;border-left:4px solid #68717d;
-  border-radius:12px;isolation:isolate;
-}
-.player.playerPhotoCard::before{display:none!important}
-.player.playerPhotoCard .playerPhotoArea{
-  position:relative;width:100%;height:clamp(105px,15vw,155px);min-height:105px;
-  background:#303945 center 22%/cover no-repeat;overflow:hidden;flex:0 0 auto;
-}
-.player.playerPhotoCard .playerPhotoArea::after{
-  content:"";position:absolute;inset:0;pointer-events:none;
-  background:linear-gradient(180deg,rgba(0,0,0,.12),transparent 32%,rgba(0,0,0,.12));
-}
-.player.playerPhotoCard .playerPhotoFlags{
-  position:absolute;z-index:2;top:6px;left:6px;right:6px;
-  display:flex;align-items:flex-start;justify-content:space-between;gap:4px;
-}
-.player.playerPhotoCard .playerPhotoFlags .badge{font-size:9px;padding:4px 5px;max-width:58%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.player.playerPhotoCard .playerPhotoFlags .badgeStarter{margin-left:auto}
-.player.playerPhotoCard .playerPhotoFallback{
-  position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
-  font-size:42px;color:#cbd5e1;background:linear-gradient(135deg,#35404c,#202832);
-}
-.player.playerPhotoCard .playerStatsCompact{
-  display:flex;justify-content:space-around;align-items:center;gap:2px;
-  margin:0;padding:5px 3px;background:rgba(30,38,48,.68);color:#fff;
-  border-top:1px solid rgba(255,255,255,.13);font-size:10px;font-weight:800;
-  text-shadow:0 1px 2px #000;backdrop-filter:blur(3px);flex:0 0 auto;
-}
-.player.playerPhotoCard .playerStatsCompact span{flex:1;text-align:center;white-space:nowrap}
-.player.playerPhotoCard .playerIdentityBelow{
-  display:flex;align-items:center;gap:6px;min-width:0;padding:5px 6px;
-  background:#202832;color:#fff;min-height:29px;
-}
-.player.playerPhotoCard .playerIdentityBelow .playerNumber{
-  flex:0 0 auto;min-width:28px;height:25px;padding:0 4px;font-size:13px;
-  border-radius:6px;background:#111820;border:1px solid #64748b;color:#fff;
-  display:flex;align-items:center;justify-content:center;font-weight:900;
-}
-.player.playerPhotoCard .playerIdentityBelow .playerNameView{
-  min-width:0;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
-  color:#fff;font-size:12px;font-weight:900;line-height:1.1;
-}
-.player.playerPhotoCard .playerIdentityBelow .playerStatus{flex:0 0 auto;width:10px;height:10px;margin:0}
-.player.playerPhotoCard .playerQuickButton{
-  margin:0;border-radius:0 0 8px 8px;min-height:33px;padding:6px 4px;font-size:12px;
-}
-.player.playerPhotoCard.onCourt{border-color:#21f56c;border-left-color:#21f56c;box-shadow:0 0 8px #21f56c35}
-.player.playerPhotoCard.starter{border-top:3px solid #e5b638}
-.player.playerPhotoCard.sentOff{filter:grayscale(.5)}
-@media(max-width:700px){
- .player.playerPhotoCard .playerPhotoArea{height:clamp(92px,24vw,125px);min-height:92px;background-position:center 20%}
- .player.playerPhotoCard .playerPhotoFlags{top:4px;left:4px;right:4px}
- .player.playerPhotoCard .playerPhotoFlags .badge{font-size:8px;padding:3px 4px}
- .player.playerPhotoCard .playerStatsCompact{font-size:9px;padding:4px 1px}
- .player.playerPhotoCard .playerIdentityBelow{padding:4px;gap:4px}
- .player.playerPhotoCard .playerIdentityBelow .playerNumber{min-width:25px;height:23px;font-size:12px}
- .player.playerPhotoCard .playerIdentityBelow .playerNameView{font-size:11px}
- .player.playerPhotoCard .playerQuickButton{font-size:11px;min-height:31px}
-}
-</style>
-
-
-<style id="v30-layout-hotfix">
-/* V30.1: impedir que la tarjeta colapse y oculte estadísticas, identidad y acción */
-.player.playerPhotoCard{
-  box-sizing:border-box!important;
-  display:flex!important;
-  flex-direction:column!important;
-  justify-content:flex-start!important;
-  align-items:stretch!important;
-  height:auto!important;
-  max-height:none!important;
-  min-height:0!important;
-  padding:0!important;
-  overflow:hidden!important;
-  flex-shrink:0!important;
-  gap:0!important;
-  background-image:none!important;
-}
-.player.playerPhotoCard .playerPhotoArea{
-  display:block!important;
-  position:relative!important;
-  flex:0 0 116px!important;
-  height:116px!important;
-  min-height:116px!important;
-  max-height:116px!important;
-  width:100%!important;
-  overflow:hidden!important;
-  background-position:center 22%!important;
-  background-size:cover!important;
-  background-repeat:no-repeat!important;
-}
-.player.playerPhotoCard .playerPhotoFlags{display:flex!important;position:absolute!important}
-.player.playerPhotoCard .playerStatsCompact{
-  display:flex!important;position:relative!important;flex:0 0 auto!important;
-  width:100%!important;box-sizing:border-box!important;min-height:29px!important;
-  visibility:visible!important;opacity:1!important;
-}
-.player.playerPhotoCard .playerIdentityBelow{
-  display:flex!important;position:relative!important;flex:0 0 auto!important;
-  width:100%!important;box-sizing:border-box!important;min-height:30px!important;
-  visibility:visible!important;opacity:1!important;
-}
-.player.playerPhotoCard .playerQuickButton{
-  display:block!important;position:relative!important;flex:0 0 auto!important;
-  width:100%!important;box-sizing:border-box!important;min-height:34px!important;
-  visibility:visible!important;opacity:1!important;
-}
-@media(max-width:700px){
- .player.playerPhotoCard .playerPhotoArea{
-   flex-basis:104px!important;height:104px!important;min-height:104px!important;max-height:104px!important;
- }
- .player.playerPhotoCard .playerStatsCompact{min-height:27px!important;font-size:9px!important;padding:4px 1px!important}
- .player.playerPhotoCard .playerIdentityBelow{min-height:28px!important}
- .player.playerPhotoCard .playerQuickButton{min-height:32px!important;font-size:11px!important}
-}
 </style>
 
 </head>
@@ -3887,8 +3779,6 @@ function renderTeamPlayers(id, arr){
         const d = document.createElement("div");
         d.className = "player playerPhotoCard " + (p.onCourt ? "onCourt " : "") + (p.sentOff ? "sentOff " : "") + (p.starter ? "starter" : "");
         d.title = "Pulsa para abrir las estadísticas y acciones";
-        // La foto se aplica únicamente al área fotográfica, no a toda la tarjeta.
-        d.style.backgroundImage = 'none';
 
         const status = p.sentOff ? "🟥 EXPULSADO" : (p.onCourt ? "🟢 EN PISTA" : "⚪ BANQUILLO");
         const quickText = p.sentOff ? "🟥 EXPULSADO" : (p.onCourt ? "🔄 SALIR" : "🟢 ENTRAR");
@@ -3897,32 +3787,24 @@ function renderTeamPlayers(id, arr){
 
         d.innerHTML = `
           <div class="playerPhotoArea">
-            <div class="playerPhotoFlags">
+            ${playerPhotoMarkup(p,team,i)}
+            <div class="playerPhotoBadges">
               <span class="badge ${p.onCourt ? 'badgeCourt' : 'badgeBench'}">${status}</span>
               ${starter}
             </div>
-            ${p.photo ? '' : '<div class="playerPhotoFallback">👤</div>'}
           </div>
           <div class="playerStatsCompact">
-            <span>⚽ ${p.goals||0}</span><span>🟨 ${p.yellow||0}</span><span>🟥 ${p.red||0}</span><span>🚨 ${p.fouls||0}</span>
+            <span title="Goles">⚽ ${p.goals||0}</span><span title="Amarillas">🟨 ${p.yellow||0}</span><span title="Rojas">🟥 ${p.red||0}</span><span title="Faltas">🚨 ${p.fouls||0}</span>
           </div>
-          <div class="playerIdentityBelow">
+          <div class="playerIdentityLine playerIdentityBelow">
             <span class="playerNumber">#${esc(p.number)}</span>
             <span class="playerNameView">${esc(p.name)}</span>
-            <div class="playerStatus" aria-label="${p.onCourt ? 'En pista' : 'Banquillo'}"></div>
           </div>
           <button class="playerQuickButton ${quickClass}" ${p.sentOff?'disabled':''}>${quickText}</button>
         `;
-        const photoArea = d.querySelector('.playerPhotoArea');
-        if(photoArea && p.photo){
-            photoArea.style.backgroundImage = 'url("' + p.photo + '")';
-        }
-
 
         const photo = d.querySelector('label.playerAvatar');
-        if(photo){
-            photo.addEventListener('click', e=>e.stopPropagation());
-        }
+        if(photo){ photo.addEventListener('click', e=>e.stopPropagation()); }
         const quick = d.querySelector('.playerQuickButton');
         if(quick && !p.sentOff){
             quick.addEventListener('click', e=>{
@@ -3934,7 +3816,6 @@ function renderTeamPlayers(id, arr){
         el.appendChild(d);
     });
 }
-
 function showPlayerPanel(team,i){
     const arr = team===1 ? homePlayers : awayPlayers;
     const p = arr[i];
