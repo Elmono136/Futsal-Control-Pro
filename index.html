@@ -1175,41 +1175,6 @@ header .small{color:#87909d;font-size:10px;text-transform:uppercase;letter-spaci
 #saveFinalMatchStatus{display:none;text-align:center;margin-top:7px;padding:9px;border-radius:9px;background:#102d1c;color:#8ff0b0;font-size:13px;font-weight:bold;}
 </style>
 
-
-<style id="v27-1-player-cards">
-/* V27.1: tarjetas de jugador aisladas del CSS antiguo */
-.container>.card:nth-child(5)>div[id$="Players"],
-.container>.card:nth-child(6)>div[id$="Players"]{
-  align-content:start!important;
-}
-.player.playerPhotoCard{
-  display:flex!important;flex-direction:column!important;align-items:stretch!important;
-  min-width:0!important;min-height:0!important;height:auto!important;overflow:visible!important;
-  padding:7px!important;margin:0!important;gap:0!important;cursor:pointer;
-  background:#171e27!important;border:1px solid #354252!important;border-left:3px solid #687789!important;
-  border-radius:10px!important;opacity:1;
-}
-.player.playerPhotoCard.onCourt{border-color:#1ed760!important;border-left-color:#1ed760!important;background:#10271d!important;}
-.player.playerPhotoCard.sentOff{opacity:.72!important;border-color:#b51f2d!important;}
-.playerCardStatusRow{display:flex;justify-content:space-between;align-items:center;gap:4px;margin-bottom:6px;min-height:20px;}
-.playerCardCourt,.playerCardStarter{display:inline-flex;align-items:center;justify-content:center;max-width:50%;padding:4px 5px;border-radius:5px;font-size:8px;line-height:1.1;font-weight:900;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;background:#394351;color:#fff;}
-.playerCardCourt.active{background:#19a84e;color:#fff;}.playerCardCourt.expelled{background:#b51f2d;}
-.playerCardStarter{background:#f5c400;color:#151515;}.playerCardStarter.empty{background:#303946;color:#aeb8c4;}
-.playerCardPhoto{width:100%;height:clamp(90px,12vw,145px);min-height:90px;max-height:145px;display:flex;align-items:center;justify-content:center;overflow:hidden;background:#0c1117;border:1px solid #303a46;border-radius:7px;}
-.playerCardPhoto .playerAvatar{display:flex!important;position:relative!important;width:100%!important;height:100%!important;min-width:0!important;min-height:0!important;max-width:none!important;max-height:none!important;border:0!important;border-radius:0!important;background:transparent!important;overflow:hidden!important;align-items:center;justify-content:center;font-size:36px;}
-.playerCardPhoto .playerAvatar img{display:block!important;width:100%!important;height:100%!important;object-fit:contain!important;object-position:center center!important;}
-.playerCardPhoto .playerAvatar .photoPlaceholder{font-size:34px;}
-.playerCardPhoto .photoUploadInput{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;opacity:0!important;z-index:3!important;cursor:pointer!important;}
-.playerCardStats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:3px;margin-top:6px;}
-.playerCardStats span{display:flex;justify-content:center;align-items:center;gap:2px;min-width:0;padding:4px 1px;background:#0c1219;border-radius:5px;color:#e6edf5;font-size:10px;}
-.playerCardStats b{font-size:11px;color:#fff;}
-.playerCardIdentity{display:flex;align-items:center;gap:5px;margin-top:6px;min-width:0;min-height:27px;}
-.playerCardNumber{flex:0 0 auto;display:flex;align-items:center;justify-content:center;min-width:29px;padding:5px 3px;border-radius:5px;background:#273241;color:#f5c400;font-size:12px;font-weight:900;}
-.playerCardName{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#fff;font-size:12px;font-weight:900;}
-.player.playerPhotoCard .playerQuickButton{display:block!important;position:relative!important;width:100%!important;min-height:30px!important;margin-top:6px!important;padding:7px 4px!important;font-size:10px!important;line-height:1.1!important;border-radius:7px!important;}
-@media(max-width:700px){.playerCardPhoto{height:115px;min-height:90px}.playerCardName{font-size:11px}.playerCardStats span{font-size:9px}}
-</style>
-
 </head>
 
 <body>
@@ -3709,34 +3674,51 @@ function renderTeamPlayers(id, arr){
     const el = document.getElementById(id);
     if(!el) return;
     el.innerHTML = "";
+
     arr.forEach((p,i)=>{
         const team = arr===homePlayers ? 1 : 0;
         const d = document.createElement("div");
-        d.className = "player playerPhotoCard " + (p.onCourt ? "onCourt " : "") + (p.sentOff ? "sentOff " : "") + (p.starter ? "starter" : "");
+        d.className = "player " + (p.onCourt ? "onCourt " : "") + (p.sentOff ? "sentOff " : "") + (p.starter ? "starter" : "");
         d.title = "Pulsa para abrir las estadísticas y acciones";
-        const status = p.sentOff ? "EXPULSADO" : (p.onCourt ? "EN PISTA" : "BANQUILLO");
+
+        const status = p.sentOff ? "🟥 EXPULSADO" : (p.onCourt ? "🟢 EN PISTA" : "⚪ BANQUILLO");
         const quickText = p.sentOff ? "🟥 EXPULSADO" : (p.onCourt ? "🔄 SALIR" : "🟢 ENTRAR");
         const quickClass = p.sentOff ? "dark" : (p.onCourt ? "red" : "green");
-        const starter = p.starter ? '<span class="playerCardStarter">⭐ TITULAR</span>' : '';
+        const starter = p.starter ? '<span class="badge badgeStarter">⭐ TITULAR</span>' : '';
+
         d.innerHTML = `
-          <div class="playerCardStatusRow">
-            <span class="playerCardCourt ${p.onCourt ? 'active' : ''} ${p.sentOff ? 'expelled' : ''}">${status}</span>
-            ${starter || '<span class="playerCardStarter empty">SUPLENTE</span>'}
+          <div class="playerTop">
+            ${playerPhotoMarkup(p,team,i)}
+            <div class="playerMain">
+              <div class="playerIdentityLine">
+                <span class="playerNumber">#${esc(p.number)}</span>
+                <span class="playerNameView">${esc(p.name)}</span>
+              </div>
+              <div class="playerBadgesCompact">
+                <span class="badge ${p.onCourt ? 'badgeCourt' : 'badgeBench'}">${status}</span>
+                ${starter}
+              </div>
+            </div>
+            <div class="playerStatus" aria-label="${p.onCourt ? 'En pista' : 'Banquillo'}"></div>
           </div>
-          <div class="playerCardPhoto">${playerPhotoMarkup(p,team,i)}</div>
-          <div class="playerCardStats">
-            <span title="Goles">⚽ <b>${p.goals||0}</b></span>
-            <span title="Amarillas">🟨 <b>${p.yellow||0}</b></span>
-            <span title="Rojas">🟥 <b>${p.red||0}</b></span>
-            <span title="Faltas">🚨 <b>${p.fouls||0}</b></span>
+          <div class="playerStatsCompact">
+            <span>⚽ ${p.goals||0}</span><span>🟨 ${p.yellow||0}</span><span>🟥 ${p.red||0}</span><span>🚨 ${p.fouls||0}</span>
           </div>
-          <div class="playerCardIdentity"><span class="playerCardNumber">#${esc(p.number)}</span><span class="playerCardName">${esc(p.name)}</span></div>
           <button class="playerQuickButton ${quickClass}" ${p.sentOff?'disabled':''}>${quickText}</button>
+          <div class="playerQuickHint">Toca la tarjeta para estadísticas y edición</div>
         `;
+
         const photo = d.querySelector('label.playerAvatar');
-        if(photo) photo.addEventListener('click', e=>e.stopPropagation());
+        if(photo){
+            photo.addEventListener('click', e=>e.stopPropagation());
+        }
         const quick = d.querySelector('.playerQuickButton');
-        if(quick && !p.sentOff) quick.addEventListener('click', e=>{e.stopPropagation();togglePlayer(arr,i);});
+        if(quick && !p.sentOff){
+            quick.addEventListener('click', e=>{
+                e.stopPropagation();
+                togglePlayer(arr,i);
+            });
+        }
         d.addEventListener('click', ()=>showPlayerPanel(team,i));
         el.appendChild(d);
     });
