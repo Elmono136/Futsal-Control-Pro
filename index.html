@@ -1169,10 +1169,83 @@ header .small{color:#87909d;font-size:10px;text-transform:uppercase;letter-spaci
 </style>
 
 
+
+<style id="v28-player-photo-cards">
+/* V29: rostro protagonista y estadísticas transparentes */
+.player.playerPhotoCard{
+  min-height:178px;
+  padding:10px;
+  display:flex;
+  flex-direction:column;
+  justify-content:flex-end;
+  gap:0;
+  overflow:hidden;
+  background-color:#202832;
+  background-position:center 18%;
+  background-size:cover;
+  background-repeat:no-repeat;
+  border:2px solid #56616d;
+  border-left:4px solid #68717d;
+  isolation:isolate;
+}
+.player.playerPhotoCard::before{
+  content:"";position:absolute;inset:0;z-index:-1;
+  background:linear-gradient(180deg,rgba(4,8,12,.02) 0%,rgba(4,8,12,.02) 48%,rgba(4,8,12,.42) 70%,rgba(4,8,12,.78) 100%);
+  pointer-events:none;
+}
+.player.playerPhotoCard .playerTop{
+  display:flex!important;align-items:flex-end;gap:7px;min-width:0;
+  margin-top:auto;padding:42px 0 8px;
+}
+.player.playerPhotoCard .playerAvatar{display:none!important}
+.player.playerPhotoCard .playerMain{min-width:0;flex:1}
+.player.playerPhotoCard .playerIdentityLine{align-items:flex-end;gap:6px;flex-wrap:wrap}
+.player.playerPhotoCard .playerNumber{
+  min-width:40px;height:38px;font-size:21px;border-radius:8px;
+  background:rgba(8,13,20,.88);border:1px solid rgba(255,255,255,.65);
+  text-shadow:0 1px 3px #000;
+}
+.player.playerPhotoCard .playerNameView{
+  display:inline-block;max-width:100%;white-space:normal;overflow-wrap:anywhere;
+  color:#fff;font-size:15px;font-weight:900;line-height:1.15;
+  text-shadow:0 2px 5px #000,0 0 3px #000;
+}
+.player.playerPhotoCard .playerStatus{flex:0 0 auto;margin-bottom:7px}
+.player.playerPhotoCard .playerBadgesCompact{margin-top:5px}
+.player.playerPhotoCard .playerStatsCompact{
+  display:flex;justify-content:space-around;align-items:center;gap:3px;
+  margin:0;padding:8px 5px;background:rgba(12,17,23,.48);color:#fff;
+  border-top:1px solid rgba(255,255,255,.25);border-radius:0;font-size:13px;font-weight:900;text-shadow:0 1px 3px #000;backdrop-filter:blur(2px);
+}
+.player.playerPhotoCard .playerStatsCompact span{flex:1;text-align:center;white-space:nowrap}
+.player.playerPhotoCard .playerQuickButton{
+  margin:0;border-radius:0 0 9px 9px;min-height:39px;padding:8px 6px;font-size:14px;
+}
+.player.playerPhotoCard.onCourt{border-color:#21f56c;border-left-color:#21f56c;box-shadow:0 0 9px #21f56c35}
+.player.playerPhotoCard.starter{border-top:3px solid #e5b638}
+.player.playerPhotoCard.sentOff{filter:grayscale(.65)}
+@media(max-width:700px){
+  .player.playerPhotoCard{min-height:164px;padding:7px}
+  .player.playerPhotoCard .playerTop{padding-top:35px}
+  .player.playerPhotoCard .playerNumber{min-width:34px;height:33px;font-size:18px}
+  .player.playerPhotoCard .playerNameView{font-size:13px}
+  .player.playerPhotoCard .playerStatsCompact{font-size:11px;padding:7px 2px}
+  .player.playerPhotoCard .playerQuickButton{font-size:12px;min-height:36px}
+}
+</style>
+
 <style id="v26-finish-save-style">
 #saveFinalMatchBtn{display:none;width:100%;margin-top:10px;min-height:62px;font-size:17px;font-weight:900;background:linear-gradient(180deg,#f5c400,#dca900);color:#111;border:2px solid #ffe37a;border-radius:12px;}
 #saveFinalMatchBtn.saved{background:linear-gradient(180deg,#20b65a,#13843d);border-color:#61e18e;color:#fff;}
 #saveFinalMatchStatus{display:none;text-align:center;margin-top:7px;padding:9px;border-radius:9px;background:#102d1c;color:#8ff0b0;font-size:13px;font-weight:bold;}
+</style>
+
+
+<style id="roster-templates-v27-style">
+.rosterTemplateTools{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:10px 0 12px}
+.rosterTemplateTools button{border:1px solid #536273;border-radius:9px;padding:9px 6px;background:#263442;color:#fff;font-size:11px;font-weight:900;line-height:1.25;min-height:39px}
+.rosterTemplateTools button:first-child{background:#dca900;color:#111;border-color:#f5d65c}
+@media(max-width:420px){.rosterTemplateTools button{font-size:10px;padding:8px 4px}}
 </style>
 
 </head>
@@ -1509,7 +1582,12 @@ header .small{color:#87909d;font-size:10px;text-transform:uppercase;letter-spaci
     ⭐ Selecciona los <strong>5 TITULARES</strong> antes de comenzar.
     Los cinco primeros vienen seleccionados por defecto.
 </div>
-
+<div class="rosterTemplateTools">
+  <button type="button" onclick="saveRosterTemplate('home')">💾 GUARDAR PLANTILLA</button>
+  <button type="button" onclick="saveSeasonRosterCopy('home')">📚 COPIA DE TEMPORADA</button>
+  <button type="button" onclick="loadRosterTemplate('home')">📂 CARGAR PLANTILLA</button>
+  <button type="button" onclick="loadSeasonRosterCopy('home')">🗂️ CARGAR TEMPORADA</button>
+</div>
 <div id="homePlayers"></div>
 
 </div>
@@ -1531,7 +1609,12 @@ header .small{color:#87909d;font-size:10px;text-transform:uppercase;letter-spaci
     ⭐ Selecciona los <strong>5 TITULARES</strong> antes de comenzar.
     Los cinco primeros vienen seleccionados por defecto.
 </div>
-
+<div class="rosterTemplateTools">
+  <button type="button" onclick="saveRosterTemplate('away')">💾 GUARDAR PLANTILLA</button>
+  <button type="button" onclick="saveSeasonRosterCopy('away')">📚 COPIA DE TEMPORADA</button>
+  <button type="button" onclick="loadRosterTemplate('away')">📂 CARGAR PLANTILLA</button>
+  <button type="button" onclick="loadSeasonRosterCopy('away')">🗂️ CARGAR TEMPORADA</button>
+</div>
 <div id="awayPlayers"></div>
 
 </div>
@@ -3678,8 +3761,11 @@ function renderTeamPlayers(id, arr){
     arr.forEach((p,i)=>{
         const team = arr===homePlayers ? 1 : 0;
         const d = document.createElement("div");
-        d.className = "player " + (p.onCourt ? "onCourt " : "") + (p.sentOff ? "sentOff " : "") + (p.starter ? "starter" : "");
+        d.className = "player playerPhotoCard " + (p.onCourt ? "onCourt " : "") + (p.sentOff ? "sentOff " : "") + (p.starter ? "starter" : "");
         d.title = "Pulsa para abrir las estadísticas y acciones";
+        if(p.photo){
+            d.style.backgroundImage = 'url("' + p.photo + '")';
+        }
 
         const status = p.sentOff ? "🟥 EXPULSADO" : (p.onCourt ? "🟢 EN PISTA" : "⚪ BANQUILLO");
         const quickText = p.sentOff ? "🟥 EXPULSADO" : (p.onCourt ? "🔄 SALIR" : "🟢 ENTRAR");
@@ -3705,7 +3791,6 @@ function renderTeamPlayers(id, arr){
             <span>⚽ ${p.goals||0}</span><span>🟨 ${p.yellow||0}</span><span>🟥 ${p.red||0}</span><span>🚨 ${p.fouls||0}</span>
           </div>
           <button class="playerQuickButton ${quickClass}" ${p.sentOff?'disabled':''}>${quickText}</button>
-          <div class="playerQuickHint">Toca la tarjeta para estadísticas y edición</div>
         `;
 
         const photo = d.querySelector('label.playerAvatar');
@@ -4768,6 +4853,65 @@ function buildCustomTable(){
 }
 const seasonNameInput=document.getElementById('seasonNameInput');if(seasonNameInput)seasonNameInput.addEventListener('change',()=>{try{localStorage.setItem(SEASON_KEY,seasonNameInput.value||'Temporada 2026/27')}catch(e){}});
 const seasonModal=document.getElementById('seasonModal');if(seasonModal)seasonModal.addEventListener('click',e=>{if(e.target===seasonModal)closeHistory()});
+
+const ROSTER_TEMPLATES_KEY='futsalProRosterTemplatesV1';
+const ROSTER_SEASON_COPIES_KEY='futsalProRosterSeasonCopiesV1';
+function rosterSideData(side){
+  const home=side==='home';
+  return {side, teamName:(document.getElementById(home?'homeName':'awayName')?.value|| (home?'EQUIPO LOCAL':'EQUIPO VISITANTE')).trim(), players:home?homePlayers:awayPlayers};
+}
+function rosterIdentitySnapshot(players){
+  return (players||[]).map((p,i)=>({number:p.number??i+1,name:p.name||('Jugador '+(i+1)),photo:p.photo||'',starter:!!p.starter}));
+}
+function readRosterStore(key){try{const v=JSON.parse(localStorage.getItem(key)||'[]');return Array.isArray(v)?v:[]}catch(e){return []}}
+function writeRosterStore(key,value){try{localStorage.setItem(key,JSON.stringify(value));return true}catch(e){alert('No se ha podido guardar la plantilla. El almacenamiento del dispositivo puede estar lleno, especialmente si hay muchas fotografías.');return false}}
+function rosterKeyName(v){return String(v||'').trim().toLocaleLowerCase()}
+function saveRosterTemplate(side){
+  const d=rosterSideData(side); if(!d.players.length){alert('No hay jugadores que guardar.');return}
+  const defaultName=d.teamName||'Mi equipo';
+  const name=prompt('Nombre de la plantilla permanente:',defaultName); if(name===null||!name.trim())return;
+  const list=readRosterStore(ROSTER_TEMPLATES_KEY); const idx=list.findIndex(x=>rosterKeyName(x.name)===rosterKeyName(name));
+  const record={id:'roster-'+Date.now().toString(36)+'-'+Math.random().toString(36).slice(2,7),name:name.trim(),teamName:d.teamName,updatedAt:new Date().toISOString(),players:rosterIdentitySnapshot(d.players)};
+  if(idx>=0){if(!confirm('Ya existe una plantilla llamada «'+list[idx].name+'». ¿Quieres sustituirla?'))return;list[idx]=record}else list.unshift(record);
+  if(writeRosterStore(ROSTER_TEMPLATES_KEY,list))alert('✅ Plantilla permanente guardada: '+record.name+' ('+record.players.length+' jugadores).');
+}
+function saveSeasonRosterCopy(side){
+  const d=rosterSideData(side); if(!d.players.length){alert('No hay jugadores que guardar.');return}
+  const season=(document.getElementById('seasonNameInput')?.value||localStorage.getItem('futsalProSeasonNameV1')||'Temporada 2026/27').trim();
+  const suggested=(d.teamName||'Equipo')+' · '+season;
+  const name=prompt('Nombre de esta copia de temporada:',suggested);if(name===null||!name.trim())return;
+  const list=readRosterStore(ROSTER_SEASON_COPIES_KEY);const idx=list.findIndex(x=>rosterKeyName(x.name)===rosterKeyName(name));
+  const record={id:'season-roster-'+Date.now().toString(36)+'-'+Math.random().toString(36).slice(2,7),name:name.trim(),teamName:d.teamName,season,updatedAt:new Date().toISOString(),players:rosterIdentitySnapshot(d.players)};
+  if(idx>=0){if(!confirm('Ya existe una copia llamada «'+list[idx].name+'». ¿Quieres actualizarla?'))return;list[idx]=record}else list.unshift(record);
+  if(writeRosterStore(ROSTER_SEASON_COPIES_KEY,list))alert('✅ Copia de temporada guardada: '+record.name+'.');
+}
+function chooseRosterRecord(list,title){
+  if(!list.length){alert('Todavía no hay plantillas guardadas de este tipo.');return null}
+  const options=list.map((x,i)=>(i+1)+'. '+x.name+(x.season?' — '+x.season:'' )).join('\n');
+  const answer=prompt(title+'\n\n'+options+'\n\nEscribe el número de la plantilla:', '1');
+  if(answer===null)return null;const n=Number(answer);if(!Number.isInteger(n)||n<1||n>list.length){alert('Número no válido.');return null}return list[n-1];
+}
+function applyRosterTemplate(side,record){
+  if(!record||!Array.isArray(record.players))return;
+  if(matchStarted&&!matchFinished){alert('Para proteger las estadísticas del partido en juego, termina o guarda el encuentro antes de cargar una plantilla.');return}
+  if(!confirm('Se cargarán los nombres, dorsales, fotos y titulares de «'+record.name+'» para '+(side==='home'?'el equipo local':'el equipo visitante')+'. Se reiniciarán las estadísticas individuales de esos jugadores. ¿Continuar?'))return;
+  const current=side==='home'?homePlayers:awayPlayers;
+  const count=Math.max(14,record.players.length,current.length);
+  const next=[];
+  for(let i=0;i<count;i++){
+    const src=record.players[i]||{number:i+1,name:'Jugador '+(i+1),photo:'',starter:i<5};
+    const old=current[i]||player(i+1);
+    next.push({...old,number:src.number??i+1,name:src.name||('Jugador '+(i+1)),photo:src.photo||'',starter:!!src.starter,onCourt:!!src.starter,sentOff:false,goals:0,yellow:0,red:0,fouls:0,seconds:0});
+  }
+  if(side==='home')homePlayers=next;else awayPlayers=next;
+  const nameInput=document.getElementById(side==='home'?'homeName':'awayName');if(nameInput&&record.teamName)nameInput.value=record.teamName;
+  updateQuickTeamTitles();renderPlayers();saveRosterTemplateStateQuietly();
+  alert('✅ Plantilla cargada. Revisa los cinco titulares antes de comenzar el partido.');
+}
+function loadRosterTemplate(side){const d=rosterSideData(side);const list=readRosterStore(ROSTER_TEMPLATES_KEY);let record=list.find(x=>rosterKeyName(x.name)===rosterKeyName(d.teamName));if(!record)record=chooseRosterRecord(list,'ELIGE UNA PLANTILLA PERMANENTE');if(record)applyRosterTemplate(side,record)}
+function loadSeasonRosterCopy(side){const list=readRosterStore(ROSTER_SEASON_COPIES_KEY);const record=chooseRosterRecord(list,'ELIGE UNA COPIA DE TEMPORADA');if(record)applyRosterTemplate(side,record)}
+function saveRosterTemplateStateQuietly(){try{const state={homeName:document.getElementById('homeName')?.value||'',awayName:document.getElementById('awayName')?.value||'',myTeamSide:document.getElementById('myTeamSide')?.value||'home',clockMode:document.getElementById('clockMode')?.value||'stopped',periodDuration,period,seconds,running:false,matchStarted,matchFinished,matchArchiveId,matchArchiveIsSaved,homeGoals,awayGoals,homeFouls,awayFouls,periodFouls,homePlayers,awayPlayers,events,matchDate:document.getElementById('matchDate')?.value||'',matchTime:document.getElementById('matchTime')?.value||'',matchVenue:document.getElementById('matchVenue')?.value||''};localStorage.setItem('futsalProMatchState',JSON.stringify(state))}catch(e){}}
+
 </script>
 
 </body>
